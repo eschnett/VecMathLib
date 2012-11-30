@@ -1,0 +1,32 @@
+// -*-C++-*-
+
+#include "vec_float.h"
+#include "vec_double_avx.h"
+
+#include <iostream>
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+  using namespace vecmathlib;
+  typedef realvec<float,1> realvec_t;
+  // typedef realvec<double,4> realvec_t;
+  typedef realvec_t::boolvec_t boolvec_t;
+  typedef realvec_t::intvec_t intvec_t;
+  
+  realvec_t x = 1.0;
+  realvec_t y = x + realvec_t(1.0);
+  y = sqrt(y);
+  realvec_t z = log(y);
+  boolvec_t b = x < y;
+  intvec_t i = convert_int(y);
+  
+  cout << "x=" << x << "\n";
+  cout << "y=" << y << "\n";
+  cout << "z=" << z << "\n";
+  cout << "b=" << b << "\n";
+  cout << "i=" << i << "\n";
+  
+  return 0;
+}

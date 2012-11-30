@@ -1,0 +1,33 @@
+ar  = ar
+cxx = g++
+
+cppflags =
+cxxflags = -std=gnu++11 -Wall -g -march=native
+# -Ofast
+ldflags = -L.
+
+rule cxx
+  command = $cxx $cppflags -MMD -MT $out -MF $out.d $cxxflags -c $in -o $out
+  description = CXX $out
+  depfile = $out.d
+
+rule ar
+  command = rm -f $out && $ar crs $out $in && ranlib $out
+  description = AR $out
+
+rule link
+  command = $cxx $cppflags $cxxflags $ldflags -o $out $in $libs
+  description = LINK $out
+
+build empty.o: cxx empty.cc
+build example.o: cxx example.cc
+build test.o: cxx test.cc
+
+build libvecmath.a: ar empty.o
+
+build example: link example.o | libvecmath.a
+  libs = -lvecmath
+build test: link test.o | libvecmath.a
+  libs = -lvecmath
+
+default example test

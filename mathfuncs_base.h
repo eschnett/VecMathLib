@@ -1,0 +1,67 @@
+// -*-C++-*-
+
+#ifndef MATHFUNCS_BASE_H
+#define MATHFUNCS_BASE_H
+
+#include "floatprops.h"
+#include "vec_base.h"
+
+
+
+namespace vecmathlib {
+  
+  template<typename realvec_t>
+  struct mathfuncs {
+    typedef floatprops<typename realvec_t::real_t> FP;
+    
+    typedef typename FP::real_t real_t;
+    typedef typename FP::int_t int_t;
+    typedef typename FP::uint_t uint_t;
+    
+    static int const size = realvec_t::size;
+    
+    // typedef realvec<real_t, size> realvec_t;
+    typedef intvec<real_t, size> intvec_t;
+    typedef boolvec<real_t, size> boolvec_t;
+    
+    // Short names for type casts
+    typedef real_t R;
+    typedef int_t I;
+    typedef uint_t U;
+    typedef realvec_t RV;
+    typedef intvec_t IV;
+    typedef boolvec_t BV;
+    
+    // asin
+    static realvec_t vml_acos(realvec_t x);
+    static realvec_t vml_asin(realvec_t x);
+    static realvec_t vml_atan(realvec_t x);
+    
+    // convert
+    static realvec_t vml_convert_float(intvec_t x);
+    static intvec_t vml_convert_int(realvec_t x);
+    
+    // fabs
+    static realvec_t vml_copysign(realvec_t x, realvec_t y);
+    static realvec_t vml_fabs(realvec_t x);
+    static intvec_t vml_ilogb(realvec_t x);
+    static realvec_t vml_scalbn(realvec_t x, intvec_t n);
+    static boolvec_t vml_signbit(realvec_t x);
+    
+    // log
+    static realvec_t vml_log(realvec_t x);
+    static realvec_t vml_log10(realvec_t x);
+    static realvec_t vml_log1p(realvec_t x);
+    static realvec_t vml_log2(realvec_t x);
+    
+    // rcp
+    static realvec_t vml_rcp(realvec_t x);
+    
+    // sqrt
+    static realvec_t vml_rsqrt(realvec_t x);
+    static realvec_t vml_sqrt(realvec_t x);
+  };
+  
+} // namespace vecmathlib
+
+#endif  // #ifndef MATHFUNCS_BASE_H
