@@ -395,27 +395,7 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return _mm256_castpd_si256(v); }
-    intvec_t convert_int() const
-    {
-#if 0
-      __m128i iv0123 = _mm256_cvtpd_epi32(v);
-      __m128i iv2301 = _mm_shuffle_ps(iv0123, iv0123, 0b10110001);
-      __m256i iv01232301 =
-        _mm256_insertf128_si256(_mm256_castsi128_si256(iv0123), iv2301, 1);
-      __m256i zero = _mm256_setzero_ps();
-      return _mm256_unpacklo_ps(iv01232301, zero);
-#else
-      realvec x = _mm256_floor_pd(v);
-      intvec_t ix = x.as_int();
-      boolvec_t sign = ix.as_bool();
-      intvec_t exponent = (ix & exponent_mask) >> mantissa_bits;
-      ix &= mantissa_mask;
-      ix |= U(1) << mantissa_bits;  // add hidden bit
-      ix <<= exponent - exponent_offset + 52; // ???
-      ix = ifthen(sign, -ix, ix);
-      return ix;
-#endif
-    }
+    intvec_t convert_int() const { return MF::vml_convert_int(*this); }
     
     
     
@@ -566,21 +546,7 @@ namespace vecmathlib {
   
   inline auto intvec<double,4>::convert_float() const -> realvec_t
   {
-    intvec x = v;
-    uint_t signbitmask = U(1) << (bits-1);
-    // make unsigned
-    x += signbitmask;
-    // convert lower 52 bits
-    intvec xlo = x & IV((U(1) << mantissa_bits) - 1);
-    int_t exponent_0 = exponent_offset + mantissa_bits;
-    xlo = xlo | exponent_0;
-    realvec_t flo = xlo.as_float() - FP::as_float(exponent_0);
-    // convert upper 22 bits
-    intvec xhi = x.lsr(U(mantissa_bits));
-    int_t exponent_52 = exponent_0 + mantissa_bits;
-    xhi = xhi | exponent_52;
-    realvec_t fhi = xhi.as_float() - FP::as_float(exponent_52);
-    return flo + fhi - R(signbitmask);
+    return MF::vml_convert_float(*this);
   }
   
 } // namespace vecmathlib

@@ -15,7 +15,6 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_sqrt(realvec_t x)
   {
-    std::cout << "mathfuncs::sqrt\n";
     // Handle special case: zero
     boolvec_t is_zero = x <= RV(0.0);
     x = ifthen(is_zero, RV(1.0), x);
@@ -28,18 +27,15 @@ namespace vecmathlib {
     // TODO: divide by M_SQRT2 if ilogb_x % 2 == 1 ?
 #else
     real_t correction =
-      std::scalbn(4.0/3.0, FP::exponent_offset >> 1) *
-      (FP::exponent_offset & 1 ? 1.0 / M_SQRT1_2 : 1.0);
+      std::scalbn(FP::exponent_offset & 1 ? M_SQRT2 : 1.0,
+                  FP::exponent_offset >> 1);
     realvec_t r = lsr(x.as_int(), 1).as_float() * RV(correction);
-    real_t one=1.0;
-    std::cout << "x=" << x << " r=" << r << " eo=" << FP::exponent_offset << " corr=" << correction << " ione=" << RV(one).as_int() << "\n";
 #endif
     
     // Iterate
     // nmax iterations give an accuracy of 2^nmax binary digits. 5
     // iterations suffice for double precision with its 53 digits.
     int const nmax = 5;
-    std::cout << "bits" << FP::bits << "nmax" << nmax << "\n";
     for (int n=1; n<nmax; ++n) {
       // Step
       assert(all(x > RV(0.0)));

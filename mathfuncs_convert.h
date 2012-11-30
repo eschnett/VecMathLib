@@ -24,21 +24,24 @@ namespace vecmathlib {
     // Convert lower bits
     intvec_t xlo = x & IV((U(1) << lobits) - 1);
     // exponent for the equivalent floating point number
-    int_t exponent_lo = FP::exponent_offset + lobits;
+    int_t exponent_lo = (FP::exponent_offset + lobits) << FP::mantissa_bits;
     xlo |= exponent_lo;
     // subtract hidden mantissa bit
     realvec_t flo = as_float(xlo) - RV(FP::as_float(exponent_lo));
     
     // Convert upper bits
     // make unsigned by subtracting largest negative number
+    // (only do this for the high bits, since they have sufficient
+    // precision to handle the overflow)
     x ^= FP::sign_mask;
     intvec_t xhi = lsr(x, lobits);
     // exponent for the equivalent floating point number
-    int_t exponent_hi = FP::exponent_offset + FP::bits;
+    int_t exponent_hi = (FP::exponent_offset + 2*lobits) << FP::mantissa_bits;
     xhi |= exponent_hi;
-    // add largest negative number, and subtract hidden mantissa bit
-    realvec_t
-      fhi = as_float(xhi) - RV(FP::as_float(exponent_hi) + R(FP::sign_mask));
+    // subtract hidden mantissa bit
+    realvec_t fhi = as_float(xhi) - RV(FP::as_float(exponent_hi));
+    // add largest negative number again
+    fhi -= RV(R(FP::sign_mask));
     
     // Combine results
     return flo + fhi;
@@ -76,7 +79,7 @@ namespace vecmathlib {
     // Handle negative numbers
     ix = ifthen(is_negative, -ix, ix);
     // Handle zero
-    ix = ifthen(is_zero, IV(0), ix);
+    ix = ifthen(is_zero, IV(I(0)), ix);
     
     return ix;
   }
