@@ -76,6 +76,16 @@ namespace vecmathlib {
     static realvec_t vml_rcp(realvec_t x);
     static realvec_t vml_remainder(realvec_t x, realvec_t y);
     
+    // sin
+    static realvec_t vml_cos(realvec_t x);
+    static realvec_t vml_sin(realvec_t x);
+    static realvec_t vml_tan(realvec_t x);
+    
+    // sinh
+    static realvec_t vml_cosh(realvec_t x);
+    static realvec_t vml_sinh(realvec_t x);
+    static realvec_t vml_tanh(realvec_t x);
+    
     // sqrt
     static realvec_t vml_rsqrt(realvec_t x);
     static realvec_t vml_sqrt(realvec_t x);

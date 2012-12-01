@@ -290,15 +290,16 @@ struct vecmathlib_test {
   //   }
   // }
   
-  // void test_sinh()
-  // {
-  //   for (int i=0; i<imax; ++i) {
-  //     real_t const x = random(-10.0, 10.0);
-  //     check("sinh", sinh, vecmathlib::sinh, x, accuracy);
-  //     check("cosh", cosh, vecmathlib::cosh, x, accuracy);
-  //     check("tanh", tanh, vecmathlib::tanh, x, accuracy);
-  //   }
-  // }
+  static void test_sinh()
+  {
+    cout << "   testing cosh sinh tanh...\n";
+    for (int i=0; i<imax; ++i) {
+      realvec_t const x = random(real_t(-10.0), real_t(+10.0));
+      check("sinh", sinh, vecmathlib::sinh, x, accuracy);
+      check("cosh", cosh, vecmathlib::cosh, x, accuracy);
+      check("tanh", tanh, vecmathlib::tanh, x, accuracy);
+    }
+  }
   
   static real_t rsqrt(real_t x) { return real_t(1.0)/sqrt(x); }
   static void test_sqrt()
@@ -331,7 +332,7 @@ struct vecmathlib_test {
     test_pow();
     test_rcp();
     // test_sin();
-    // test_sinh();
+    test_sinh();
     test_sqrt();
   }
 };

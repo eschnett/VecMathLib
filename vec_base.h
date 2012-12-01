@@ -183,6 +183,18 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> cos(realvec<real_t, size> x)
+  {
+    return x.cos();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> cosh(realvec<real_t, size> x)
+  {
+    return x.cosh();
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> exp(realvec<real_t, size> x)
   {
     return x.exp();
@@ -302,9 +314,33 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> sin(realvec<real_t, size> x)
+  {
+    return x.sin();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> sinh(realvec<real_t, size> x)
+  {
+    return x.sinh();
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> sqrt(realvec<real_t, size> x)
   {
     return x.sqrt();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> tan(realvec<real_t, size> x)
+  {
+    return x.tan();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> tanh(realvec<real_t, size> x)
+  {
+    return x.tanh();
   }
   
   

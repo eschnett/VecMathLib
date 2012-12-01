@@ -13,6 +13,7 @@
 #include "mathfuncs_log.h"
 #include "mathfuncs_pow.h"
 #include "mathfuncs_rcp.h"
+#include "mathfuncs_sinh.h"
 #include "mathfuncs_sqrt.h"
 
 #endif  // #ifndef MATHFUNCS_H
