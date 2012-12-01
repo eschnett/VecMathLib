@@ -25,7 +25,7 @@ namespace vecmathlib {
   template<>
   struct boolvec<double,4>: floatprops<double>
   {
-    static const int size = 4;
+    static int const size = 4;
     typedef bool scalar_t;
     typedef __m256d bvector_t;
     
@@ -113,7 +113,7 @@ namespace vecmathlib {
   template<>
   struct intvec<double,4>: floatprops<double>
   {
-    static const int size = 4;
+    static int const size = 4;
     typedef int_t scalar_t;
     typedef __m256i ivector_t;
     
@@ -356,9 +356,11 @@ namespace vecmathlib {
   template<>
   struct realvec<double,4>: floatprops<double>
   {
-    static const int size = 4;
+    static int const size = 4;
     typedef real_t scalar_t;
     typedef __m256d vector_t;
+    
+    static constexpr char const* const name = "<AVX:4*double>";
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
@@ -450,51 +452,20 @@ namespace vecmathlib {
     
     
     
-#if 0
-    realvec copysign(realvec y) const
-    {
-      uint_t signmask = U(1) << (bits-1);
-      intvec_t value = as_int() & IV(~signmask);
-      intvec_t sign = y.as_int() & IV(signmask);
-      return (sign | value).as_float();
-    }
-    
-    realvec fabs() const
-    {
-      uint_t signmask = U(1) << (bits-1);
-      return (as_int() & IV(~signmask)).as_float();
-    }
-    
-    intvec_t ilogb() const
-    {
-      intvec_t exponent_mask =
-        ((U(1) << exponent_bits) - U(1)) << mantissa_bits;
-      return lsr(as_int() & exponent_mask, mantissa_bits) - IV(exponent_offset);
-    }
-    
-    realvec scalbn(intvec_t n) const
-    {
-      return *this * ((n + exponent_offset) << mantissa_bits).as_float();
-    }
-    
-    boolvec_t signbit() const
-    {
-      return v;
-    }
-#endif
-    
-    realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
-    realvec fabs() const { return MF::vml_fabs(*this); }
-    intvec_t ilogb() const { return MF::vml_ilogb(*this); }
-    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
-    boolvec_t signbit() const { return v; }
-    
-    
-    
     realvec acos() const { return MF::vml_acos(*this); }
+    realvec acosh() const { return MF::vml_acosh(*this); }
     realvec asin() const { return MF::vml_asin(*this); }
+    realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
+    realvec atanh() const { return MF::vml_atanh(*this); }
+    realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
+    realvec exp() const { return MF::vml_exp(*this); }
+    realvec exp10() const { return MF::vml_exp10(*this); }
+    realvec exp2() const { return MF::vml_exp2(*this); }
+    realvec expm1() const { return MF::vml_expm1(*this); }
+    realvec fabs() const { return MF::vml_fabs(*this); }
     realvec floor() const { return _mm256_floor_pd(v); }
+    intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
@@ -502,6 +473,8 @@ namespace vecmathlib {
     realvec rcp() const { return _mm256_div_pd(_mm256_set1_pd(1.0), v); }
     // realvec rcp() const { return MF::vml_rcp(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
+    boolvec_t signbit() const { return v; }
+    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     realvec sqrt() const { return _mm256_sqrt_pd(v); }
     // realvec sqrt() const { return MF::vml_sqrt(*this); }
   };

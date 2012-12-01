@@ -22,7 +22,7 @@ namespace vecmathlib {
   template<>
   struct boolvec<float,1>: floatprops<float>
   {
-    static const int size = 1;
+    static int const size = 1;
     typedef bool scalar_t;
     typedef bool bvector_t;
     
@@ -87,7 +87,7 @@ namespace vecmathlib {
   template<>
   struct intvec<float,1>: floatprops<float>
   {
-    static const int size = 1;
+    static int const size = 1;
     typedef int_t scalar_t;
     typedef int_t ivector_t;
     
@@ -176,6 +176,8 @@ namespace vecmathlib {
     typedef real_t scalar_t;
     typedef real_t vector_t;
     
+    static constexpr char const* const name = "<1*float>";
+    
     typedef boolvec<real_t, size> boolvec_t;
     typedef intvec<real_t, size> intvec_t;
     typedef realvec realvec_t;
@@ -239,22 +241,28 @@ namespace vecmathlib {
     
     
     
-    realvec copysign(realvec x) const { return MF::vml_copysign(v, x.v); }
-    realvec fabs() const { return MF::vml_fabs(v); }
-    intvec_t ilogb() const { return MF::vml_ilogb(v); }
-    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(v, n.v); }
-    boolvec_t signbit() const { return MF::vml_signbit(v); }
-    
     realvec acos() const { return MF::vml_acos(*this); }
+    realvec acosh() const { return MF::vml_acosh(*this); }
     realvec asin() const { return MF::vml_asin(*this); }
+    realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
+    realvec atanh() const { return MF::vml_atanh(*this); }
+    realvec copysign(realvec x) const { return MF::vml_copysign(v, x.v); }
+    realvec exp() const { return MF::vml_exp(*this); }
+    realvec exp10() const { return MF::vml_exp10(*this); }
+    realvec exp2() const { return MF::vml_exp2(*this); }
+    realvec expm1() const { return MF::vml_expm1(*this); }
+    realvec fabs() const { return MF::vml_fabs(v); }
     realvec floor() const { return std::floor(v); }
+    intvec_t ilogb() const { return MF::vml_ilogb(v); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
     realvec log2() const { return MF::vml_log2(*this); }
     realvec rcp() const { return MF::vml_rcp(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
+    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(v, n.v); }
+    boolvec_t signbit() const { return MF::vml_signbit(v); }
     realvec sqrt() const { return MF::vml_sqrt(*this); }
   };
   

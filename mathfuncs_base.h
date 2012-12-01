@@ -37,6 +37,11 @@ namespace vecmathlib {
     static realvec_t vml_asin(realvec_t x);
     static realvec_t vml_atan(realvec_t x);
     
+    // asinh
+    static realvec_t vml_acosh(realvec_t x);
+    static realvec_t vml_asinh(realvec_t x);
+    static realvec_t vml_atanh(realvec_t x);
+    
     // convert
     static realvec_t vml_convert_float(intvec_t x);
     static intvec_t vml_convert_int(realvec_t x);
@@ -47,6 +52,12 @@ namespace vecmathlib {
     static intvec_t vml_ilogb(realvec_t x);
     static realvec_t vml_scalbn(realvec_t x, intvec_t n);
     static boolvec_t vml_signbit(realvec_t x);
+    
+    // exp
+    static realvec_t vml_exp(realvec_t x);
+    static realvec_t vml_exp10(realvec_t x);
+    static realvec_t vml_exp2(realvec_t x);
+    static realvec_t vml_expm1(realvec_t x);
     
     // log
     static realvec_t vml_log(realvec_t x);

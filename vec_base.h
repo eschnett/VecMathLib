@@ -134,44 +134,15 @@ namespace vecmathlib {
   
   
   template<typename real_t, int size>
-  inline realvec<real_t, size> copysign(realvec<real_t, size> x,
-                                          realvec<real_t, size> y)
-  {
-    return x.copysign(y);
-  }
-  
-  template<typename real_t, int size>
-  inline realvec<real_t, size> fabs(realvec<real_t, size> x)
-  {
-    return x.fabs();
-  }
-  
-  template<typename real_t, int size>
-  inline intvec<real_t, size> ilogb(realvec<real_t, size> x)
-  {
-    return x.ilogb();
-  }
-  
-  template<typename real_t, int size>
-  inline
-  realvec<real_t, size> scalbn(realvec<real_t, size> x,
-                                 intvec<real_t, size> n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
-  inline boolvec<real_t, size> signbit(realvec<real_t, size> x)
-  {
-    return x.signbit();
-  }
-  
-  
-  
-  template<typename real_t, int size>
   inline realvec<real_t, size> acos(realvec<real_t, size> x)
   {
     return x.acos();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> acosh(realvec<real_t, size> x)
+  {
+    return x.acosh();
   }
   
   template<typename real_t, int size>
@@ -181,15 +152,70 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> asinh(realvec<real_t, size> x)
+  {
+    return x.asinh();
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> atan(realvec<real_t, size> x)
   {
     return x.atan();
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> atanh(realvec<real_t, size> x)
+  {
+    return x.atanh();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> copysign(realvec<real_t, size> x,
+                                          realvec<real_t, size> y)
+  {
+    return x.copysign(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> exp(realvec<real_t, size> x)
+  {
+    return x.exp();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> exp10(realvec<real_t, size> x)
+  {
+    return x.exp10();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> exp2(realvec<real_t, size> x)
+  {
+    return x.exp2();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> expm1(realvec<real_t, size> x)
+  {
+    return x.expm1();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> fabs(realvec<real_t, size> x)
+  {
+    return x.fabs();
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> floor(realvec<real_t, size> x)
   {
     return x.floor();
+  }
+  
+  template<typename real_t, int size>
+  inline intvec<real_t, size> ilogb(realvec<real_t, size> x)
+  {
+    return x.ilogb();
   }
   
   template<typename real_t, int size>
@@ -226,6 +252,20 @@ namespace vecmathlib {
   inline realvec<real_t, size> rsqrt(realvec<real_t, size> x)
   {
     return x.rsqrt();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realvec<real_t, size> scalbn(realvec<real_t, size> x,
+                                 intvec<real_t, size> n)
+  {
+    return x.scalbn(n);
+  }
+  
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> signbit(realvec<real_t, size> x)
+  {
+    return x.signbit();
   }
   
   template<typename real_t, int size>
