@@ -42,6 +42,10 @@ namespace vecmathlib {
     realvec_t fhi = as_float(xhi) - RV(FP::as_float(exponent_hi));
     // add largest negative number again
     fhi -= RV(R(FP::sign_mask));
+    // Ensure that the converted low and high bits are calculated
+    // separately, since a real_t doesn't have enough precision to
+    // hold all the bits of an int_t
+    fhi.barrier();
     
     // Combine results
     return flo + fhi;
@@ -90,9 +94,11 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_round(realvec_t x)
   {
     realvec_t r = fabs(x);
+    // Round by adding a large number, destroying all excess precision
     real_t offset = RV(std::scalbn(R(1.0), FP::mantissa_bits));
     r += offset;
-#warning "TODO: don't optimise this away!"
+    // Ensure the rounding is not optimised away
+    r.barrier();
     r -= offset;
     return copysign(r, x);
   }

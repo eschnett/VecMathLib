@@ -2,8 +2,7 @@ ar  = ar
 cxx = g++
 
 cppflags =
-cxxflags = -std=gnu++11 -Wall -g -march=native
-# -Ofast
+cxxflags = -std=gnu++11 -Wall -g -march=native -Ofast
 ldflags = -L.
 
 rule cxx

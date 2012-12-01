@@ -361,6 +361,7 @@ namespace vecmathlib {
     typedef __m256d vector_t;
     
     static constexpr char const* const name = "<AVX:4*double>";
+    inline void barrier() { asm("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
@@ -476,7 +477,6 @@ namespace vecmathlib {
     realvec log2() const { return MF::vml_log2(*this); }
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return _mm256_div_pd(_mm256_set1_pd(1.0), v); }
-    // realvec rcp() const { return MF::vml_rcp(*this); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
     realvec round() const { return _mm256_round_pd(v, _MM_FROUND_NINT); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
@@ -485,7 +485,6 @@ namespace vecmathlib {
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
     realvec sqrt() const { return _mm256_sqrt_pd(v); }
-    // realvec sqrt() const { return MF::vml_sqrt(*this); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
   };

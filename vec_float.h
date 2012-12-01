@@ -39,6 +39,12 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
+    // static real_t R(double a) { return real_t(a); }
+    // static int_t I(int a) { return int_t(a); }
+    // static uint_t U(int a) { return uint_t(a); }
+    // static realvec_t RV(real_t a) { return realvec_t(a); }
+    // static intvec_t IV(int_t a) { return intvec_t(a); }
+    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     
@@ -104,6 +110,12 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
+    // static real_t R(double a) { return real_t(a); }
+    // static int_t I(int a) { return int_t(a); }
+    // static uint_t U(int a) { return uint_t(a); }
+    // static realvec_t RV(real_t a) { return realvec_t(a); }
+    // static intvec_t IV(int_t a) { return intvec_t(a); }
+    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     
@@ -122,7 +134,7 @@ namespace vecmathlib {
     
     
     
-    auto as_bool() const -> boolvec_t { return *(bool const*)&v; }
+    auto as_bool() const -> boolvec_t { return v; }
     auto convert_bool() const -> boolvec_t { return v; }
     auto as_float() const -> realvec_t; // defined after realvec
     auto convert_float() const -> realvec_t; // defined after realvec
@@ -177,6 +189,7 @@ namespace vecmathlib {
     typedef real_t vector_t;
     
     static constexpr char const* const name = "<1*float>";
+    inline void barrier() { asm("": "+x" (v)); }
     
     typedef boolvec<real_t, size> boolvec_t;
     typedef intvec<real_t, size> intvec_t;
@@ -191,6 +204,12 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
+    // static real_t R(double a) { return real_t(a); }
+    // static int_t I(int a) { return int_t(a); }
+    // static uint_t U(int a) { return uint_t(a); }
+    // static realvec_t RV(real_t a) { return realvec_t(a); }
+    // static intvec_t IV(int_t a) { return intvec_t(a); }
+    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     

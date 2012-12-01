@@ -61,8 +61,18 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static inline real_t as_float(int_t x) { return *(real_t*)&x; }
-    static inline int_t as_int(real_t x) { return *(int_t*)&x; }
+    static inline real_t as_float(int_t x)
+    {
+      // return *(real_t*)&x;
+      union { int_t i; real_t r; } ir;
+      return ir.i=x, ir.r;
+    }
+    static inline int_t as_int(real_t x)
+    {
+      // return *(int_t*)&x;
+      union { real_t r; int_t i; } ri;
+      return ri.r=x, ri.i;
+    }
     
     // Convert values
     static inline real_t convert_float(int_t x) { return real_t(x); }
@@ -114,8 +124,18 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static inline real_t as_float(int_t x) { return *(real_t*)&x; }
-    static inline int_t as_int(real_t x) { return *(int_t*)&x; }
+    static inline real_t as_float(int_t x)
+    {
+      // return *(real_t*)&x;
+      union { int_t i; real_t r; } ir;
+      return ir.i=x, ir.r;
+    }
+    static inline int_t as_int(real_t x)
+    {
+      // return *(int_t*)&x;
+      union { real_t r; int_t i; } ri;
+      return ri.r=x, ri.i;
+    }
     
     // Convert values
     static inline real_t convert_float(int_t x) { return real_t(x); }
