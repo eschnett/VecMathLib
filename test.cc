@@ -185,13 +185,16 @@ struct vecmathlib_test {
   
   static void test_convert()
   {
-    cout << "   testing convert_float convert_int...\n";
+    cout << "   testing ceil convert_float convert_int floor round...\n";
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(real_t(-10.0), real_t(+10.0));
       intvec_t const n = random(int_t(-10), int_t(+10));
+      check("ceil", ceil, vecmathlib::ceil, x, accuracy);
       check("convert_float",
             FP::convert_float, vecmathlib::convert_float, n, accuracy);
       check("convert_int", FP::convert_int, vecmathlib::convert_int, x);
+      check("floor", floor, vecmathlib::floor, x, accuracy);
+      check("round", round, vecmathlib::round, x, accuracy);
     }
   }
   
@@ -254,31 +257,26 @@ struct vecmathlib_test {
     }
   }
   
-  // static real_t pown(real_t const x, long long const n)
-  // {
-  //   return pow(x, real_t(n));
-  // }
-  // void test_pow()
-  // {
-  //   for (int i=0; i<imax; ++i) {
-  //     real_t const x = random(0.001, 1000.0);
-  //     real_t const y = random(-10.0, +10.0);
-  //     check("pow", pow, vecmathlib::pow, x, y, accuracy);
-  //   }
-  //   for (int i=0; i<imax; ++i) {
-  //     real_t const x = random(-1000.0, +1000.0);
-  //     long long const n = llrandom(-10, +10);
-  //     check("pown", pown, vecmathlib::pown, x, n, accuracy);
-  //   }
-  // }
+  static void test_pow()
+  {
+    cout << "   testing pow...\n";
+    for (int i=0; i<imax; ++i) {
+      realvec_t const x = random(real_t(0.001), real_t(1000.0));
+      realvec_t const y = random(real_t(-10.0), real_t(+10.0));
+      check("pow", pow, vecmathlib::pow, x, y, accuracy);
+    }
+  }
   
   static real_t rcp(real_t x) { return real_t(1.0)/x; }
   static void test_rcp()
   {
-    cout << "   testing rcp...\n";
+    cout << "   testing fmod rcp remainder...\n";
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(real_t(-10.0), real_t(+10.0));
+      realvec_t const y = random(real_t(-10.0), real_t(+10.0));
+      check("fmod", fmod, vecmathlib::fmod, x, y, accuracy);
       check("rcp", rcp, vecmathlib::rcp, x, accuracy);
+      check("remainder", remainder, vecmathlib::remainder, x, y, accuracy);
     }
   }
   
@@ -329,8 +327,8 @@ struct vecmathlib_test {
     test_asin();
     test_asinh();
     test_exp();
-    // test_log();
-    // test_pow();
+    test_log();
+    test_pow();
     test_rcp();
     // test_sin();
     // test_sinh();

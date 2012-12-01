@@ -43,6 +43,22 @@ namespace vecmathlib {
     return r;
   }
   
+  
+  
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_remainder(realvec_t x, realvec_t y)
+  {
+    return x - round(x / y) * y;
+  }
+  
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_fmod(realvec_t x, realvec_t y)
+  {
+    realvec_t r = fabs(x);
+    y = fabs(y);
+    return copysign(r - floor(r / y) * y, x);
+  }
+  
 }; // namespace vecmathlib
 
 #endif  // #ifndef MATHFUNCS_RCP_H

@@ -168,7 +168,13 @@ namespace vecmathlib {
   {
     return x.atanh();
   }
-  
+    
+  template<typename real_t, int size>
+  inline realvec<real_t, size> ceil(realvec<real_t, size> x)
+  {
+    return x.ceil();
+  }
+
   template<typename real_t, int size>
   inline realvec<real_t, size> copysign(realvec<real_t, size> x,
                                           realvec<real_t, size> y)
@@ -213,6 +219,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> fmod(realvec<real_t, size> x,
+                                    realvec<real_t, size> y)
+  {
+    return x.fmod(y);
+  }
+  
+  template<typename real_t, int size>
   inline intvec<real_t, size> ilogb(realvec<real_t, size> x)
   {
     return x.ilogb();
@@ -243,9 +256,29 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> pow(realvec<real_t, size> x,
+                                   realvec<real_t, size> y)
+  {
+    return x.pow(y);
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> rcp(realvec<real_t, size> x)
   {
     return x.rcp();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> remainder(realvec<real_t, size> x,
+                                         realvec<real_t, size> y)
+  {
+    return x.remainder(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> round(realvec<real_t, size> x)
+  {
+    return x.round();
   }
   
   template<typename real_t, int size>

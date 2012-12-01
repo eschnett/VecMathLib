@@ -247,22 +247,27 @@ namespace vecmathlib {
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
-    realvec copysign(realvec x) const { return MF::vml_copysign(v, x.v); }
+    realvec ceil() const { return MF::vml_ceil(*this); }
+    realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
     realvec exp() const { return MF::vml_exp(*this); }
     realvec exp10() const { return MF::vml_exp10(*this); }
     realvec exp2() const { return MF::vml_exp2(*this); }
     realvec expm1() const { return MF::vml_expm1(*this); }
-    realvec fabs() const { return MF::vml_fabs(v); }
-    realvec floor() const { return std::floor(v); }
-    intvec_t ilogb() const { return MF::vml_ilogb(v); }
+    realvec fabs() const { return MF::vml_fabs(*this); }
+    realvec floor() const { return MF::vml_floor(*this); }
+    realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
+    intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
     realvec log2() const { return MF::vml_log2(*this); }
+    realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return MF::vml_rcp(*this); }
+    realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
+    realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
-    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(v, n.v); }
-    boolvec_t signbit() const { return MF::vml_signbit(v); }
+    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
+    boolvec_t signbit() const { return MF::vml_signbit(*this); }
     realvec sqrt() const { return MF::vml_sqrt(*this); }
   };
   

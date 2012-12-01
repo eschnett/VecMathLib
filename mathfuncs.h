@@ -11,6 +11,7 @@
 #include "mathfuncs_exp.h"
 #include "mathfuncs_fabs.h"
 #include "mathfuncs_log.h"
+#include "mathfuncs_pow.h"
 #include "mathfuncs_rcp.h"
 #include "mathfuncs_sqrt.h"
 

@@ -458,6 +458,7 @@ namespace vecmathlib {
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
+    realvec ceil() const { return _mm256_ceil_pd(v); }
     realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
     realvec exp() const { return MF::vml_exp(*this); }
     realvec exp10() const { return MF::vml_exp10(*this); }
@@ -465,13 +466,17 @@ namespace vecmathlib {
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return MF::vml_fabs(*this); }
     realvec floor() const { return _mm256_floor_pd(v); }
+    realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
     realvec log2() const { return MF::vml_log2(*this); }
+    realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return _mm256_div_pd(_mm256_set1_pd(1.0), v); }
     // realvec rcp() const { return MF::vml_rcp(*this); }
+    realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
+    realvec round() const { return _mm256_round_pd(v, _MM_FROUND_NINT); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     boolvec_t signbit() const { return v; }
     realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }

@@ -43,8 +43,11 @@ namespace vecmathlib {
     static realvec_t vml_atanh(realvec_t x);
     
     // convert
+    static realvec_t vml_ceil(realvec_t x);
     static realvec_t vml_convert_float(intvec_t x);
     static intvec_t vml_convert_int(realvec_t x);
+    static realvec_t vml_floor(realvec_t x);
+    static realvec_t vml_round(realvec_t x);
     
     // fabs
     static realvec_t vml_copysign(realvec_t x, realvec_t y);
@@ -65,8 +68,13 @@ namespace vecmathlib {
     static realvec_t vml_log1p(realvec_t x);
     static realvec_t vml_log2(realvec_t x);
     
+    // pow
+    static realvec_t vml_pow(realvec_t x, realvec_t y);
+    
     // rcp
+    static realvec_t vml_fmod(realvec_t x, realvec_t y);
     static realvec_t vml_rcp(realvec_t x);
+    static realvec_t vml_remainder(realvec_t x, realvec_t y);
     
     // sqrt
     static realvec_t vml_rsqrt(realvec_t x);
