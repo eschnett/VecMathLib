@@ -40,7 +40,7 @@ struct vecmathlib_test {
   
   
   // Test each function with this many random values
-  static int const imax = 100000;
+  static int const imax = 10000;
   // Require that 3/4 of the digits are correct
   static real_t constexpr accuracy = pow(realvec_t::epsilon(), R(0.75));
   
@@ -380,7 +380,11 @@ int main(int argc, char** argv)
   cout << "Testing math functions:\n";
   
   vecmathlib_test<realvec<float,1>>::test();
+  vecmathlib_test<realvec<float,4>>::test();
+  vecmathlib_test<realvec<float,8>>::test();
+  
   vecmathlib_test<realvec<double,1>>::test();
+  vecmathlib_test<realvec<double,2>>::test();
   vecmathlib_test<realvec<double,4>>::test();
   
   cout << "\n";

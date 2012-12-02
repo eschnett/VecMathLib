@@ -57,6 +57,14 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_rsqrt(realvec_t x)
   {
+#if 0
+    double const x_2 = 0.5 * x;   // x/2
+    // Newton method:
+    // Solve   f(r) = 0   for   f(r) = x - 1/r^2
+    //    r <- r - f(r) / f'(r)
+    //    r <- (3 r - r^3 x) / 2
+    return r * (1.5 - r*r * x_2);
+#endif
     return rcp(sqrt(x));
   }
   
