@@ -63,6 +63,12 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_log1p(realvec_t x)
   {
     return log(RV(1.0) + x);
+#if 0
+    // Goldberg, theorem 4
+    realvec_t x1 = RV(1.0) + x;
+    x1.barrier();
+    return ifthen(x1 == x, x, x * log(x1) / (x1 - RV(1.0)));
+#endif
   }
   
 }; // namespace vecmathlib

@@ -17,25 +17,24 @@ namespace vecmathlib {
   {
     // Rescale
     realvec_t x0 = x;
-    realvec_t floor_x = floor(x);
-    x -= floor_x;
-    intvec_t ifloor_x = convert_int(floor_x);
+    realvec_t round_x = round(x);
+    x -= round_x;
+    intvec_t iround_x = convert_int(round_x);
     
     // Approximate
-    assert(all(x >= RV(0.0) && x < RV(1.0)));
+    assert(all(x >= RV(-0.5) && x <= RV(0.5)));
     // exp(x) = Sum[n=0,nmax] x^n / n!
     int const nmax = 15;
-    x -= RV(0.5);               // shift range to increase accuracy
     x *= RV(M_LN2);
-    realvec_t y = RV(M_SQRT2); // x^n / n!, compensated for range shift
-    realvec_t r = y;
-    for (int n=1; n<nmax; ++n) {
+    realvec_t y = x;            // x^n / n!
+    realvec_t r = RV(1.0) + y;
+    for (int n=2; n<nmax; ++n) {
       y *= x * RV(R(1.0) / R(n));
       r += y;
     }
     
     // Undo rescaling
-    r = ifthen(x0 < RV(R(FP::min_exponent)), RV(0.0), scalbn(r, ifloor_x));
+    r = ifthen(x0 < RV(R(FP::min_exponent)), RV(0.0), scalbn(r, iround_x));
     
     return r;
   }
@@ -61,6 +60,10 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_expm1(realvec_t x)
   {
     return exp(x) - RV(1.0);
+#if 0
+    r = exp(x) - RV(1.0);
+    return ifthen(r == RV(0.0), x, r);
+#endif
   }
   
 }; // namespace vecmathlib

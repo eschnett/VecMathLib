@@ -58,6 +58,10 @@ namespace vecmathlib {
   {
     // Handle zero
     boolvec_t is_zero = x == RV(0.0);
+    // Handle overflow
+    int_t min_int = FP::sign_mask;
+    int_t max_int = ~FP::sign_mask;
+    boolvec_t is_overflow = x < RV(R(min_int)) || x > RV(R(max_int));
     // Handle negative numbers
     boolvec_t is_negative = signbit(x);
     x = fabs(x);
@@ -82,6 +86,8 @@ namespace vecmathlib {
     
     // Handle negative numbers
     ix = ifthen(is_negative, -ix, ix);
+    // Handle overflow
+    ix = ifthen(is_overflow, IV(min_int), ix);
     // Handle zero
     ix = ifthen(is_zero, IV(I(0)), ix);
     
@@ -93,26 +99,28 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_round(realvec_t x)
   {
-    realvec_t r = fabs(x);
+    realvec_t r = x;
     // Round by adding a large number, destroying all excess precision
-    real_t offset = RV(std::scalbn(R(1.0), FP::mantissa_bits));
+    realvec_t offset = copysign(RV(std::scalbn(R(1.0), FP::mantissa_bits)), x);
     r += offset;
     // Ensure the rounding is not optimised away
     r.barrier();
     r -= offset;
-    return copysign(r, x);
+    return r;
   }
   
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ceil(realvec_t x)
   {
-    return round(x + RV(0.5));
+    real_t offset = R(0.5) - std::scalbn(fabs(x), -FP::mantissa_bits);
+    return round(x + RV(offset));
   }
   
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_floor(realvec_t x)
   {
-    return round(x - RV(0.5));
+    real_t offset = R(0.5) - std::scalbn(fabs(x), -FP::mantissa_bits);
+    return round(x - RV(offset));
   }
   
 }; // namespace vecmathlib

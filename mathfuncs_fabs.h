@@ -37,7 +37,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_scalbn(realvec_t x, intvec_t n)
   {
-    return as_float(as_int(x) + (n << FP::mantissa_bits));
+    return as_float(as_int(x) + (n << IV(FP::mantissa_bits)));
     // return x * as_float((n + exponent_offset) << mantissa_bits);
   }
   

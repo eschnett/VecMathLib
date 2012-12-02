@@ -15,10 +15,20 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_pow(realvec_t x, realvec_t y)
   {
+    // Handle zero
+    boolvec_t is_zero = x == RV(0.0);
+    x = ifthen(is_zero, RV(1.0), x);
+    
     realvec_t r = exp(log(fabs(x)) * y);
+    
     // The result is negative if x<0 and if y is integer and odd
-    realvec_t sign = fmod(x, RV(2.0)) + RV(1.0);
-    return ifthen(x == RV(0.0), RV(0.0), copysign(r, sign));
+    realvec_t sign = fmod(copysign(y, x), RV(2.0)) + RV(0.5);
+    r = copysign(r, sign);
+    
+    // Handle zero
+    r = ifthen(is_zero, RV(0.0), r);
+    
+    return r;
   }
   
 }; // namespace vecmathlib
