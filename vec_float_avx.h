@@ -95,11 +95,15 @@ namespace vecmathlib {
     
     bool all() const
     {
-      return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
+      return
+        (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3] &&
+        (*this)[4] && (*this)[5] && (*this)[6] && (*this)[7];
     }
     bool any() const
     {
-      return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
+      return
+        (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3] ||
+        (*this)[4] || (*this)[5] || (*this)[6] || (*this)[7];
     }
     
     
@@ -350,7 +354,31 @@ namespace vecmathlib {
                                                as[3], as[2], as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
+    real_t operator[](int n) const
+    {
+      // return ((real_t const*)&v)[n];
+      __m128 vlo = _mm256_extractf128_ps(v, 0);
+      __m128 vhi = _mm256_extractf128_ps(v, 1);
+      switch (n){
+      case 0:
+        return _mm_cvtss_f32(vlo);
+      case 1:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vlo, vlo, _MM_SHUFFLE(2,3,0,1)));
+      case 2:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vlo, vlo, _MM_SHUFFLE(1,0,3,2)));
+      case 3:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vlo, vlo, _MM_SHUFFLE(0,1,2,3)));
+      case 4:
+        return _mm_cvtss_f32(vhi);
+      case 5:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vhi, vhi, _MM_SHUFFLE(2,3,0,1)));
+      case 6:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vhi, vhi, _MM_SHUFFLE(1,0,3,2)));
+      case 7:
+        return _mm_cvtss_f32(_mm_shuffle_ps(vhi, vhi, _MM_SHUFFLE(0,1,2,3)));
+      }
+      assert(0);
+    }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
     
@@ -375,11 +403,24 @@ namespace vecmathlib {
     
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      return
+        (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3] *
+        (*this)[4] * (*this)[5] * (*this)[6] * (*this)[7];
     }
     real_t sum() const
     {
-      return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      // return
+      //   (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3] +
+      //   (*this)[4] + (*this)[5] + (*this)[6] + (*this)[7];
+      // _m256 x = vhaddps(v, v);
+      // x = vhaddps(x, x);
+      // __m128 xlo = _mm256_extractf128_ps(x, 0);
+      // __m128 xhi = _mm256_extractf128_ps(x, 1);
+      // return _mm_cvtsd_f64(xlo) + _mm_cvtsd_f64(xhi);
+      realvec x = *this;
+      x = _mm256_hadd_ps(x.v, x.v);
+      x = _mm256_hadd_ps(x.v, x.v);
+      return x[0] + x[4];
     }
     
     

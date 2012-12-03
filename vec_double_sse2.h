@@ -288,7 +288,15 @@ namespace vecmathlib {
     realvec(real_t const* as): v(_mm_set_pd(as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
+    real_t operator[](int n) const
+    {
+      // return ((real_t const*)&v)[n];
+      switch (n){
+      case 0: return _mm_cvtsd_f64(v);
+      case 1: return _mm_cvtsd_f64(_mm_shuffle_pd(v, v, _MM_SHUFFLE2(0,1)));
+      }
+      assert(0);
+    }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
     
@@ -317,7 +325,8 @@ namespace vecmathlib {
     }
     real_t sum() const
     {
-      return (*this)[0] + (*this)[1];
+      // return (*this)[0] + (*this)[1];
+      return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
     }
     
     

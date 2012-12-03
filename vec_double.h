@@ -39,12 +39,6 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
-    // static real_t R(double a) { return real_t(a); }
-    // static int_t I(int a) { return int_t(a); }
-    // static uint_t U(int a) { return uint_t(a); }
-    // static realvec_t RV(real_t a) { return realvec_t(a); }
-    // static intvec_t IV(int_t a) { return intvec_t(a); }
-    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     
@@ -110,12 +104,6 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
-    // static real_t R(double a) { return real_t(a); }
-    // static int_t I(int a) { return int_t(a); }
-    // static uint_t U(int a) { return uint_t(a); }
-    // static realvec_t RV(real_t a) { return realvec_t(a); }
-    // static intvec_t IV(int_t a) { return intvec_t(a); }
-    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     
@@ -204,12 +192,6 @@ namespace vecmathlib {
     typedef boolvec_t BV;
     typedef floatprops<real_t> FP;
     typedef mathfuncs<realvec_t> MF;
-    // static real_t R(double a) { return real_t(a); }
-    // static int_t I(int a) { return int_t(a); }
-    // static uint_t U(int a) { return uint_t(a); }
-    // static realvec_t RV(real_t a) { return realvec_t(a); }
-    // static intvec_t IV(int_t a) { return intvec_t(a); }
-    // static boolvec_t BV(bool a) { return boolvec_t(a); }
     
     
     

@@ -372,7 +372,19 @@ namespace vecmathlib {
     realvec(real_t const* as): v(_mm256_set_pd(as[3], as[2], as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
+    real_t operator[](int n) const
+    {
+      // return ((real_t const*)&v)[n];
+      __m128d vlo = _mm256_extractf128_pd(v, 0);
+      __m128d vhi = _mm256_extractf128_pd(v, 1);
+      switch (n){
+      case 0: return _mm_cvtsd_f64(vlo);
+      case 1: return _mm_cvtsd_f64(_mm_shuffle_pd(vlo, vlo, _MM_SHUFFLE2(0,1)));
+      case 2: return _mm_cvtsd_f64(vhi);
+      case 3: return _mm_cvtsd_f64(_mm_shuffle_pd(vhi, vhi, _MM_SHUFFLE2(0,1)));
+      }
+      assert(0);
+    }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
     
@@ -401,7 +413,13 @@ namespace vecmathlib {
     }
     real_t sum() const
     {
-      return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      // return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      // __m256d x = _mm256_hadd_pd(v, v);
+      // __m128d xlo = _mm256_extractf128_pd(x, 0);
+      // __m128d xhi = _mm256_extractf128_pd(x, 1);
+      realvec x = *this;
+      x = _mm256_hadd_pd(x.v, x.v);
+      return x[0] + x[2];
     }
     
     
