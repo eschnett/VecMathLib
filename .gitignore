@@ -7,3 +7,7 @@ test
 .ninja_log
 OUT
 test.out
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile
