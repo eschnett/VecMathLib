@@ -90,7 +90,8 @@ struct vecmathlib_test {
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
-           << "   fvml(x)=" << rvml << "\n";
+           << "   fvml(x)=" << rvml << "\n"
+           << flush;
     }
   }
   
@@ -114,7 +115,8 @@ struct vecmathlib_test {
       cout << setprecision(realvec_t::digits10+1)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
-           << "   fvml(x,y)=" << rvml << "\n";
+           << "   fvml(x,y)=" << rvml << "\n"
+           << flush;
     }
   }
   
@@ -133,7 +135,8 @@ struct vecmathlib_test {
       cout << setprecision(realvec_t::digits10+1)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
-           << "   fvml(x)=" << rvml << "\n";
+           << "   fvml(x)=" << rvml << "\n"
+           << flush;
     }
   }
   
@@ -154,7 +157,8 @@ struct vecmathlib_test {
       cout << setprecision(realvec_t::digits10+1)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
-           << "   fvml(x,y)=" << rvml << "\n";
+           << "   fvml(x,y)=" << rvml << "\n"
+           << flush;
     }
   }
   
@@ -173,7 +177,8 @@ struct vecmathlib_test {
       cout << setprecision(realvec_t::digits10+1)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
-           << "   fvml(x)=" << rvml << "\n";
+           << "   fvml(x)=" << rvml << "\n"
+           << flush;
     }
   }
   
@@ -183,7 +188,7 @@ struct vecmathlib_test {
   static real_t scalbn(real_t x, int_t n) { return std::scalbn(x, n); }
   static void test_fabs()
   {
-    cout << "   testing copysign fabs ilogb scalbn signbit...\n";
+    cout << "   testing copysign fabs ilogb scalbn signbit...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-10.0), R(+10.0));
       realvec_t const y = random(R(-10.0), R(+10.0));
@@ -198,7 +203,8 @@ struct vecmathlib_test {
   
   static void test_convert()
   {
-    cout << "   testing ceil convert_float convert_int floor round...\n";
+    cout << "   testing ceil convert_float convert_int floor round...\n"
+         << flush;
     
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-1.0e+10), R(+1.0e+10));
@@ -220,7 +226,7 @@ struct vecmathlib_test {
   
   static void test_asin()
   {
-    cout << "   testing asin acos atan...\n";
+    cout << "   testing asin acos atan...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-1.0), R(+1.0));
       check("asin", asin, vecmathlib::asin, x, accuracy);
@@ -234,7 +240,7 @@ struct vecmathlib_test {
   
   static void test_asinh()
   {
-    cout << "   testing asinh acosh atanh...\n";
+    cout << "   testing asinh acosh atanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-1000.0), R(+1000.0));
       check("asinh", asinh, vecmathlib::asinh, x, accuracy);
@@ -252,7 +258,7 @@ struct vecmathlib_test {
   static real_t exp10(real_t x) { return pow(R(10.0), x); }
   static void test_exp()
   {
-    cout << "   testing exp exp10 exp2 expm1...\n";
+    cout << "   testing exp exp10 exp2 expm1...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-100.0), R(+100.0));
       check("exp", exp, vecmathlib::exp, x, accuracy);
@@ -264,7 +270,7 @@ struct vecmathlib_test {
   
   static void test_log()
   {
-    cout << "   testing log log10 log1p log2...\n";
+    cout << "   testing log log10 log1p log2...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(1.0e-10), R(1.0e+10));
       check("log", log, vecmathlib::log, x, accuracy);
@@ -276,7 +282,7 @@ struct vecmathlib_test {
   
   static void test_pow()
   {
-    cout << "   testing pow...\n";
+    cout << "   testing pow...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(0.001), R(1000.0));
       realvec_t const y = random(R(-10.0), R(+10.0));
@@ -292,7 +298,7 @@ struct vecmathlib_test {
   static real_t rcp(real_t x) { return R(1.0)/x; }
   static void test_rcp()
   {
-    cout << "   testing fmod rcp remainder...\n";
+    cout << "   testing fmod rcp remainder...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-100.0), R(+100.0));
       realvec_t const y = random(R(-100.0), R(+100.0));
@@ -314,7 +320,7 @@ struct vecmathlib_test {
   
   static void test_sin()
   {
-    cout << "   testing cos sin tan...\n";
+    cout << "   testing cos sin tan...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-10.0), R(+10.0));
       check("sin", sin, vecmathlib::sin, x, accuracy);
@@ -326,7 +332,7 @@ struct vecmathlib_test {
   
   static void test_sinh()
   {
-    cout << "   testing cosh sinh tanh...\n";
+    cout << "   testing cosh sinh tanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-10.0), R(+10.0));
       check("sinh", sinh, vecmathlib::sinh, x, accuracy);
@@ -338,7 +344,7 @@ struct vecmathlib_test {
   static real_t rsqrt(real_t x) { return R(1.0)/sqrt(x); }
   static void test_sqrt()
   {
-    cout << "   testing rsqrt sqrt...\n";
+    cout << "   testing rsqrt sqrt...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(0.0), R(1.0e+3));
       check("rsqrt", rsqrt, vecmathlib::rsqrt, x, accuracy);
@@ -354,7 +360,7 @@ struct vecmathlib_test {
          << "Testing math functions for type "
       // << typeid(realvec_t).name()
          << realvec_t::name
-         << ":\n";
+         << ":\n" << flush;
     
     test_fabs();
     test_convert();
@@ -377,15 +383,27 @@ int main(int argc, char** argv)
 {
   using namespace vecmathlib;
 
-  cout << "Testing math functions:\n";
+  cout << "Testing math functions:\n" << flush;
   
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   vecmathlib_test<realvec<float,1>>::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
   vecmathlib_test<realvec<float,4>>::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
   vecmathlib_test<realvec<float,8>>::test();
+#endif
   
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   vecmathlib_test<realvec<double,1>>::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
   vecmathlib_test<realvec<double,2>>::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
   vecmathlib_test<realvec<double,4>>::test();
+#endif
   
   cout << "\n";
   if (num_errors == 0) {
@@ -393,6 +411,7 @@ int main(int argc, char** argv)
   } else {
     cout << "FAILURE";
   }
-  cout << ": " << num_errors << " errors found\n";
+  cout << ": " << num_errors << " errors found\n" << flush;
+  
   return num_errors == 0 ? 0 : 1;
 }
