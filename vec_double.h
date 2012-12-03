@@ -48,7 +48,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // boolvec(boolvec const& x): v(x.v) {}
-    boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
+    // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     //boolvec(vector_t x): v(x) {}
     boolvec(bool a): v(a) {}
     boolvec(bool const* as): v(as[0]) {}
@@ -115,7 +115,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // intvec(intvec const& x): v(x.v) {}
-    intvec& operator=(intvec const& x) { return v=x.v, *this; }
+    // intvec& operator=(intvec const& x) { return v=x.v, *this; }
     //intvec(vector_t x): v(x) {}
     intvec(int_t a): v(a) {}
     intvec(int_t const* as): v(as[0]) {}
@@ -205,7 +205,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // realvec(realvec const& x): v(x.v) {}
-    realvec& operator=(realvec const& x) { return v=x.v, *this; }
+    // realvec& operator=(realvec const& x) { return v=x.v, *this; }
     //realvec(vector_t x): v(x) {}
     realvec(real_t a): v(a) {}
     realvec(real_t const* as): v(as[0]) {}

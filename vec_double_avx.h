@@ -60,7 +60,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // boolvec(boolvec const& x): v(x.v) {}
-    boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
+    // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     boolvec(bvector_t x): v(x) {}
     boolvec(bool a):
     v(_mm256_castsi256_pd(_mm256_set1_epi64x(from_bool(a)))) {}
@@ -144,7 +144,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // intvec(intvec const& x): v(x.v) {}
-    intvec& operator=(intvec const& x) { return v=x.v, *this; }
+    // intvec& operator=(intvec const& x) { return v=x.v, *this; }
     intvec(ivector_t x): v(x) {}
     intvec(int_t a): v(_mm256_set1_epi64x(a)) {}
     intvec(int_t const* as): v(_mm256_set_epi64x(as[3], as[2], as[1], as[0])) {}
@@ -372,7 +372,7 @@ namespace vecmathlib {
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // realvec(realvec const& x): v(x.v) {}
-    realvec& operator=(realvec const& x) { return v=x.v, *this; }
+    // realvec& operator=(realvec const& x) { return v=x.v, *this; }
     realvec(vector_t x): v(x) {}
     realvec(real_t a): v(_mm256_set1_pd(a)) {}
     realvec(real_t const* as): v(_mm256_set_pd(as[3], as[2], as[1], as[0])) {}
