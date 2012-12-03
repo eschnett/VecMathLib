@@ -16,6 +16,7 @@
 
 namespace vecmathlib {
   
+#define VECMATHLIB_HAVE_VEC_DOUBLE_4
   template<> struct boolvec<double,4>;
   template<> struct intvec<double,4>;
   template<> struct realvec<double,4>;

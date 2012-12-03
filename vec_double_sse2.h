@@ -22,6 +22,7 @@
 
 namespace vecmathlib {
   
+#define VECMATHLIB_HAVE_VEC_DOUBLE_2
   template<> struct boolvec<double,2>;
   template<> struct intvec<double,2>;
   template<> struct realvec<double,2>;

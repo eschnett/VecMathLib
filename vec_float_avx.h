@@ -16,6 +16,7 @@
 
 namespace vecmathlib {
   
+#define VECMATHLIB_HAVE_VEC_FLOAT_8
   template<> struct boolvec<float,8>;
   template<> struct intvec<float,8>;
   template<> struct realvec<float,8>;
