@@ -45,7 +45,9 @@ namespace vecmathlib {
     bvector_t v;
     
     boolvec() {}
-    boolvec(boolvec const& x): v(x.v) {}
+    // Can't have a non-trivial copy constructor; if so, objects won't
+    // be passed in registers
+    // boolvec(boolvec const& x): v(x.v) {}
     boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     //boolvec(vector_t x): v(x) {}
     boolvec(bool a): v(a) {}
@@ -110,7 +112,9 @@ namespace vecmathlib {
     ivector_t v;
     
     intvec() {}
-    intvec(intvec const& x): v(x.v) {}
+    // Can't have a non-trivial copy constructor; if so, objects won't
+    // be passed in registers
+    // intvec(intvec const& x): v(x.v) {}
     intvec& operator=(intvec const& x) { return v=x.v, *this; }
     //intvec(vector_t x): v(x) {}
     intvec(int_t a): v(a) {}
@@ -198,7 +202,9 @@ namespace vecmathlib {
     vector_t v;
     
     realvec() {}
-    realvec(realvec const& x): v(x.v) {}
+    // Can't have a non-trivial copy constructor; if so, objects won't
+    // be passed in registers
+    // realvec(realvec const& x): v(x.v) {}
     realvec& operator=(realvec const& x) { return v=x.v, *this; }
     //realvec(vector_t x): v(x) {}
     realvec(real_t a): v(a) {}
