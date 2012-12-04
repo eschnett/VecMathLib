@@ -21,6 +21,13 @@ double sum_d1(vecmathlib::realvec<double,1> x) { return sum(x); }
 double sum_d2(vecmathlib::realvec<double,2> x) { return sum(x); }
 double sum_d4(vecmathlib::realvec<double,4> x) { return sum(x); }
 
+bool all_f1(vecmathlib::boolvec<float,1> x) { return all(x); }
+bool all_f4(vecmathlib::boolvec<float,4> x) { return all(x); }
+bool all_f8(vecmathlib::boolvec<float,8> x) { return all(x); }
+bool all_d1(vecmathlib::boolvec<double,1> x) { return all(x); }
+bool all_d2(vecmathlib::boolvec<double,2> x) { return all(x); }
+bool all_d4(vecmathlib::boolvec<double,4> x) { return all(x); }
+
 float elt0_f1(vecmathlib::realvec<float,1> x) { return x[0]; }
 float elt0_f4(vecmathlib::realvec<float,4> x) { return x[0]; }
 float elt1_f4(vecmathlib::realvec<float,4> x) { return x[1]; }

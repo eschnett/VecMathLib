@@ -60,8 +60,8 @@ namespace vecmathlib {
     
     
     
-    auto as_int() const -> intvec_t;      // defined after intvec
-    auto convert_int() const -> intvec_t; // defined after intvec
+    intvec_t as_int() const;      // defined after intvec
+    intvec_t convert_int() const; // defined after intvec
     
     
     
@@ -78,11 +78,8 @@ namespace vecmathlib {
     
     
     // ifthen(condition, then-value, else-value)
-    auto ifthen(intvec_t x,
-                intvec_t y) const -> intvec_t; // defined after intvec
-    auto ifthen(realvec_t x,
-                realvec_t y) const -> realvec_t; // defined after realvec
-    
+    intvec_t ifthen(intvec_t x, intvec_t y) const; // defined after intvec
+    realvec_t ifthen(realvec_t x, realvec_t y) const; // defined after realvec
   };
   
   
@@ -127,10 +124,10 @@ namespace vecmathlib {
     
     
     
-    auto as_bool() const -> boolvec_t { return v; }
-    auto convert_bool() const -> boolvec_t { return v; }
-    auto as_float() const -> realvec_t; // defined after realvec
-    auto convert_float() const -> realvec_t; // defined after realvec
+    boolvec_t as_bool() const { return v; }
+    boolvec_t convert_bool() const { return v; }
+    realvec_t as_float() const;      // defined after realvec
+    realvec_t convert_float() const; // defined after realvec
     
     
     

@@ -75,7 +75,18 @@ namespace vecmathlib {
     v(_mm_castsi128_pd(_mm_set_epi64x(from_bool(as[1]), from_bool(as[0])))) {}
     
     operator bvector_t() const { return v; }
-    bool operator[](int n) const { return to_bool(((uint_t const*)&v)[n]); }
+    bool operator[](int n) const
+    {
+      // return to_bool(((uint_t const*)&v)[n]);
+      boolvec x = *this;
+      switch (n){
+      case 0: /* do nothing */ break;
+      case 1: x = _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1)); break;
+      default: assert(0);
+      }
+      // return to_bool(FP::as_int(_mm_cvtsd_f64(x.v)));
+      return to_bool(_mm_cvtsi128_si64(_mm_castpd_si128(x.v)));
+    }
     boolvec& set_elt(int n, bool a)
     {
       return ((int_t*)&v)[n] = from_bool(a), *this;
@@ -83,8 +94,8 @@ namespace vecmathlib {
     
     
     
-    auto as_int() const -> intvec_t;      // defined after intvec
-    auto convert_int() const -> intvec_t; // defined after intvec
+    intvec_t as_int() const;      // defined after intvec
+    intvec_t convert_int() const; // defined after intvec
     
     
     
@@ -95,23 +106,14 @@ namespace vecmathlib {
     boolvec operator==(boolvec x) const { return !(*this==x); }
     boolvec operator!=(boolvec x) const { return _mm_xor_pd(v, x.v); }
     
-    bool all() const
-    {
-      return (*this)[0] && (*this)[1];
-    }
-    bool any() const
-    {
-      return (*this)[0] || (*this)[1];
-    }
+    bool all() const;
+    bool any() const;
     
     
     
     // ifthen(condition, then-value, else-value)
-    auto ifthen(intvec_t x,
-                intvec_t y) const -> intvec_t; // defined after intvec
-    auto ifthen(realvec_t x,
-                realvec_t y) const -> realvec_t; // defined after realvec
-    
+    intvec_t ifthen(intvec_t x, intvec_t y) const; // defined after intvec
+    realvec_t ifthen(realvec_t x, realvec_t y) const; // defined after realvec
   };
   
   
@@ -159,8 +161,8 @@ namespace vecmathlib {
     
     
     
-    auto as_bool() const -> boolvec_t { return _mm_castsi128_pd(v); }
-    auto convert_bool() const -> boolvec_t
+    boolvec_t as_bool() const { return _mm_castsi128_pd(v); }
+    boolvec_t convert_bool() const
     {
       // Result: convert_bool(0)=false, convert_bool(else)=true
       // There is no intrinsic to compare with zero. Instead, we check
@@ -171,8 +173,8 @@ namespace vecmathlib {
       // return (~xm1 | x).as_bool();
       return x.as_bool() || !xm1.as_bool();
     }
-    auto as_float() const -> realvec_t; // defined after realvec
-    auto convert_float() const -> realvec_t; // defined after realvec
+    realvec_t as_float() const;      // defined after realvec
+    realvec_t convert_float() const; // defined after realvec
     
     
     
@@ -419,6 +421,24 @@ namespace vecmathlib {
   }
   
   inline
+  bool boolvec<double,2>::all() const
+  {
+    // return (*this)[0] && (*this)[1];
+    boolvec x = *this;
+    x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+    return x[0];
+  }
+  
+  inline
+  bool boolvec<double,2>::any() const
+  {
+    // return (*this)[0] || (*this)[1];
+    boolvec x = *this;
+    x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+    return x[0];
+  }
+  
+  inline
   auto boolvec<double,2>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
   {
     return ifthen(x.as_float(), y.as_float()).as_int();
@@ -429,7 +449,7 @@ namespace vecmathlib {
   {
     return _mm_blendv_pd(y.v, x.v, v);
   }
-
+  
   
   
   // intvec definitions
