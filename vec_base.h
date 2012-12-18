@@ -231,6 +231,35 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> fdim(realvec<real_t, size> x,
+                                    realvec<real_t, size> y)
+  {
+    return x.fdim(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> fma(realvec<real_t, size> x,
+                                   realvec<real_t, size> y,
+                                   realvec<real_t, size> z)
+  {
+    return x.fma(y, z);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> fmax(realvec<real_t, size> x,
+                                    realvec<real_t, size> y)
+  {
+    return x.fmax(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> fmin(realvec<real_t, size> x,
+                                    realvec<real_t, size> y)
+  {
+    return x.fmin(y);
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> fmod(realvec<real_t, size> x,
                                     realvec<real_t, size> y)
   {
@@ -241,6 +270,30 @@ namespace vecmathlib {
   inline intvec<real_t, size> ilogb(realvec<real_t, size> x)
   {
     return x.ilogb();
+  }
+  
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> isfinite(realvec<real_t, size> x)
+  {
+    return x.isfinite();
+  }
+  
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> isinf(realvec<real_t, size> x)
+  {
+    return x.isinf();
+  }
+  
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> isnan(realvec<real_t, size> x)
+  {
+    return x.isnan();
+  }
+  
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> isnormal(realvec<real_t, size> x)
+  {
+    return x.isnormal();
   }
   
   template<typename real_t, int size>

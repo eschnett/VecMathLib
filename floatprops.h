@@ -46,18 +46,18 @@ namespace vecmathlib {
     // Number of bits in internal representation
     static int const bits = 8 * sizeof(real_t);
     static int const mantissa_bits = digits - 1;
-    static int const sign_bits = 1;
-    static int const exponent_bits = bits - mantissa_bits - sign_bits;
+    static int const signbit_bits = 1;
+    static int const exponent_bits = bits - mantissa_bits - signbit_bits;
     static int const exponent_offset = 2 - min_exponent;
-    static_assert(mantissa_bits + exponent_bits + sign_bits == bits,
+    static_assert(mantissa_bits + exponent_bits + signbit_bits == bits,
                   "error in bit counts");
     static uint_t const mantissa_mask = (uint_t(1) << mantissa_bits) - 1;
     static uint_t const exponent_mask =
       ((uint_t(1) << exponent_bits) - 1) << mantissa_bits;
-    static uint_t const sign_mask = uint_t(1) << (bits-1);
-    static_assert((mantissa_mask & exponent_mask & sign_mask) == uint_t(0),
+    static uint_t const signbit_mask = uint_t(1) << (bits-1);
+    static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
                   "error in masks");
-    static_assert((mantissa_mask | exponent_mask | sign_mask) == ~uint_t(0),
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) == ~uint_t(0),
                   "error in masks");
     
     // Re-interpret bit patterns
@@ -109,18 +109,18 @@ namespace vecmathlib {
     // Number of bits in internal representation
     static int const bits = 8 * sizeof(real_t);
     static int const mantissa_bits = digits - 1;
-    static int const sign_bits = 1;
-    static int const exponent_bits = bits - mantissa_bits - sign_bits;
+    static int const signbit_bits = 1;
+    static int const exponent_bits = bits - mantissa_bits - signbit_bits;
     static int const exponent_offset = 2 - min_exponent;
-    static_assert(mantissa_bits + exponent_bits + sign_bits == bits,
+    static_assert(mantissa_bits + exponent_bits + signbit_bits == bits,
                   "error in bit counts");
     static uint_t const mantissa_mask = (uint_t(1) << mantissa_bits) - 1;
     static uint_t const exponent_mask =
       ((uint_t(1) << exponent_bits) - 1) << mantissa_bits;
-    static uint_t const sign_mask = uint_t(1) << (bits-1);
-    static_assert((mantissa_mask & exponent_mask & sign_mask) == uint_t(0),
+    static uint_t const signbit_mask = uint_t(1) << (bits-1);
+    static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
                   "error in masks");
-    static_assert((mantissa_mask | exponent_mask | sign_mask) == ~uint_t(0),
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) == ~uint_t(0),
                   "error in masks");
     
     // Re-interpret bit patterns

@@ -120,6 +120,32 @@ struct vecmathlib_test {
     }
   }
   
+  template<typename A, typename B, typename C>
+  static void check(char const* const func,
+                    real_t fstd(typename A::scalar_t, typename B::scalar_t,
+                                typename C::scalar_t),
+                    realvec_t fvml(A, B, C),
+                    A const x, B const y, C const z,
+                    real_t const accuracy)
+  {
+    realvec_t rstd;
+    for (int i=0; i<realvec_t::size; ++i) {
+      rstd.set_elt(i, fstd(x[i], y[i], z[i]));
+    }
+    realvec_t const rvml = fvml(x, y, z);
+    realvec_t const dr = rstd - rvml;
+    if (any(fabs(dr) >
+            realvec_t(accuracy) * (fabs(rstd) + fabs(rvml) + realvec_t(1.0))))
+    {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+1)
+           << "Error in " << func << "(" << x << "," << y<< "," << z << "):\n"
+           << "   fstd(x,y,z)=" << rstd << "\n"
+           << "   fvml(x,y,z)=" << rvml << "\n"
+           << flush;
+    }
+  }
+  
   template<typename A>
   static void check(char const* const func,
                     int_t fstd(typename A::scalar_t), intvec_t fvml(A),
@@ -188,14 +214,23 @@ struct vecmathlib_test {
   static real_t scalbn(real_t x, int_t n) { return std::scalbn(x, n); }
   static void test_fabs()
   {
-    cout << "   testing copysign fabs ilogb scalbn signbit...\n" << flush;
+    cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal scalbn signbit...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-10.0), R(+10.0));
       realvec_t const y = random(R(-10.0), R(+10.0));
+      realvec_t const z = random(R(-10.0), R(+10.0));
       intvec_t const n = random(int_t(-10), int_t(+10));
       check("copysign", copysign, vecmathlib::copysign, x, y, 0.0);
       check("fabs", fabs, vecmathlib::fabs, x, 0.0);
+      check("fdim", fdim, vecmathlib::fdim, x, y, accuracy);
+      check("fma", fma, vecmathlib::fma, x, y, z, accuracy);
+      check("fmax", fmax, vecmathlib::fmax, x, y, 0.0);
+      check("fmin", fmin, vecmathlib::fmin, x, y, 0.0);
       check("ilogb", ilogb, vecmathlib::ilogb, x);
+      check("isfinite", isfinite, vecmathlib::isfinite, x);
+      check("isinf", isinf, vecmathlib::isinf, x);
+      check("isnan", isnan, vecmathlib::isnan, x);
+      check("isnormal", isnormal, vecmathlib::isnormal, x);
       check("scalbn", scalbn, vecmathlib::scalbn, x, n, 0.0);
       check("signbit", signbit, vecmathlib::signbit, x);
     }

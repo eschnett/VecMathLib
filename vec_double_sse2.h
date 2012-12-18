@@ -252,6 +252,17 @@ namespace vecmathlib {
     intvec operator<<(intvec n) const { return _mm_sll_epi64(v, n.v); }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
+    
+    
+    
+    boolvec_t operator==(intvec const& x) const
+    {
+      return ! (*this != x);
+    }
+    boolvec_t operator!=(intvec const& x) const
+    {
+      return (*this ^ x).convert_bool();
+    }
   };
   
   
@@ -382,9 +393,17 @@ namespace vecmathlib {
     realvec exp2() const { return MF::vml_exp2(*this); }
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return MF::vml_fabs(*this); }
+    realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
     realvec floor() const { return _mm_floor_pd(v); }
+    realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
+    realvec fmax(realvec y) const { return _mm_max_pd(v, y.v); }
+    realvec fmin(realvec y) const { return _mm_min_pd(v, y.v); }
     realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
+    boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
+    boolvec_t isinf() const { return MF::vml_isinf(*this); }
+    boolvec_t isnan() const { return MF::vml_isnan(*this); }
+    boolvec_t isnormal() const { return MF::vml_isnormal(*this); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }

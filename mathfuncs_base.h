@@ -58,7 +58,15 @@ namespace vecmathlib {
     // fabs
     static realvec_t vml_copysign(realvec_t x, realvec_t y);
     static realvec_t vml_fabs(realvec_t x);
+    static realvec_t vml_fdim(realvec_t x, realvec_t y);
+    static realvec_t vml_fma(realvec_t x, realvec_t y, realvec_t z);
+    static realvec_t vml_fmax(realvec_t x, realvec_t y);
+    static realvec_t vml_fmin(realvec_t x, realvec_t y);
     static intvec_t vml_ilogb(realvec_t x);
+    static boolvec_t vml_isfinite(realvec_t x);
+    static boolvec_t vml_isinf(realvec_t x);
+    static boolvec_t vml_isnan(realvec_t x);
+    static boolvec_t vml_isnormal(realvec_t x);
     static realvec_t vml_scalbn(realvec_t x, intvec_t n);
     static boolvec_t vml_signbit(realvec_t x);
     

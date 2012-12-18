@@ -33,7 +33,7 @@ namespace vecmathlib {
     // make unsigned by subtracting largest negative number
     // (only do this for the high bits, since they have sufficient
     // precision to handle the overflow)
-    x ^= FP::sign_mask;
+    x ^= FP::signbit_mask;
     intvec_t xhi = lsr(x, lobits);
     // exponent for the equivalent floating point number
     int_t exponent_hi = (FP::exponent_offset + 2*lobits) << FP::mantissa_bits;
@@ -41,7 +41,7 @@ namespace vecmathlib {
     // subtract hidden mantissa bit
     realvec_t fhi = as_float(xhi) - RV(FP::as_float(exponent_hi));
     // add largest negative number again
-    fhi -= RV(R(FP::sign_mask));
+    fhi -= RV(R(FP::signbit_mask));
     // Ensure that the converted low and high bits are calculated
     // separately, since a real_t doesn't have enough precision to
     // hold all the bits of an int_t
@@ -59,8 +59,8 @@ namespace vecmathlib {
     // Handle zero
     boolvec_t is_zero = x == RV(0.0);
     // Handle overflow
-    int_t min_int = FP::sign_mask;
-    int_t max_int = ~FP::sign_mask;
+    int_t min_int = FP::signbit_mask;
+    int_t max_int = ~FP::signbit_mask;
     boolvec_t is_overflow = x < RV(R(min_int)) || x > RV(R(max_int));
     // Handle negative numbers
     boolvec_t is_negative = signbit(x);

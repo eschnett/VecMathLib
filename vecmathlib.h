@@ -3,6 +3,11 @@
 #ifndef VECMATHLIB_H
 #define VECMATHLIB_H
 
+// #define VML_HAVE_DENORMALS
+// #define VML_HAVE_INF
+// #define VML_HAVE_NAN
+// #define VML_HAVE_SIGNED_ZERO
+
 #include "vec_float.h"
 #if defined __SSE2__            // Intel SSE 2
 #  include "vec_float_sse2.h"
