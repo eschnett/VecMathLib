@@ -186,10 +186,10 @@ namespace vecmathlib {
       // There is no intrinsic to compare with zero. Instead, we check
       // whether x is positive and x-1 is negative.
       intvec x = *this;
-      intvec xm1 = x - 1;
       // We know that boolvec values depend only on the sign bit
-      // return (~xm1 | x).as_bool();
-      return x.as_bool() || !xm1.as_bool();
+      // return (~(x-1) | x).as_bool();
+      // return x.as_bool() || !(x-1).as_bool();
+      return x.as_bool() || (x + (FP::signbit_mask - 1)).as_bool();
     }
     realvec_t as_float() const;      // defined after realvec
     realvec_t convert_float() const; // defined after realvec
