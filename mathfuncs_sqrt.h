@@ -10,6 +10,9 @@
 
 
 
+// For cbrt: Use "Halley's method with cubic convergence":
+// <http://press.mcs.anl.gov/gswjanuary12/files/2012/01/Optimizing-Single-Node-Performance-on-BlueGene.pdf>
+
 namespace vecmathlib {
   
   template<typename realvec_t>
