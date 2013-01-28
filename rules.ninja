@@ -11,15 +11,6 @@
 # =============================================================================
 
 #############################################
-# Rule for running custom commands.
-
-rule CUSTOM_COMMAND
-  command = $COMMAND
-  description = $DESC
-  restat = 1
-
-
-#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER
@@ -32,18 +23,27 @@ rule CXX_COMPILER
 # Rule for linking CXX executable.
 
 rule CXX_EXECUTABLE_LINKER
-  command = $PRE_LINK && /opt/local/bin/c++   $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in  -o $out $LINK_LIBRARIES && $POST_BUILD
+  command = $PRE_LINK && /opt/local/bin/c++   $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in  -o $out $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $out
 
 
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER_RSPFILE
-  command = $PRE_LINK && /opt/local/bin/c++   $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS @$out.rsp  -o $out  && $POST_BUILD
+rule CXX_EXECUTABLE_LINKER_RSP_FILE
+  command = $PRE_LINK && /opt/local/bin/c++   $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS @$RSP_FILE  -o $out  && $POST_BUILD
   description = Linking CXX executable $out
-  rspfile = $out.rsp
-  rspfile_content = $in $LINK_LIBRARIES
+  rspfile = $RSP_FILE
+  rspfile_content = $in  $LINK_PATH $LINK_LIBRARIES
+
+
+#############################################
+# Rule for running custom commands.
+
+rule CUSTOM_COMMAND
+  command = $COMMAND
+  description = $DESC
+  restat = 1
 
 
 #############################################

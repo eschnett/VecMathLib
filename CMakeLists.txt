@@ -7,5 +7,7 @@ project (vecmathlib)
 
 add_executable (example example.cc)
 add_executable (test test.cc)
+add_executable (bench bench.cc)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -std=gnu++11 -march=native -Ofast")
+# use flag "-DNDEBUG" for benchmarks

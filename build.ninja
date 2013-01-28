@@ -23,6 +23,26 @@
 
 include rules.ninja
 
+# =============================================================================
+# Object build statements for EXECUTABLE target bench
+
+build CMakeFiles/bench.dir/bench.cc.o: CXX_COMPILER bench.cc
+  DEP_FILE = CMakeFiles/bench.dir/bench.cc.o.d
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+  OBJECT_DIR = CMakeFiles/bench.dir
+
+# =============================================================================
+# Link build statements for EXECUTABLE target bench
+
+
+#############################################
+# Link the executable bench
+
+build bench: CXX_EXECUTABLE_LINKER CMakeFiles/bench.dir/bench.cc.o
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_PDB = bench.dbg
 
 #############################################
 # Utility command for edit_cache
@@ -36,7 +56,8 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build CMakeFiles/example.dir/example.cc.o: CXX_COMPILER example.cc
   DEP_FILE = CMakeFiles/example.dir/example.cc.o.d
-  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+  OBJECT_DIR = CMakeFiles/example.dir
 
 # =============================================================================
 # Link build statements for EXECUTABLE target example
@@ -46,7 +67,7 @@ build CMakeFiles/example.dir/example.cc.o: CXX_COMPILER example.cc
 # Link the executable example
 
 build example: CXX_EXECUTABLE_LINKER CMakeFiles/example.dir/example.cc.o
-  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
   POST_BUILD = :
   PRE_LINK = :
   TARGET_PDB = example.dbg
@@ -63,7 +84,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 build CMakeFiles/test.dir/test.cc.o: CXX_COMPILER test.cc
   DEP_FILE = CMakeFiles/test.dir/test.cc.o.d
-  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+  OBJECT_DIR = CMakeFiles/test.dir
 
 # =============================================================================
 # Link build statements for EXECUTABLE target test
@@ -73,7 +95,7 @@ build CMakeFiles/test.dir/test.cc.o: CXX_COMPILER test.cc
 # Link the executable test
 
 build test: CXX_EXECUTABLE_LINKER CMakeFiles/test.dir/test.cc.o
-  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast
+  FLAGS = -Wall -g -std=gnu++11 -march=native -Ofast -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
   POST_BUILD = :
   PRE_LINK = :
   TARGET_PDB = test.dbg
@@ -87,7 +109,7 @@ build test: CXX_EXECUTABLE_LINKER CMakeFiles/test.dir/test.cc.o
 #############################################
 # The main all target.
 
-build all: phony example test
+build all: phony bench example test
 
 #############################################
 # Make the all target the default.
@@ -97,12 +119,12 @@ default all
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeCCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeCXXCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeSystem.cmake /Users/eschnett/src/cc/vecmathlib/CMakeLists.txt /opt/local/share/cmake-2.8/Modules/CMakeCCompiler.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeCCompilerABI.c /opt/local/share/cmake-2.8/Modules/CMakeCInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCXXCompiler.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeCXXCompilerABI.cpp /opt/local/share/cmake-2.8/Modules/CMakeCXXInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeClDeps.cmake /opt/local/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCXXCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCompilerABI.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCompilerId.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeFindBinUtils.cmake /opt/local/share/cmake-2.8/Modules/CMakeGenericSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeNinjaFindMake.cmake /opt/local/share/cmake-2.8/Modules/CMakeParseImplicitLinkInfo.cmake /opt/local/share/cmake-2.8/Modules/CMakeSystem.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCXXCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCompilerCommon.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin.cmake /opt/local/share/cmake-2.8/Modules/Platform/UnixPaths.cmake CMakeCache.txt
+build build.ninja: RERUN_CMAKE | /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeCCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeCXXCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeSystem.cmake /Users/eschnett/src/cc/vecmathlib/CMakeLists.txt /opt/local/share/cmake-2.8/Modules/CMakeCInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCXXInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake /opt/local/share/cmake-2.8/Modules/CMakeGenericSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin.cmake /opt/local/share/cmake-2.8/Modules/Platform/UnixPaths.cmake CMakeCache.txt
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeCCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeCXXCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/CMakeSystem.cmake /Users/eschnett/src/cc/vecmathlib/CMakeLists.txt /opt/local/share/cmake-2.8/Modules/CMakeCCompiler.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeCCompilerABI.c /opt/local/share/cmake-2.8/Modules/CMakeCInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCXXCompiler.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeCXXCompilerABI.cpp /opt/local/share/cmake-2.8/Modules/CMakeCXXInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeClDeps.cmake /opt/local/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCXXCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCompilerABI.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineCompilerId.cmake /opt/local/share/cmake-2.8/Modules/CMakeDetermineSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeFindBinUtils.cmake /opt/local/share/cmake-2.8/Modules/CMakeGenericSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeNinjaFindMake.cmake /opt/local/share/cmake-2.8/Modules/CMakeParseImplicitLinkInfo.cmake /opt/local/share/cmake-2.8/Modules/CMakeSystem.cmake.in /opt/local/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCXXCompiler.cmake /opt/local/share/cmake-2.8/Modules/CMakeTestCompilerCommon.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin.cmake /opt/local/share/cmake-2.8/Modules/Platform/UnixPaths.cmake CMakeCache.txt: phony
+build /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeCCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeCXXCompiler.cmake /Users/eschnett/src/cc/vecmathlib/CMakeFiles/2.8.10/CMakeSystem.cmake /Users/eschnett/src/cc/vecmathlib/CMakeLists.txt /opt/local/share/cmake-2.8/Modules/CMakeCInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCXXInformation.cmake /opt/local/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake /opt/local/share/cmake-2.8/Modules/CMakeGenericSystem.cmake /opt/local/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Compiler/GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-C.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU-CXX.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin-GNU.cmake /opt/local/share/cmake-2.8/Modules/Platform/Darwin.cmake /opt/local/share/cmake-2.8/Modules/Platform/UnixPaths.cmake CMakeCache.txt: phony
 
 #############################################
 # Clean all the built files.
