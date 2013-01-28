@@ -325,6 +325,9 @@ struct vecmathlib_test {
       realvec_t const fn = vecmathlib::convert_float(n);
       check("pow", pow, vecmathlib::pow, RV(0.0), y, accuracy);
       check("pow", pow, vecmathlib::pow, x, RV(0.0), accuracy);
+      // just to check
+      check("log", log, vecmathlib::log, x, accuracy);
+      check("pow", pow, vecmathlib::pow, x, y, accuracy);
       check("pow", pow, vecmathlib::pow, x, y, accuracy);
       check("pow", pow, vecmathlib::pow, -x, fn, accuracy);
     }
@@ -360,7 +363,13 @@ struct vecmathlib_test {
       realvec_t const x = random(R(-10.0), R(+10.0));
       check("sin", sin, vecmathlib::sin, x, accuracy);
       check("cos", cos, vecmathlib::cos, x, accuracy);
-      // tan loses accuracy (by definition, not by implementation?)
+    }
+    for (int i=0; i<imax; ++i) {
+      realvec_t const x0 = random(R(-1.55), R(+1.55));
+      intvec_t const n = random(I(-10), I(+10));
+      realvec_t const x = x0 + vecmathlib::convert_float(n) * RV(M_PI);
+      // tan loses accuracy near pi/2
+      // (by definition, not by implementation?)
       check("tan", tan, vecmathlib::tan, x, R(100.0)*accuracy);
     }
   }
