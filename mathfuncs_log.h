@@ -24,7 +24,7 @@ namespace vecmathlib {
     // Approximate
     assert(all(x >= RV(1.0) && x < RV(2.0)));
     // log(x) = Sum[n=1,nmax,n%2==1] 2/n ((x-1) / (x+1))^n
-    int const nmax = 30;
+    int const nmax = 38;
     x *= RV(M_SQRT1_2);         // shift range to increase accuracy
     realvec_t xm1_xp1 = (x - RV(1.0)) / (x + RV(1.0));
     realvec_t xm1_xp1_2 = xm1_xp1 * xm1_xp1;
