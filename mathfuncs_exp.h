@@ -22,9 +22,17 @@ namespace vecmathlib {
     intvec_t iround_x = convert_int(round_x);
     
     // Approximate
-    assert(all(x >= RV(-0.5) && x <= RV(0.5)));
     // exp(x) = Sum[n=0,nmax] x^n / n!
-    int const nmax = 15;
+    assert(all(x >= RV(-0.5) && x <= RV(0.5)));
+    
+    // nmax   max_error
+    //    5   4.2e-5
+    //    6   2.4e-6
+    //    7   1.2e-7
+    //   11   2.2e-13
+    //   12   6.3e-15
+    //   13   1.7e-16
+    int const nmax = sizeof(real_t)==4 ? 7 : 11;
     x *= RV(M_LN2);
     realvec_t y = x;            // x^n / n!
     realvec_t r = RV(1.0) + y;
