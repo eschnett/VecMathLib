@@ -401,10 +401,7 @@ struct vecmathlib_test {
   static void test()
   {
     cout << "\n"
-         << "Testing math functions for type "
-      // << typeid(realvec_t).name()
-         << realvec_t::name
-         << ":\n" << flush;
+         << "Testing math functions for type " << realvec_t::name() << ":\n";
     
     test_fabs();
     test_convert();

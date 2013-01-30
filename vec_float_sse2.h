@@ -257,7 +257,7 @@ namespace vecmathlib {
     typedef real_t scalar_t;
     typedef __m128 vector_t;
     
-    static constexpr char const* const name = "<SSE2:4*float>";
+    static char const* name() { return "<SSE2:4*float>"; }
     inline void barrier() { asm("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),

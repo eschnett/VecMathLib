@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <typeinfo>
 
 #include <sys/time.h>
 
@@ -106,37 +107,37 @@ double bench_func()
 template<typename realvec_t>
 void bench()
 {
-  cout << "identity(" << realvec_t::name << "):" << flush;
+  cout << "identity(" << realvec_t::name() << "):" << flush;
   double const cycles_identity =
     bench_func<realvec_t, functor_identity<realvec_t>>();
   cout << "   " << cycles_identity << " cycles\n";
   
-  cout << "sqrt(" << realvec_t::name << "):" << flush;
+  cout << "sqrt(" << realvec_t::name() << "):" << flush;
   double const cycles_sqrt =
     bench_func<realvec_t, functor_sqrt<realvec_t>>();
   cout << "   " << cycles_sqrt - cycles_identity << " cycles\n";
   
-  cout << "exp(" << realvec_t::name << "):" << flush;
+  cout << "exp(" << realvec_t::name() << "):" << flush;
   double const cycles_exp =
     bench_func<realvec_t, functor_exp<realvec_t>>();
   cout << "   " << cycles_exp - cycles_identity << " cycles\n";
   
-  cout << "log(" << realvec_t::name << "):" << flush;
+  cout << "log(" << realvec_t::name() << "):" << flush;
   double const cycles_log =
     bench_func<realvec_t, functor_log<realvec_t>>();
   cout << "   " << cycles_log - cycles_identity << " cycles\n";
   
-  cout << "sin(" << realvec_t::name << "):" << flush;
+  cout << "sin(" << realvec_t::name() << "):" << flush;
   double const cycles_sin =
     bench_func<realvec_t, functor_sin<realvec_t>>();
   cout << "   " << cycles_sin - cycles_identity << " cycles\n";
   
-  cout << "cos(" << realvec_t::name << "):" << flush;
+  cout << "cos(" << realvec_t::name() << "):" << flush;
   double const cycles_cos =
     bench_func<realvec_t, functor_cos<realvec_t>>();
   cout << "   " << cycles_cos - cycles_identity << " cycles\n";
   
-  cout << "atan(" << realvec_t::name << "):" << flush;
+  cout << "atan(" << realvec_t::name() << "):" << flush;
   double const cycles_atan =
     bench_func<realvec_t, functor_atan<realvec_t>>();
   cout << "   " << cycles_atan - cycles_identity << " cycles\n";

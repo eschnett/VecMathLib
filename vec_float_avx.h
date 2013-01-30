@@ -351,7 +351,7 @@ namespace vecmathlib {
     typedef real_t scalar_t;
     typedef __m256 vector_t;
     
-    static constexpr char const* const name = "<AVX:8*float>";
+    static char const* name() { return "<AVX:8*float>"; }
     inline void barrier() { asm("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),

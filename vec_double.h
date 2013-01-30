@@ -183,7 +183,7 @@ namespace vecmathlib {
     typedef real_t scalar_t;
     typedef real_t vector_t;
     
-    static constexpr char const* const name = "<1*double>";
+    static char const* name() { return "<1*double>"; }
     inline void barrier() { asm("": "+x" (v)); }
     
     typedef boolvec<real_t, size> boolvec_t;
