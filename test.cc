@@ -41,7 +41,7 @@ struct vecmathlib_test {
   
   // Test each function with this many random values
   static int const imax = 10000;
-  // Require that 3/4 of the digits are correct
+  // Require (arbitrarily) that 3/4 of the digits are correct
   static real_t constexpr accuracy = pow(realvec_t::epsilon(), R(0.75));
   
   
@@ -83,14 +83,16 @@ struct vecmathlib_test {
     }
     realvec_t const rvml = fvml(x);
     realvec_t const dr = rstd - rvml;
-    if (any(fabs(dr) >
-            realvec_t(accuracy) * (fabs(rstd) + fabs(rvml) + realvec_t(1.0))))
-    {
+    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
            << "   fvml(x)=" << rvml << "\n"
+           << "   rel-error(x)=" << fabs(dr) / scale << "\n"
+           << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
   }
@@ -108,14 +110,16 @@ struct vecmathlib_test {
     }
     realvec_t const rvml = fvml(x, y);
     realvec_t const dr = rstd - rvml;
-    if (any(fabs(dr) >
-            realvec_t(accuracy) * (fabs(rstd) + fabs(rvml) + realvec_t(1.0))))
-    {
+    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+1)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
            << "   fvml(x,y)=" << rvml << "\n"
+           << "   rel-error(x,y)=" << fabs(dr) / scale << "\n"
+           << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
   }
