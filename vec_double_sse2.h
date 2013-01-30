@@ -311,11 +311,13 @@ namespace vecmathlib {
     real_t operator[](int n) const
     {
       // return ((real_t const*)&v)[n];
+      realvec x = *this;
       switch (n){
-      case 0: return _mm_cvtsd_f64(v);
-      case 1: return _mm_cvtsd_f64(_mm_shuffle_pd(v, v, _MM_SHUFFLE2(0,1)));
+      case 0: /* do nothing */ break;
+      case 1: x = _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1)); break;
+      default: assert(0);
       }
-      assert(0);
+      return _mm_cvtsd_f64(x.v);
     }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
