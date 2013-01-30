@@ -22,18 +22,40 @@ namespace vecmathlib {
     assert(all(x >= RV(1.0) && x < RV(2.0)));
     
     // Approximate
+    // for |x|>0.01: (*)  log(x) = Sum[n=1,nmax,n%2==1] 2/n ((x-1) / (x+1))^n
+    // else:         (**) log(x) = Sum[n=1,nmax] (-1)^(n+1) 1/n (x-1)^n
     assert(all(x >= RV(1.0) && x < RV(2.0)));
-    // log(x) = Sum[n=1,nmax,n%2==1] 2/n ((x-1) / (x+1))^n
-    int const nmax = 38;
+    
+    // nmax   max_error of (*)
+    //    5   5.9e-5
+    //    7   1.3e-6
+    //    9   2.9e-8
+    //   15   4.4e-13
+    //   17   1.1e-14
+    //   19   3.0e-16
+    int const nmax = sizeof(real_t)==4 ? 9 : 17;
     x *= RV(M_SQRT1_2);         // shift range to increase accuracy
-    realvec_t xm1_xp1 = (x - RV(1.0)) / (x + RV(1.0));
+    
+    realvec_t xm1 = x - RV(1.0);
+    boolvec_t near1 = fabs(xm1) < RV(0.0001); // epsilon^(1/niters)
+    
+    // for (*)
+    realvec_t xm1_xp1 = xm1 / (x + RV(1.0));
     realvec_t xm1_xp1_2 = xm1_xp1 * xm1_xp1;
-    realvec_t y = RV(M_LOG2E * 2.0) * xm1_xp1;
+    
+    // for (**)
+    realvec_t mxm1 = - xm1;
+    
+    realvec_t y  = ifthen(near1, xm1,  RV(2.0) * xm1_xp1);
+    realvec_t yf = ifthen(near1, mxm1, xm1_xp1_2);
+    y *= RV(M_LOG2E);
+    
     realvec_t r = y;
-    for (int n=3; n<nmax; n+=2) {
-      y *= xm1_xp1_2;
-      r += y * RV(R(1.0) / R(n));
+    for (int n=3, nn=2; n<nmax; n+=2, ++nn) {
+      y *= yf;
+      r += y * ifthen(near1, RV(R(1.0) / R(nn)), RV(R(1.0) / R(n)));
     }
+    
     r += RV(0.5);               // correct result for range shift
     
     // Undo rescaling
