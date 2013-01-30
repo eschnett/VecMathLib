@@ -1,5 +1,7 @@
 // -*-C++-*-
 
+#define NDEBUG
+
 #include "vecmathlib.h"
 
 #include <cmath>
