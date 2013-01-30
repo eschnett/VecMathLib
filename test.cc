@@ -328,7 +328,6 @@ struct vecmathlib_test {
       // just to check
       check("log", log, vecmathlib::log, x, accuracy);
       check("pow", pow, vecmathlib::pow, x, y, accuracy);
-      check("pow", pow, vecmathlib::pow, x, y, accuracy);
       check("pow", pow, vecmathlib::pow, -x, fn, accuracy);
     }
   }
