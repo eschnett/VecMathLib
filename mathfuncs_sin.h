@@ -42,15 +42,12 @@ namespace vecmathlib {
     realvec_t x2 = x*x;
     realvec_t y = ifthen(use_cos, RV(1.0), x);
     realvec_t r = y;
-    // realvec_t rn = RV(FP::convert_float(3)) + noffset;
-    // realvec_t drn = RV(FP::convert_float(2));
     for (int n=3; n<nmax; n+=2) {
       // sin: (n-1)*n
       // cos: n*(n+1)
       realvec_t rn = RV(FP::convert_float(n)) + noffset;
       y *= - x2 * rcp((rn-RV(1.0))*rn);
       r += y;
-      // rn += drn;
     }
     
     // Undo range reduction
