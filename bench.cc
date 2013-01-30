@@ -49,6 +49,37 @@ double measure_tick()
 
 
 
+template<typename T>
+struct pseudovec {
+  T v;
+  static int const size = 1;
+  static char const* name()
+  {
+    if (typeid(T) == typeid(float)) return "float";
+    else if (typeid(T) == typeid(double)) return "double";
+    return typeid(T).name();
+  }
+  pseudovec() {}
+  pseudovec(T const& w): v(w) {}
+  pseudovec& set_elt(int, T const& w) { v=w; return *this; }
+  T operator[] (int) const { return v; }
+  pseudovec& operator+=(pseudovec const& x) { v+=x.v; return *this; }
+};
+template<typename T>
+pseudovec<T> atan(pseudovec<T> const& x) { return std::atan(x.v); } 
+template<typename T>
+pseudovec<T> cos(pseudovec<T> const& x) { return std::cos(x.v); } 
+template<typename T>
+pseudovec<T> exp(pseudovec<T> const& x) { return std::exp(x.v); } 
+template<typename T>
+pseudovec<T> log(pseudovec<T> const& x) { return std::log(x.v); } 
+template<typename T>
+pseudovec<T> sin(pseudovec<T> const& x) { return std::sin(x.v); } 
+template<typename T>
+pseudovec<T> sqrt(pseudovec<T> const& x) { return std::sqrt(x.v); } 
+
+
+
 double global_result = 0.0;
 template<typename realvec_t>
 void save_result(realvec_t result)
@@ -152,6 +183,7 @@ int main(int argc, char** argv)
   cout << "Benchmarking math functions:\n"
        << "\n";
   
+  bench<pseudovec<float>>();
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   bench<realvec<float,1>>();
 #endif
@@ -164,6 +196,7 @@ int main(int argc, char** argv)
   
   cout << "\n";
   
+  bench<pseudovec<double>>();
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   bench<realvec<double,1>>();
 #endif
