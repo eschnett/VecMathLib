@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <typeinfo>
 
 #include <sys/time.h>
@@ -49,34 +50,46 @@ double measure_tick()
 
 
 
-template<typename T>
+template<typename T, int N>
 struct pseudovec {
-  T v;
-  static int const size = 1;
-  static char const* name()
+  T v[N];
+  static int const size = N;
+  static string name()
   {
-    if (typeid(T) == typeid(float)) return "float";
-    else if (typeid(T) == typeid(double)) return "double";
-    return typeid(T).name();
+    string base;
+    if (typeid(T) == typeid(float)) base = "float";
+    else if (typeid(T) == typeid(double)) base = "double";
+    else base = typeid(T).name();
+    return string("<")+to_string(N)+"*"+base+">";
   }
   pseudovec() {}
-  pseudovec(T const& w): v(w) {}
-  pseudovec& set_elt(int, T const& w) { v=w; return *this; }
-  T operator[] (int) const { return v; }
-  pseudovec& operator+=(pseudovec const& x) { v+=x.v; return *this; }
+  pseudovec(T const& w) { for (int i=0; i<N; ++i) v[i]=w; }
+  pseudovec& set_elt(int i, T const& w) { v[i]=w; return *this; }
+  T operator[] (int i) const { return v[i]; }
+  pseudovec& operator+=(pseudovec const& x)
+  {
+    for (int i=0; i<N; ++i) v[i]+=x.v[i]; return *this;
+  }
 };
-template<typename T>
-pseudovec<T> atan(pseudovec<T> const& x) { return std::atan(x.v); } 
-template<typename T>
-pseudovec<T> cos(pseudovec<T> const& x) { return std::cos(x.v); } 
-template<typename T>
-pseudovec<T> exp(pseudovec<T> const& x) { return std::exp(x.v); } 
-template<typename T>
-pseudovec<T> log(pseudovec<T> const& x) { return std::log(x.v); } 
-template<typename T>
-pseudovec<T> sin(pseudovec<T> const& x) { return std::sin(x.v); } 
-template<typename T>
-pseudovec<T> sqrt(pseudovec<T> const& x) { return std::sqrt(x.v); } 
+template<typename T, int N>
+pseudovec<T,N> map(T f(T), pseudovec<T,N> const& x)
+{
+  pseudovec<T,N> r;
+  for (int i=0; i<N; ++i) r.set_elt(i, f(x[i]));
+  return r;
+}
+template<typename T, int N>
+pseudovec<T,N> atan(pseudovec<T,N> const& x) { return map(std::atan, x); }
+template<typename T, int N>
+pseudovec<T,N> cos(pseudovec<T,N> const& x) { return map(std::cos, x); }
+template<typename T, int N>
+pseudovec<T,N> exp(pseudovec<T,N> const& x) { return map(std::exp, x); }
+template<typename T, int N>
+pseudovec<T,N> log(pseudovec<T,N> const& x) { return map(std::log, x); }
+template<typename T, int N>
+pseudovec<T,N> sin(pseudovec<T,N> const& x) { return map(std::sin, x); }
+template<typename T, int N>
+pseudovec<T,N> sqrt(pseudovec<T,N> const& x) { return map(std::sqrt, x); }
 
 
 
@@ -183,27 +196,31 @@ int main(int argc, char** argv)
   cout << "Benchmarking math functions:\n"
        << "\n";
   
-  bench<pseudovec<float>>();
+  bench<pseudovec<float,1>>();
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   bench<realvec<float,1>>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
+  bench<pseudovec<float,4>>();
   bench<realvec<float,4>>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
+  bench<pseudovec<float,8>>();
   bench<realvec<float,8>>();
 #endif
   
   cout << "\n";
   
-  bench<pseudovec<double>>();
+  bench<pseudovec<double,1>>();
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   bench<realvec<double,1>>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
+  bench<pseudovec<double,2>>();
   bench<realvec<double,2>>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
+  bench<pseudovec<double,4>>();
   bench<realvec<double,4>>();
 #endif
   
