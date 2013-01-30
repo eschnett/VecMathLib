@@ -18,6 +18,7 @@ namespace vecmathlib {
   struct floatprops {
     // Some interesting properties are:
     //    digits
+    //    epsilon
     //    min_exponent
     //    max_exponent
   };
