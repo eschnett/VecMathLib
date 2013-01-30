@@ -15,7 +15,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_sin(realvec_t x)
   {
-    typename realvec_t::scalar_t eps = 0.000001;
+    typename realvec_t::scalar_t eps __attribute__((__unused__)) = 0.000001;
     
     // Reduce range: sin(x) = sin(x + 2pi)
     x = remainder(x, RV(2.0*M_PI));
