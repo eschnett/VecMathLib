@@ -38,7 +38,7 @@ namespace vecmathlib {
     // Iterate
     // nmax iterations give an accuracy of 2^nmax binary digits. 5
     // iterations suffice for double precision with its 53 digits.
-    int const nmax = 5;
+    int const nmax = sizeof(real_t)==4 ? 3 : 5;
     for (int n=1; n<nmax; ++n) {
       // Step
       assert(all(x > RV(0.0)));
