@@ -62,7 +62,7 @@ struct pseudovec {
     if (typeid(T) == typeid(float)) base = "float";
     else if (typeid(T) == typeid(double)) base = "double";
     else base = typeid(T).name();
-    return string("<")+to_string(N)+"*"+base+">";
+    return string("<")+to_string(N)+"*std::"+base+">";
   }
   pseudovec() {}
   pseudovec(T const& w) { for (int i=0; i<N; ++i) v[i]=w; }
