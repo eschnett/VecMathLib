@@ -6,3 +6,6 @@ Build:
 
 Test:
    ./test
+
+Benchmark:
+   ./bench
