@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <typeinfo>
@@ -13,6 +14,7 @@
 #include <sys/time.h>
 
 using namespace std;
+using namespace vecmathlib;
 
 
 
@@ -104,15 +106,16 @@ void save_result(realvec_t result)
 
 
 
-template<typename T> inline T identity(T x) { return x; }
+template<typename T> inline T nop(T x) { return x; }
 
 #define DECLARE_FUNCTOR(func)                   \
   template<typename T>                          \
   struct functor_##func {                       \
+    static char const* name() { return #func; } \
     T operator()(T x) { return func(x); }       \
   }
 
-DECLARE_FUNCTOR(identity);
+DECLARE_FUNCTOR(nop);
 DECLARE_FUNCTOR(sqrt);
 DECLARE_FUNCTOR(exp);
 DECLARE_FUNCTOR(log);
@@ -122,8 +125,8 @@ DECLARE_FUNCTOR(atan);
 
 
 
-template<typename realvec_t, typename func_t>
-double bench_func()
+template<typename realvec_t, template<typename> class func_t>
+double run_bench()
 {
   realvec_t x0, dx;
   for (int i=0; i<realvec_t::size; ++i) {
@@ -135,7 +138,7 @@ double bench_func()
   double const cycles_per_tick = 1.0; // measure_tick();
   int const numiters = 10000000;
   
-  func_t func;
+  func_t<realvec_t> func;
   t0 = getticks();
   x = y = x0;
   for (int n=0; n<numiters; ++n) {
@@ -148,43 +151,58 @@ double bench_func()
   return cycles_per_tick * elapsed(t1,t0) * realvec_t::size / numiters;
 }
 
-template<typename realvec_t>
+template<typename realvec_t, template<typename> class func_t>
+void bench_type_func()
+{
+  cout << "   "
+       << setw(-5) << func_t<realvec_t>::name() << " "
+       << setw(15) << realvec_t::name() << ": " << flush;
+  double const cycles = run_bench<realvec_t, func_t>();
+  cout << cycles << " cycles\n" << flush;
+}
+
+template<template<typename> class func_t>
+void bench_func()
+{
+  cout << "\n"
+       << "Benchmarking " << func_t<float>().name() << ":\n";
+  
+  bench_type_func<pseudovec<float,1>, func_t>();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
+  bench_type_func<realvec<float,1>, func_t>();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
+  bench_type_func<pseudovec<float,4>, func_t>();
+  bench_type_func<realvec<float,4>, func_t>();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
+  bench_type_func<pseudovec<float,8>, func_t>();
+  bench_type_func<realvec<float,8>, func_t>();
+#endif
+  
+  bench_type_func<pseudovec<double,1>, func_t>();
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
+  bench_type_func<realvec<double,1>, func_t>();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
+  bench_type_func<pseudovec<double,2>, func_t>();
+  bench_type_func<realvec<double,2>, func_t>();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
+  bench_type_func<pseudovec<double,4>, func_t>();
+  bench_type_func<realvec<double,4>, func_t>();
+#endif
+}
+
 void bench()
 {
-  cout << "identity(" << realvec_t::name() << "):" << flush;
-  double const cycles_identity =
-    bench_func<realvec_t, functor_identity<realvec_t>>();
-  cout << "   " << cycles_identity << " cycles\n";
-  
-  cout << "sqrt(" << realvec_t::name() << "):" << flush;
-  double const cycles_sqrt =
-    bench_func<realvec_t, functor_sqrt<realvec_t>>();
-  cout << "   " << cycles_sqrt - cycles_identity << " cycles\n";
-  
-  cout << "exp(" << realvec_t::name() << "):" << flush;
-  double const cycles_exp =
-    bench_func<realvec_t, functor_exp<realvec_t>>();
-  cout << "   " << cycles_exp - cycles_identity << " cycles\n";
-  
-  cout << "log(" << realvec_t::name() << "):" << flush;
-  double const cycles_log =
-    bench_func<realvec_t, functor_log<realvec_t>>();
-  cout << "   " << cycles_log - cycles_identity << " cycles\n";
-  
-  cout << "sin(" << realvec_t::name() << "):" << flush;
-  double const cycles_sin =
-    bench_func<realvec_t, functor_sin<realvec_t>>();
-  cout << "   " << cycles_sin - cycles_identity << " cycles\n";
-  
-  cout << "cos(" << realvec_t::name() << "):" << flush;
-  double const cycles_cos =
-    bench_func<realvec_t, functor_cos<realvec_t>>();
-  cout << "   " << cycles_cos - cycles_identity << " cycles\n";
-  
-  cout << "atan(" << realvec_t::name() << "):" << flush;
-  double const cycles_atan =
-    bench_func<realvec_t, functor_atan<realvec_t>>();
-  cout << "   " << cycles_atan - cycles_identity << " cycles\n";
+  bench_func<functor_nop>();
+  bench_func<functor_sqrt>();
+  bench_func<functor_exp>();
+  bench_func<functor_log>();
+  bench_func<functor_sin>();
+  bench_func<functor_cos>();
+  bench_func<functor_atan>();
 }
 
 
@@ -193,40 +211,15 @@ int main(int argc, char** argv)
 {
   using namespace vecmathlib;
 
-  cout << "Benchmarking math functions:\n"
-       << "\n";
+  cout << "Benchmarking math functions:\n";
   
-  bench<pseudovec<float,1>>();
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
-  bench<realvec<float,1>>();
-#endif
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
-  bench<pseudovec<float,4>>();
-  bench<realvec<float,4>>();
-#endif
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
-  bench<pseudovec<float,8>>();
-  bench<realvec<float,8>>();
-#endif
+  bench();
   
-  cout << "\n";
-  
-  bench<pseudovec<double,1>>();
-#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
-  bench<realvec<double,1>>();
-#endif
-#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
-  bench<pseudovec<double,2>>();
-  bench<realvec<double,2>>();
-#endif
-#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
-  bench<pseudovec<double,4>>();
-  bench<realvec<double,4>>();
-#endif
-  
-  cout << "\n"
-       << "Outputting global result to prevent optimisation: "
-       << global_result << "\n";
+  // Checking global accumulator to prevent optimisation
+  if (std::isnan(global_result)) {
+    cout << "\n"
+         << "WARNING: Global accumulator is nan\n";
+  }
   
   return 0;
 }
