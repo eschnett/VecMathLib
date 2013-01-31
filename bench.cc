@@ -62,7 +62,7 @@ struct pseudovec {
     if (typeid(T) == typeid(float)) base = "float";
     else if (typeid(T) == typeid(double)) base = "double";
     else base = typeid(T).name();
-    return string("<")+to_string(N)+"*std::"+base+">";
+    return string("<")+to_string(N)+"*"+base+">";
   }
   pseudovec() {}
   pseudovec(T const& w) { for (int i=0; i<N; ++i) v[i]=w; }
@@ -156,7 +156,7 @@ void bench_type_func()
 {
   cout << "   "
        << setw(-5) << func_t<realvec_t>::name() << " "
-       << setw(15) << realvec_t::name() << ": " << flush;
+       << setw(17) << realvec_t::name() << ": " << flush;
   double const cycles = run_bench<realvec_t, func_t>();
   cout << cycles << " cycles\n" << flush;
 }
