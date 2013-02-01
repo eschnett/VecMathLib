@@ -216,9 +216,9 @@ int main(int argc, char** argv)
   bench();
   
   // Checking global accumulator to prevent optimisation
-  if (std::isnan(global_result)) {
+  if (! std::isfinite(global_result)) {
     cout << "\n"
-         << "WARNING: Global accumulator is nan\n";
+         << "WARNING: Global accumulator is not finite\n";
   }
   
   return 0;
