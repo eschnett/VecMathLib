@@ -547,7 +547,10 @@ namespace vecmathlib {
     realpseudovec atan() const { return map(std::atan); }
     realpseudovec atanh() const { return map(std::atanh); }
     realpseudovec ceil() const { return map(std::ceil); }
-    realpseudovec copysign(realpseudovec y) const { return map(std::copysign, y); }
+    realpseudovec copysign(realpseudovec y) const
+    {
+      return map(std::copysign, y);
+    }
     realpseudovec cos() const { return map(std::cos); }
     realpseudovec cosh() const { return map(std::cosh); }
     realpseudovec exp() const { return map(std::exp); }
@@ -562,7 +565,10 @@ namespace vecmathlib {
     realpseudovec fabs() const { return map(std::fabs); }
     realpseudovec fdim(realpseudovec y) const { return map(std::fdim, y); }
     realpseudovec floor() const { return map(std::floor); }
-    realpseudovec fma(realpseudovec y, realpseudovec z) const { return map(std::fma, y, z); }
+    realpseudovec fma(realpseudovec y, realpseudovec z) const
+    {
+      return map(std::fma, y, z);
+    }
     realpseudovec fmax(realpseudovec y) const { return map(std::fmax, y); }
     realpseudovec fmin(realpseudovec y) const { return map(std::fmin, y); }
     realpseudovec fmod(realpseudovec y) const { return map(std::fmod, y); }
@@ -587,7 +593,10 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) res.v[d] = R(1.0) / v[d];
       return res;
     }
-    realpseudovec remainder(realpseudovec y) const { return map(std::remainder, y); }
+    realpseudovec remainder(realpseudovec y) const
+    {
+      return map(std::remainder, y);
+    }
     realpseudovec round() const { return map(std::round); }
     realpseudovec rsqrt() const { return sqrt().rcp(); }
     realpseudovec scalbn(intvec_t n) const
@@ -707,8 +716,8 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   intpseudovec<real_t, size> ifthen(boolpseudovec<real_t, size> c,
-                              intpseudovec<real_t, size> x,
-                              intpseudovec<real_t, size> y)
+                                    intpseudovec<real_t, size> x,
+                                    intpseudovec<real_t, size> y)
   {
     return c.ifthen(x, y);
   }
@@ -716,8 +725,8 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realpseudovec<real_t, size> ifthen(boolpseudovec<real_t, size> c,
-                               realpseudovec<real_t, size> x,
-                               realpseudovec<real_t, size> y)
+                                     realpseudovec<real_t, size> x,
+                                     realpseudovec<real_t, size> y)
   {
     return c.ifthen(x, y);
   }
@@ -751,15 +760,16 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline intpseudovec<real_t, size> lsr(intpseudovec<real_t, size> x,
-                                  typename intpseudovec<real_t, size>::int_t n)
+  inline
+  intpseudovec<real_t, size> lsr(intpseudovec<real_t, size> x,
+                                 typename intpseudovec<real_t, size>::int_t n)
   {
     return x.lsr(n);
   }
   
   template<typename real_t, int size>
   inline intpseudovec<real_t, size> lsr(intpseudovec<real_t, size> x,
-                                  intpseudovec<real_t, size> n)
+                                        intpseudovec<real_t, size> n)
   {
     return x.lsr(n);
   }
@@ -781,15 +791,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline
-  typename realpseudovec<real_t, size>::real_t prod(realpseudovec<real_t, size> x)
+  inline auto prod(realpseudovec<real_t, size> x) -> real_t
   {
     return x.prod();
   }
   
   template<typename real_t, int size>
-  inline
-  typename realpseudovec<real_t, size>::real_t sum(realpseudovec<real_t, size> x)
+  inline auto sum(realpseudovec<real_t, size> x) -> real_t
   {
     return x.sum();
   }
@@ -840,7 +848,7 @@ namespace vecmathlib {
 
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> copysign(realpseudovec<real_t, size> x,
-                                        realpseudovec<real_t, size> y)
+                                              realpseudovec<real_t, size> y)
   {
     return x.copysign(y);
   }
@@ -895,36 +903,36 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> fdim(realpseudovec<real_t, size> x,
-                                    realpseudovec<real_t, size> y)
+                                          realpseudovec<real_t, size> y)
   {
     return x.fdim(y);
   }
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> fma(realpseudovec<real_t, size> x,
-                                   realpseudovec<real_t, size> y,
-                                   realpseudovec<real_t, size> z)
+                                         realpseudovec<real_t, size> y,
+                                         realpseudovec<real_t, size> z)
   {
     return x.fma(y, z);
   }
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> fmax(realpseudovec<real_t, size> x,
-                                    realpseudovec<real_t, size> y)
+                                          realpseudovec<real_t, size> y)
   {
     return x.fmax(y);
   }
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> fmin(realpseudovec<real_t, size> x,
-                                    realpseudovec<real_t, size> y)
+                                          realpseudovec<real_t, size> y)
   {
     return x.fmin(y);
   }
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> fmod(realpseudovec<real_t, size> x,
-                                    realpseudovec<real_t, size> y)
+                                          realpseudovec<real_t, size> y)
   {
     return x.fmod(y);
   }
@@ -985,7 +993,7 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> pow(realpseudovec<real_t, size> x,
-                                   realpseudovec<real_t, size> y)
+                                         realpseudovec<real_t, size> y)
   {
     return x.pow(y);
   }
@@ -998,7 +1006,7 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> remainder(realpseudovec<real_t, size> x,
-                                         realpseudovec<real_t, size> y)
+                                               realpseudovec<real_t, size> y)
   {
     return x.remainder(y);
   }
@@ -1018,7 +1026,7 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realpseudovec<real_t, size> scalbn(realpseudovec<real_t, size> x,
-                               intpseudovec<real_t, size> n)
+                                     intpseudovec<real_t, size> n)
   {
     return x.scalbn(n);
   }
@@ -1062,7 +1070,8 @@ namespace vecmathlib {
   
   
   template<typename real_t, int size>
-  std::ostream& operator<<(std::ostream& os, boolpseudovec<real_t, size> const& x)
+  std::ostream& operator<<(std::ostream& os,
+                           boolpseudovec<real_t, size> const& x)
   {
     os << "[";
     for (int i=0; i<size; ++i) {
@@ -1074,7 +1083,8 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  std::ostream& operator<<(std::ostream& os, intpseudovec<real_t, size> const& x)
+  std::ostream& operator<<(std::ostream& os,
+                           intpseudovec<real_t, size> const& x)
   {
     os << "[";
     for (int i=0; i<size; ++i) {
@@ -1086,7 +1096,8 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  std::ostream& operator<<(std::ostream& os, realpseudovec<real_t, size> const& x)
+  std::ostream& operator<<(std::ostream& os,
+                           realpseudovec<real_t, size> const& x)
   {
     os << "[";
     for (int i=0; i<size; ++i) {
