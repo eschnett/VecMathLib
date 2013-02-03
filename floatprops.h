@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 
 
@@ -65,14 +66,20 @@ namespace vecmathlib {
     static inline real_t as_float(int_t x)
     {
       // return *(real_t*)&x;
-      union { int_t i; real_t r; } ir;
-      return ir.i=x, ir.r;
+      // union { int_t i; real_t r; } ir;
+      // return ir.i=x, ir.r;
+      real_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
     }
     static inline int_t as_int(real_t x)
     {
       // return *(int_t*)&x;
-      union { real_t r; int_t i; } ri;
-      return ri.r=x, ri.i;
+      // union { real_t r; int_t i; } ri;
+      // return ri.r=x, ri.i;
+      int_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
     }
     
     // Convert values
@@ -128,14 +135,20 @@ namespace vecmathlib {
     static inline real_t as_float(int_t x)
     {
       // return *(real_t*)&x;
-      union { int_t i; real_t r; } ir;
-      return ir.i=x, ir.r;
+      // union { int_t i; real_t r; } ir;
+      // return ir.i=x, ir.r;
+      real_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
     }
     static inline int_t as_int(real_t x)
     {
       // return *(int_t*)&x;
-      union { real_t r; int_t i; } ri;
-      return ri.r=x, ri.i;
+      // union { real_t r; int_t i; } ri;
+      // return ri.r=x, ri.i;
+      int_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
     }
     
     // Convert values
