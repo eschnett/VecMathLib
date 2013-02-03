@@ -44,8 +44,8 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   intvec<real_t, size> ifthen(boolvec<real_t, size> c,
-                               intvec<real_t, size> x,
-                               intvec<real_t, size> y)
+                              intvec<real_t, size> x,
+                              intvec<real_t, size> y)
   {
     return c.ifthen(x, y);
   }
@@ -53,8 +53,8 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realvec<real_t, size> ifthen(boolvec<real_t, size> c,
-                                 realvec<real_t, size> x,
-                                 realvec<real_t, size> y)
+                               realvec<real_t, size> x,
+                               realvec<real_t, size> y)
   {
     return c.ifthen(x, y);
   }
@@ -89,14 +89,14 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline intvec<real_t, size> lsr(intvec<real_t, size> x,
-                                   typename intvec<real_t, size>::int_t n)
+                                  typename intvec<real_t, size>::int_t n)
   {
     return x.lsr(n);
   }
   
   template<typename real_t, int size>
   inline intvec<real_t, size> lsr(intvec<real_t, size> x,
-                                   intvec<real_t, size> n)
+                                  intvec<real_t, size> n)
   {
     return x.lsr(n);
   }
@@ -177,7 +177,7 @@ namespace vecmathlib {
 
   template<typename real_t, int size>
   inline realvec<real_t, size> copysign(realvec<real_t, size> x,
-                                          realvec<real_t, size> y)
+                                        realvec<real_t, size> y)
   {
     return x.copysign(y);
   }
@@ -355,7 +355,7 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realvec<real_t, size> scalbn(realvec<real_t, size> x,
-                                 intvec<real_t, size> n)
+                               intvec<real_t, size> n)
   {
     return x.scalbn(n);
   }
