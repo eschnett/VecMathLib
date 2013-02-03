@@ -5,4 +5,9 @@
 # general, just running "ninja" will perform all necessary tasks.
 
 rm -f CMakeCache.txt
-cmake -G Ninja
+
+# Unix Makefiles
+cmake -G 'Unix Makefiles'
+
+# Ninja:
+#cmake -G Ninja
