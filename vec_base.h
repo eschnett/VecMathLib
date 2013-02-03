@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+
+
 namespace vecmathlib {
   
   template<typename real_t, int size>
