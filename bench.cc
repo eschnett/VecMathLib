@@ -52,49 +52,6 @@ double measure_tick()
 
 
 
-template<typename T, int N>
-struct pseudovec {
-  T v[N];
-  static int const size = N;
-  static string name()
-  {
-    string base;
-    if (typeid(T) == typeid(float)) base = "float";
-    else if (typeid(T) == typeid(double)) base = "double";
-    else base = typeid(T).name();
-    return string("<")+to_string(N)+"*"+base+">";
-  }
-  pseudovec() {}
-  pseudovec(T const& w) { for (int i=0; i<N; ++i) v[i]=w; }
-  pseudovec& set_elt(int i, T const& w) { v[i]=w; return *this; }
-  T operator[] (int i) const { return v[i]; }
-  pseudovec& operator+=(pseudovec const& x)
-  {
-    for (int i=0; i<N; ++i) v[i]+=x.v[i]; return *this;
-  }
-};
-template<typename T, int N>
-pseudovec<T,N> map(T f(T), pseudovec<T,N> const& x)
-{
-  pseudovec<T,N> r;
-  for (int i=0; i<N; ++i) r.set_elt(i, f(x[i]));
-  return r;
-}
-template<typename T, int N>
-pseudovec<T,N> atan(pseudovec<T,N> const& x) { return map(std::atan, x); }
-template<typename T, int N>
-pseudovec<T,N> cos(pseudovec<T,N> const& x) { return map(std::cos, x); }
-template<typename T, int N>
-pseudovec<T,N> exp(pseudovec<T,N> const& x) { return map(std::exp, x); }
-template<typename T, int N>
-pseudovec<T,N> log(pseudovec<T,N> const& x) { return map(std::log, x); }
-template<typename T, int N>
-pseudovec<T,N> sin(pseudovec<T,N> const& x) { return map(std::sin, x); }
-template<typename T, int N>
-pseudovec<T,N> sqrt(pseudovec<T,N> const& x) { return map(std::sqrt, x); }
-
-
-
 double global_result = 0.0;
 template<typename realvec_t>
 void save_result(realvec_t result)
@@ -167,29 +124,29 @@ void bench_func()
   cout << "\n"
        << "Benchmarking " << func_t<float>().name() << ":\n";
   
-  bench_type_func<pseudovec<float,1>, func_t>();
+  bench_type_func<realpseudovec<float,1>, func_t>();
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   bench_type_func<realvec<float,1>, func_t>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
-  bench_type_func<pseudovec<float,4>, func_t>();
+  bench_type_func<realpseudovec<float,4>, func_t>();
   bench_type_func<realvec<float,4>, func_t>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
-  bench_type_func<pseudovec<float,8>, func_t>();
+  bench_type_func<realpseudovec<float,8>, func_t>();
   bench_type_func<realvec<float,8>, func_t>();
 #endif
   
-  bench_type_func<pseudovec<double,1>, func_t>();
+  bench_type_func<realpseudovec<double,1>, func_t>();
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   bench_type_func<realvec<double,1>, func_t>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
-  bench_type_func<pseudovec<double,2>, func_t>();
+  bench_type_func<realpseudovec<double,2>, func_t>();
   bench_type_func<realvec<double,2>, func_t>();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
-  bench_type_func<pseudovec<double,4>, func_t>();
+  bench_type_func<realpseudovec<double,4>, func_t>();
   bench_type_func<realvec<double,4>, func_t>();
 #endif
 }

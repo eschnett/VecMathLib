@@ -325,14 +325,15 @@ struct vecmathlib_test {
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(0.001), R(1000.0));
       realvec_t const y = random(R(-10.0), R(+10.0));
+      realvec_t const ya = fabs(y);
       intvec_t const n = random(I(-10), I(+10));
       realvec_t const fn = vecmathlib::convert_float(n);
-      check("pow", pow, vecmathlib::pow, RV(0.0), y, accuracy);
-      check("pow", pow, vecmathlib::pow, x, RV(0.0), accuracy);
+      check("pow(0,y)", pow, vecmathlib::pow, RV(0.0), ya, accuracy);
+      check("pow(x,0)", pow, vecmathlib::pow, x, RV(0.0), accuracy);
       // just to check
-      check("log", log, vecmathlib::log, x, accuracy);
-      check("pow", pow, vecmathlib::pow, x, y, accuracy);
-      check("pow", pow, vecmathlib::pow, -x, fn, accuracy);
+      check("log(x)", log, vecmathlib::log, x, accuracy);
+      check("pow(x,y)", pow, vecmathlib::pow, x, y, accuracy);
+      check("pow(-x,n)", pow, vecmathlib::pow, -x, fn, accuracy);
     }
   }
   
@@ -346,16 +347,15 @@ struct vecmathlib_test {
       intvec_t const n = random(I(-100), I(+100));
       intvec_t const m = random(I(-100), I(+100));
       realvec_t const fn = vecmathlib::convert_float(n);
-      realvec_t const fm = vecmathlib::convert_float(m);
+      realvec_t const fm = vecmathlib::convert_float
+        (m + vecmathlib::convert_int(m == intvec_t(I(0))));
       check("rcp", rcp, vecmathlib::rcp, x, accuracy);
-      check("fmod", fmod, vecmathlib::fmod, x, y, accuracy);
-      check("fmod", fmod, vecmathlib::fmod, x, fm, accuracy);
-      check("fmod", fmod, vecmathlib::fmod, fn, y, accuracy);
-      check("fmod", fmod, vecmathlib::fmod, fn, y, accuracy);
-      check("remainder", remainder, vecmathlib::remainder, x, y, accuracy);
-      check("remainder", remainder, vecmathlib::remainder, x, fm, accuracy);
-      check("remainder", remainder, vecmathlib::remainder, fn, y, accuracy);
-      check("remainder", remainder, vecmathlib::remainder, fn, y, accuracy);
+      check("fmod(x,y)", fmod, vecmathlib::fmod, x, y, accuracy);
+      check("fmod(x,m)", fmod, vecmathlib::fmod, x, fm, accuracy);
+      check("fmod(n,y)", fmod, vecmathlib::fmod, fn, y, accuracy);
+      check("remainder(x,y)", remainder, vecmathlib::remainder, x, y, accuracy);
+      check("remainder(x,m)", remainder, vecmathlib::remainder, x, fm, accuracy);
+      check("remainder(n,y)", remainder, vecmathlib::remainder, fn, y, accuracy);
     }
   }
   
@@ -430,22 +430,28 @@ int main(int argc, char** argv)
   cout << "Testing math functions:\n" << flush;
   
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
+  vecmathlib_test<realpseudovec<float,1>>::test();
   vecmathlib_test<realvec<float,1>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
+  vecmathlib_test<realpseudovec<float,4>>::test();
   vecmathlib_test<realvec<float,4>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
+  vecmathlib_test<realpseudovec<float,8>>::test();
   vecmathlib_test<realvec<float,8>>::test();
 #endif
   
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
+  vecmathlib_test<realpseudovec<double,1>>::test();
   vecmathlib_test<realvec<double,1>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
+  vecmathlib_test<realpseudovec<double,2>>::test();
   vecmathlib_test<realvec<double,2>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
+  vecmathlib_test<realpseudovec<double,4>>::test();
   vecmathlib_test<realvec<double,4>>::test();
 #endif
   
