@@ -1,11 +1,10 @@
-# build via ninja: cmake -G Ninja
-# build via make: cmake .
-# clean: rm CMakeCache.txt
+# See file "BUILD" for instructions
 
 cmake_minimum_required (VERSION 2.6)
 project (vecmathlib)
 
 add_executable (example example.cc)
+add_executable (loop loop.cc)
 add_executable (test test.cc)
 add_executable (bench bench.cc)
 
