@@ -298,13 +298,39 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) v[d] <<= n;
       return *this;
     }
-    
     intpseudovec operator>>(int_t n) const
     {
       intpseudovec res = *this;
       return res >>= n;
     }
     intpseudovec operator<<(int_t n) const
+    {
+      intpseudovec res = *this;
+      return res <<= n;
+    }
+    
+    intpseudovec lsr(intpseudovec n) const
+    {
+      intpseudovec res;
+      for (int d=0; d<size; ++d) res.v[d] = I(U(v[d]) >> U(n.v[d]));
+      return res;
+    }
+    intpseudovec& operator>>=(intpseudovec n)
+    {
+      for (int d=0; d<size; ++d) v[d] >>= n.v[d];
+      return *this;
+    }
+    intpseudovec& operator<<=(intpseudovec n)
+    {
+      for (int d=0; d<size; ++d) v[d] <<= n.v[d];
+      return *this;
+    }
+    intpseudovec operator>>(intpseudovec n) const
+    {
+      intpseudovec res = *this;
+      return res >>= n;
+    }
+    intpseudovec operator<<(intpseudovec n) const
     {
       intpseudovec res = *this;
       return res <<= n;
