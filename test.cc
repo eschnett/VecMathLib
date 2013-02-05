@@ -71,6 +71,51 @@ struct vecmathlib_test {
   
   
   
+  static void check_mem(char const* const func,
+                        real_t const* p,
+                        realvec_t x,
+                        realvec_t xorig,
+                        int mval)
+  {
+    realvec_t y;
+    for (int i=0; i<realvec_t::size; ++i) {
+      y.set_elt(i, mval & (1<<i) ? p[i] : xorig[i]);
+    }
+    boolvec_t isbad = x != y;
+    if (any(isbad)) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << ":\n"
+           << "   found=" << x << "\n"
+           << "   expected=" << y << "\n"
+           << "   isbad=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  static void check_mem(char const* const func,
+                        real_t const* p,
+                        realvec_t x,
+                        real_t const* porig,
+                        int mval)
+  {
+    realvec_t pvec, y;
+    for (int i=0; i<realvec_t::size; ++i) {
+      pvec.set_elt(i, p[i]);
+      y.set_elt(i, mval & (1<<i) ? x[i] : porig[i]);
+    }
+    boolvec_t isbad = pvec != y;
+    if (any(isbad)) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << ":\n"
+           << "   found=" << pvec << "\n"
+           << "   expected=" << y << "\n"
+           << "   isbad=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
   template<typename A>
   static void check(char const* const func,
                     real_t fstd(typename A::scalar_t), realvec_t fvml(A),
@@ -213,6 +258,114 @@ struct vecmathlib_test {
   }
   
   
+  
+  static void test_mem()
+  {
+    cout << "   testing loada loadu storea storeu (errors may lead to segfaults)...\n" << flush;
+    int const n = 6;
+    realvec_t x[n], xnew[n];
+    for (int i=0; i<n; ++i) {
+      x[i] = random(R(-10.0), R(+10.0));
+    }
+    realvec_t const z = random(R(-10.0), R(+10.0));
+    
+    // loada
+    {
+      real_t *p = (real_t*)&x[1];
+      realvec_t y = realvec_t::loada(p);
+      check_mem("loada", p, y, z, ~0);
+    }
+    
+    // loadu
+    for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
+      real_t *p = (real_t*)&x[1];
+      realvec_t y = realvec_t::loadu(p+i);
+      check_mem("loadu", p+i, y, z, ~0);
+    }
+    
+    // loadu(ioff)
+    for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
+      real_t *p = (real_t*)&x[1];
+      realvec_t y = realvec_t::loadu(p, ioff);
+      check_mem("loadu(ioff)", p+ioff, y, z, ~0);
+    }
+    
+    // storea
+    {
+      memcpy(xnew, x, n*sizeof *xnew);
+      real_t *p = (real_t*)&xnew[1];
+      storea(z, p);
+      check_mem("storea", p, z, (real_t*)&x[1], ~0);
+    }
+    
+    // storeu
+    for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
+      memcpy(xnew, x, n*sizeof *xnew);
+      real_t *p = (real_t*)&xnew[1];
+      storeu(z, p+i);
+      check_mem("storeu", p+i, z, (real_t*)&x[1]+i, ~0);
+    }
+    
+    // storeu
+    for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
+      memcpy(xnew, x, n*sizeof *xnew);
+      real_t *p = (real_t*)&xnew[1];
+      storeu(z, p, ioff);
+      check_mem("storeu(ioff)", p+ioff, z, (real_t*)&x[1]+ioff, ~0);
+    }
+    
+    for (int mval=0; mval<(1<<realvec_t::size); ++mval) {
+      boolvec_t mbool;
+      for (int i=0; i<realvec_t::size; ++i) mbool.set_elt(i, mval & (1<<i));
+      typename realvec_t::mask_t mask(mbool);
+      
+      // loada(mask)
+      {
+        real_t *p = (real_t*)&x[1];
+        realvec_t y = loada(p, z, mask);
+        check_mem("loada(mask)", p, y, z, mval);
+      }
+      
+      // loadu(mask)
+      for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
+        real_t *p = (real_t*)&x[1];
+        realvec_t y = loadu(p+i, z, mask);
+        check_mem("loadu(mask)", p+i, y, z, mval);
+      }
+      
+      // loadu(ioff, mask)
+      for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
+        real_t *p = (real_t*)&x[1];
+        realvec_t y = loadu(p, ioff, z, mask);
+        check_mem("loadu(ioff,mask)", p+ioff, y, z, mval);
+      }
+      
+      // storea
+      {
+        memcpy(xnew, x, n*sizeof *xnew);
+        real_t *p = (real_t*)&xnew[1];
+        storea(z, p, mask);
+        check_mem("storea(mask)", p, z, (real_t*)&x[1], mval);
+      }
+      
+      // storeu
+      for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
+        memcpy(xnew, x, n*sizeof *xnew);
+        real_t *p = (real_t*)&xnew[1];
+        storeu(z, p+i, mask);
+        check_mem("storeu(mask)", p+i, z, (real_t*)&x[1]+i, mval);
+      }
+      
+      // storeu
+      for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
+        memcpy(xnew, x, n*sizeof *xnew);
+        real_t *p = (real_t*)&xnew[1];
+        storeu(z, p, ioff, mask);
+        check_mem("storeu(ioff,mask)", p+ioff, z, (real_t*)&x[1]+ioff, mval);
+      }
+      
+    } // for mval
+  }
   
   static int_t ilogb(real_t x) { return std::ilogb(x); }
   static real_t scalbn(real_t x, int_t n) { return std::scalbn(x, n); }
@@ -405,6 +558,8 @@ struct vecmathlib_test {
   {
     cout << "\n"
          << "Testing math functions for type " << realvec_t::name() << ":\n";
+    
+    test_mem();
     
     test_fabs();
     test_convert();

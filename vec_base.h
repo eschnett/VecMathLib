@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include "vec_mask.h"
+
 
 
 namespace vecmathlib {
@@ -106,6 +108,74 @@ namespace vecmathlib {
   
   
   // realvec wrappers
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size>
+  loada(real_t const* p,
+        realvec<real_t, size> x,
+        typename realvec<real_t, size>::mask_t const& m)
+  {
+    return x.loada(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size>
+  loadu(real_t const* p,
+        realvec<real_t, size> x,
+        typename realvec<real_t, size>::mask_t const& m)
+  {
+    return x.loadu(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size>
+  loadu(real_t const* p, size_t ioff,
+        realvec<real_t, size> x,
+        typename realvec<real_t, size>::mask_t const& m)
+  {
+    return x.loadu(p, ioff, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storea(realvec<real_t, size> x, real_t* p)
+  {
+    return x.storea(p);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realvec<real_t, size> x, real_t* p)
+  {
+    return x.storeu(p);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realvec<real_t, size> x, real_t* p, size_t ioff)
+  {
+    return x.storeu(p, ioff);
+  }
+  
+  template<typename real_t, int size>
+  inline void storea(realvec<real_t, size> x, real_t* p,
+                     typename realvec<real_t, size>::mask_t const& m)
+  {
+    return x.storea(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realvec<real_t, size> x, real_t* p,
+                     typename realvec<real_t, size>::mask_t const& m)
+  {
+    return x.storeu(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realvec<real_t, size> x, real_t* p, size_t ioff,
+                     typename realvec<real_t, size>::mask_t const &m)
+  {
+    return x.storeu(p, ioff, m);
+  }
+  
+  
   
   template<typename real_t, int size>
   inline intvec<real_t, size> as_int(realvec<real_t, size> x)

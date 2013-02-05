@@ -17,6 +17,9 @@
 #ifdef __SSE4A__                // AMD's SSE 4a
 #  include <ammintrin.h>
 #endif
+#if defined __AVX__             // Intel's AVX
+#  include <immintrin.h>
+#endif
 
 
 
@@ -263,6 +266,22 @@ namespace vecmathlib {
     {
       return (*this ^ x).convert_bool();
     }
+    boolvec_t operator<(intvec const& x) const
+    {
+      return (*this - x).as_bool();
+    }
+    boolvec_t operator<=(intvec const& x) const
+    {
+      return ! (*this > x);
+    }
+    boolvec_t operator>(intvec const& x) const
+    {
+      return x < *this;
+    }
+    boolvec_t operator>=(intvec const& x) const
+    {
+      return ! (*this < x);
+    }
   };
   
   
@@ -320,6 +339,94 @@ namespace vecmathlib {
       return _mm_cvtsd_f64(x.v);
     }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
+    
+    
+    
+    typedef vecmathlib::mask_t<realvec_t> mask_t;
+    
+    static realvec_t loada(real_t const* p)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      return _mm_load_pd(p);
+    }
+    static realvec_t loadu(real_t const* p)
+    {
+      return _mm_loadu_pd(p);
+    }
+    static realvec_t loadu(real_t const* p, size_t ioff)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p);
+      return loadu(p+ioff);
+    }
+    realvec_t loada(real_t const* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(all(m.m), true)) {
+        return loada(p);
+      } else {
+        return m.m.ifthen(loada(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        return loadu(p);
+      } else {
+        return m.m.ifthen(loadu(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p, m);
+      return loadu(p+ioff, m);
+    }
+    
+    void storea(real_t* p) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      _mm_store_pd(p, v);
+    }
+    void storeu(real_t* p) const
+    {
+      return _mm_storeu_pd(p, v);
+    }
+    void storeu(real_t* p, size_t ioff) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p);
+      storeu(p+ioff);
+    }
+    void storea(real_t* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(m.all_m, true)) {
+        storea(p);
+      } else {
+#if defined __AVX__
+        _mm_maskstore_pd(p, m.m.as_int(), v);
+#else
+        if      (m.m[0]) _mm_storel_pd(p  , v);
+        else if (m.m[1]) _mm_storeh_pd(p+1, v);
+#endif
+      }
+    }
+    void storeu(real_t* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        storeu(p);
+      } else {
+        if      (m.m[0]) _mm_storel_pd(p  , v);
+        else if (m.m[1]) _mm_storeh_pd(p+1, v);
+      }
+    }
+    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p, m);
+      storeu(p+ioff, m);
+    }
     
     
     

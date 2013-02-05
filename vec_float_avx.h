@@ -404,6 +404,89 @@ namespace vecmathlib {
     
     
     
+    typedef vecmathlib::mask_t<realvec_t> mask_t;
+    
+    static realvec_t loada(real_t const* p)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      return _mm256_load_ps(p);
+    }
+    static realvec_t loadu(real_t const* p)
+    {
+      return _mm256_loadu_ps(p);
+    }
+    static realvec_t loadu(real_t const* p, size_t ioff)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p);
+      return loadu(p+ioff);
+    }
+    realvec_t loada(real_t const* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(all(m.m), true)) {
+        return loada(p);
+      } else {
+        return m.m.ifthen(loada(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        return loadu(p);
+      } else {
+        return m.m.ifthen(loadu(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p, m);
+      return loadu(p+ioff, m);
+    }
+    
+    void storea(real_t* p) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      _mm256_store_ps(p, v);
+    }
+    void storeu(real_t* p) const
+    {
+      return _mm256_storeu_ps(p, v);
+    }
+    void storeu(real_t* p, size_t ioff) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p);
+      storeu(p+ioff);
+    }
+    void storea(real_t* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(m.all_m, true)) {
+        storea(p);
+      } else {
+        _mm256_maskstore_ps(p, m.m.as_int(), v);
+      }
+    }
+    void storeu(real_t* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        storeu(p);
+      } else {
+        // TODO: this is expensive
+        for (int n=0; n<size; ++n) if (m.m[n]) p[n] = (*this)[n];
+      }
+    }
+    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p, m);
+      storeu(p+ioff, m);
+    }
+    
+    
+    
     intvec_t as_int() const { return _mm256_castps_si256(v); }
     intvec_t convert_int() const { return _mm256_cvtps_epi32(v); }
     

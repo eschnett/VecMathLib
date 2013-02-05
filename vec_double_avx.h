@@ -152,6 +152,7 @@ namespace vecmathlib {
     intvec(ivector_t x): v(x) {}
     intvec(int_t a): v(_mm256_set1_epi64x(a)) {}
     intvec(int_t const* as): v(_mm256_set_epi64x(as[3], as[2], as[1], as[0])) {}
+    static intvec iota() { return _mm256_set_epi64x(3, 2, 1, 0); }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const
@@ -361,6 +362,22 @@ namespace vecmathlib {
     {
       return (*this ^ x).convert_bool();
     }
+    boolvec_t operator<(intvec const& x) const
+    {
+      return (*this - x).as_bool();
+    }
+    boolvec_t operator<=(intvec const& x) const
+    {
+      return ! (*this > x);
+    }
+    boolvec_t operator>(intvec const& x) const
+    {
+      return x < *this;
+    }
+    boolvec_t operator>=(intvec const& x) const
+    {
+      return ! (*this < x);
+    }
   };
   
   
@@ -419,6 +436,91 @@ namespace vecmathlib {
       return _mm_cvtsd_f64(x);
     }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
+    
+    
+    
+    typedef vecmathlib::mask_t<realvec_t> mask_t;
+    
+    static realvec_t loada(real_t const* p)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      return _mm256_load_pd(p);
+    }
+    static realvec_t loadu(real_t const* p)
+    {
+      return _mm256_loadu_pd(p);
+    }
+    static realvec_t loadu(real_t const* p, size_t ioff)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p);
+      return loadu(p+ioff);
+    }
+    realvec_t loada(real_t const* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(all(m.m), true)) {
+        return loada(p);
+      } else {
+        return m.m.ifthen(loada(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        return loadu(p);
+      } else {
+        return m.m.ifthen(loadu(p), *this);
+      }
+    }
+    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return loada(p, m);
+      return loadu(p+ioff, m);
+    }
+    
+    void storea(real_t* p) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      _mm256_store_pd(p, v);
+    }
+    void storeu(real_t* p) const
+    {
+      return _mm256_storeu_pd(p, v);
+    }
+    void storeu(real_t* p, size_t ioff) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p);
+      storeu(p+ioff);
+    }
+    void storea(real_t* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (__builtin_expect(m.all_m, true)) {
+        storea(p);
+      } else {
+        _mm256_maskstore_pd(p, m.m.as_int(), v);
+      }
+    }
+    void storeu(real_t* p, mask_t const& m) const
+    {
+      if (__builtin_expect(m.all_m, true)) {
+        storeu(p);
+      } else {
+        if (m.m[0]) p[0] = (*this)[0];
+        if (m.m[1]) p[1] = (*this)[1];
+        if (m.m[2]) p[2] = (*this)[2];
+        if (m.m[3]) p[3] = (*this)[3];
+      }
+    }
+    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      if (ioff==0) return storea(p, m);
+      storeu(p+ioff, m);
+    }
     
     
     

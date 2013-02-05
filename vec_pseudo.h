@@ -7,6 +7,7 @@
 #include "mathfuncs.h"
 #include "vec_base.h"
 
+#include <algorithm>
 #include <cmath>
 #include <string>
 #include <typeinfo>
@@ -416,6 +417,68 @@ namespace vecmathlib {
     
     
     
+    typedef vecmathlib::mask_t<realvec_t> mask_t;
+    
+    static realvec_t loada(real_t const* p)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      return loadu(p);
+    }
+    static realvec_t loadu(real_t const* p)
+    {
+      realvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = p[d];
+      return res;
+    }
+    static realvec_t loadu(real_t const* p, size_t ioff)
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      return loadu(p+ioff);
+    }
+    realvec_t loada(real_t const* p, mask_t const& m) const
+    {
+      return m.m.ifthen(loada(p), *this);
+    }
+    realvec_t loadu(real_t const* p, mask_t const& m) const
+    {
+      return m.m.ifthen(loadu(p), *this);
+    }
+    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    {
+      return m.m.ifthen(loadu(p, ioff), *this);
+    }
+    
+    void storea(real_t* p) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      storeu(p);
+    }
+    void storeu(real_t* p) const
+    {
+      for (int d=0; d<size; ++d) p[d] = v[d];
+    }
+    void storeu(real_t* p, size_t ioff) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      storeu(p+ioff);
+    }
+    void storea(real_t* p, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      storeu(p, m);
+    }
+    void storeu(real_t* p, mask_t const& m) const
+    {
+      for (int d=0; d<size; ++d) if (m.m[d]) p[d] = v[d];
+    }
+    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    {
+      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      storeu(p+ioff, m);
+    }
+    
+    
+    
     intvec_t as_int() const
     {
       intvec_t res;
@@ -777,6 +840,74 @@ namespace vecmathlib {
   
   
   // realpseudovec wrappers
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size>
+  loada(real_t const* p,
+        realpseudovec<real_t, size> x,
+        typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.loada(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size>
+  loadu(real_t const* p,
+        realpseudovec<real_t, size> x,
+        typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.loadu(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size>
+  loadu(real_t const* p, size_t ioff,
+        realpseudovec<real_t, size> x,
+        typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.loadu(p, ioff, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storea(realpseudovec<real_t, size> x, real_t* p)
+  {
+    return x.storea(p);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realpseudovec<real_t, size> x, real_t* p)
+  {
+    return x.storeu(p);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realpseudovec<real_t, size> x, real_t* p, size_t ioff)
+  {
+    return x.storeu(p, ioff);
+  }
+  
+  template<typename real_t, int size>
+  inline void storea(realpseudovec<real_t, size> x, real_t* p,
+                     typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.storea(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realpseudovec<real_t, size> x, real_t* p,
+                     typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.storeu(p, m);
+  }
+  
+  template<typename real_t, int size>
+  inline void storeu(realpseudovec<real_t, size> x, real_t* p, size_t ioff,
+                     typename realpseudovec<real_t, size>::mask_t const& m)
+  {
+    return x.storeu(p, ioff, m);
+  }
+  
+  
   
   template<typename real_t, int size>
   inline intpseudovec<real_t, size> as_int(realpseudovec<real_t, size> x)

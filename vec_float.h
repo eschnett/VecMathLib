@@ -219,6 +219,36 @@ namespace vecmathlib {
     
     
     
+    typedef vecmathlib::mask_t<realvec_t> mask_t;
+    
+    static realvec_t loada(real_t const* p) { return *p; }
+    static realvec_t loadu(real_t const* p) { return *p; }
+    static realvec_t loadu(real_t const* p, size_t ioff) { return p[ioff]; }
+    realvec_t loada(real_t const* p, mask_t const& m) const
+    {
+      return m.m.ifthen(loada(p), *this);
+    }
+    realvec_t loadu(real_t const* p, mask_t const& m) const
+    {
+      return m.m.ifthen(loadu(p), *this);
+    }
+    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    {
+      return loadu(p+ioff, m);
+    }
+    
+    void storea(real_t* p) const { *p=v; }
+    void storeu(real_t* p) const { *p=v; }
+    void storeu(real_t* p, size_t ioff) const { p[ioff]=v; }
+    void storea(real_t* p, mask_t const& m) const { if (m.all_m) storea(p); }
+    void storeu(real_t* p, mask_t const& m) const { if (m.all_m) storeu(p); }
+    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    {
+      storeu(p+ioff, m);
+    }
+    
+    
+    
     intvec_t as_int() const { return FP::as_int(v); }
     intvec_t convert_int() const { return MF::vml_convert_int(v); }
     

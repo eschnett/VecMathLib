@@ -14,3 +14,4 @@ Makefile
 bench
 rules.ninja
 build.ninja
+loop
