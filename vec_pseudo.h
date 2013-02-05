@@ -383,7 +383,7 @@ namespace vecmathlib {
     typedef realpseudovec realvec_t;
     
   private:
-    boolvec_t map(bool f(real_t)) const
+    boolvec_t mapb(bool f(real_t)) const
     {
       boolvec_t res;
       for (int d=0; d<size; ++d) res.v[d] = f(v[d]);
@@ -673,10 +673,10 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) res.v[d] = std::ilogb(v[d]);
       return res;
     }
-    boolvec_t isfinite() const { return map(std::isfinite); }
-    boolvec_t isinf() const { return map(std::isinf); }
-    boolvec_t isnan() const { return map(std::isnan); }
-    boolvec_t isnormal() const { return map(std::isnormal); }
+    boolvec_t isfinite() const { return mapb(std::isfinite); }
+    boolvec_t isinf() const { return mapb(std::isinf); }
+    boolvec_t isnan() const { return mapb(std::isnan); }
+    boolvec_t isnormal() const { return mapb(std::isnormal); }
     realpseudovec log() const { return map(std::log); }
     realpseudovec log10() const { return map(std::log10); }
     realpseudovec log1p() const { return map(std::log1p); }
@@ -700,7 +700,7 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) res.v[d] = std::scalbn(v[d], n.v[d]);
       return res;
     }
-    boolvec_t signbit() const { return map(std::signbit); }
+    boolvec_t signbit() const { return mapb(std::signbit); }
     realpseudovec sin() const { return map(std::sin); }
     realpseudovec sinh() const { return map(std::sinh); }
     realpseudovec sqrt() const { return map(std::sqrt); }

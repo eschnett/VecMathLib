@@ -4,9 +4,75 @@
 #define FLOATPROPS_H
 
 #include <cmath>
-#include <cstdint>
+#ifndef __clang__
+#  include <cstdint>
+#endif
 #include <cstring>
+#include <iostream>
 #include <limits>
+#include <sstream>
+#include <typeinfo>
+
+
+
+#ifdef __clang__
+
+typedef int int32_t;
+typedef unsigned int uint32_t;
+// typedef long int64_t;
+// typedef unsigned long uint64_t;
+
+namespace std {
+  float acosh(float a) { return ::acosh(a); }
+  float asinh(float a) { return ::asinh(a); }
+  float atanh(float a) { return ::atanh(a); }
+  float copysign(float a, float b) { return ::copysign(a, b); }
+  float exp2(float a) { return ::exp2(a); }
+  float expm1(float a) { return ::expm1(a); }
+  float fdim(float a, float b) { return ::fdim(a, b); }
+  float fma(float a, float b, float c) { return ::fma(a, b, c); }
+  float fmax(float a, float b) { return ::fmax(a, b); }
+  float fmin(float a, float b) { return ::fmin(a, b); }
+  int ilogb(float a) { return ::ilogb(a); }
+  bool isfinite(float a) { return true; /*return (isfinite)(a);*/ }
+  bool isinf(float a) { return false; /*return (isinf)(a);*/ }
+  bool isnan(float a) { return false; /*return (isnan)(a);*/ }
+  bool isnormal(float a) { return true; /*return (isnormal)(a);*/ }
+  float log1p(float a) { return ::log1p(a); }
+  float log2(float a) { return ::log2(a); }
+  long lrint(float a) { return ::lrint(a); }
+  float remainder(float a, float b) { return ::remainder(a, b); }
+  float round(float a) { return ::round(a); }
+  float scalbn(float a, int i) { return ::scalbnf(a, i); }
+  bool signbit(float a) { return a<0.0f; /*return (signbit)(a);*/ }
+  
+  double acosh(double a) { return ::acosh(a); }
+  double asinh(double a) { return ::asinh(a); }
+  double atanh(double a) { return ::atanh(a); }
+  double copysign(double a, double b) { return ::copysign(a, b); }
+  double exp2(double a) { return ::exp2(a); }
+  double expm1(double a) { return ::expm1(a); }
+  double fdim(double a, double b) { return ::fdim(a, b); }
+  double fma(double a, double b, double c) { return ::fma(a, b, c); }
+  double fmax(double a, double b) { return ::fmax(a, b); }
+  double fmin(double a, double b) { return ::fmin(a, b); }
+  int ilogb(double a) { return ::ilogb(a); }
+  bool isfinite(double a) { return true; /*return (isfinite)(a);*/ }
+  bool isinf(double a) { return false; /*return (isinf)(a);*/ }
+  bool isnan(double a) { return false; /*return (isnan)(a);*/ }
+  bool isnormal(double a) { return true; /*return (isnormal)(a);*/ }
+  double log1p(double a) { return ::log1p(a); }
+  double log2(double a) { return ::log2(a); }
+  long lrint(double a) { return ::lrint(a); }
+  double remainder(double a, double b) { return ::remainder(a, b); }
+  double round(double a) { return ::round(a); }
+  double scalbn(double a, int i) { return ::scalbn(a, i); }
+  bool signbit(double a) { return a<0.0; /*return (signbit)(a);*/ }
+  
+  string to_string(int i) { ostringstream buf; buf<<i; return buf.str(); }
+}
+
+#endif
 
 
 
