@@ -273,14 +273,14 @@ namespace vecmathlib {
       vhi = _mm_xor_si128(signmask23, vhi);
 #else
       // Convert signed to unsiged
-      vlo += _mm_set1_epi64x(U(1) << (bits-1));
-      vhi += _mm_set1_epi64x(U(1) << (bits-1));
+      vlo = _mm_add_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-1)));
+      vhi = _mm_add_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1)));
       // Shift
       vlo = _mm_srli_epi64(vlo, n);
       vhi = _mm_srli_epi64(vhi, n);
       // Undo conversion
-      vlo -= _mm_set1_epi64x(U(1) << (bits-n));
-      vhi -= _mm_set1_epi64x(U(1) << (bits-n));
+      vlo = _mm_sub_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-n)));
+      vhi = _mm_sub_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-n)));
 #endif
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
