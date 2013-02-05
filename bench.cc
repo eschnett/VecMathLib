@@ -9,7 +9,6 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <typeinfo>
 
 #include <sys/time.h>
 
