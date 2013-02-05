@@ -117,6 +117,7 @@ namespace vecmathlib {
     //intvec(vector_t x): v(x) {}
     intvec(int_t a): v(a) {}
     intvec(int_t const* as): v(as[0]) {}
+    static intvec iota() { return intvec(I(0)); }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return v; }

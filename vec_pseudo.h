@@ -149,6 +149,12 @@ namespace vecmathlib {
     // intpseudovec& operator=(intpseudovec const& x) { return v=x.v, *this; }
     intpseudovec(int_t a) { for (int d=0; d<size; ++d) v[d]=a; }
     intpseudovec(int_t const* as) { for (int d=0; d<size; ++d) v[d]=as[d]; }
+    static intpseudovec iota()
+    {
+      intpseudovec res;
+      for (int d=0; d<size; ++d) res.v[d]=d;
+      return res;
+    }
     
     int_t operator[](int n) const { return v[n]; }
     intpseudovec& set_elt(int n, int_t a) { return v[n]=a, *this; }

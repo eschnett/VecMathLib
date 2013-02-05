@@ -160,6 +160,7 @@ namespace vecmathlib {
     intvec(ivector_t x): v(x) {}
     intvec(int_t a): v(_mm_set1_epi32(a)) {}
     intvec(int_t const* as): v(_mm_set_epi32(as[3], as[2], as[1], as[0])) {}
+    static intvec iota() { return _mm_set_epi32(3, 2, 1, 0); }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const

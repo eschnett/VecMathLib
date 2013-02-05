@@ -157,6 +157,7 @@ namespace vecmathlib {
     intvec(ivector_t x): v(x) {}
     intvec(int_t a): v(_mm_set1_epi64x(a)) {}
     intvec(int_t const* as): v(_mm_set_epi64x(as[1], as[0])) {}
+    static intvec iota() { return _mm_set_epi64x(1, 0); }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
