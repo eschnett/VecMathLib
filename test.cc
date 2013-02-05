@@ -367,6 +367,7 @@ struct vecmathlib_test {
     } // for mval
   }
   
+  // Change signature: "int" -> "int_t"
   static int_t ilogb(real_t x) { return std::ilogb(x); }
   static real_t scalbn(real_t x, int_t n) { return std::scalbn(x, n); }
   static void test_fabs()
