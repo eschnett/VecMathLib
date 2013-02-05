@@ -88,7 +88,15 @@ namespace vecmathlib {
     {
       static_assert(sizeof std::lrint(x) >= sizeof(int_t),
                     "lrint() has wrong return type");
-      return std::lrint(x);
+      long res = std::lrint(x);
+      if (sizeof std::lrint(x) > sizeof(int_t)) {
+        if (res < std::numeric_limits<int_t>::min() ||
+            res > std::numeric_limits<int_t>::max())
+        {
+          return std::numeric_limits<int_t>::min();
+        }
+      }
+      return res;
     }
   };
   
@@ -157,7 +165,15 @@ namespace vecmathlib {
     {
       static_assert(sizeof std::lrint(x) >= sizeof(int_t),
                     "lrint() has wrong return type");
-      return std::lrint(x);
+      long res = std::lrint(x);
+      if (sizeof std::lrint(x) > sizeof(int_t)) {
+        if (res < std::numeric_limits<int_t>::min() ||
+            res > std::numeric_limits<int_t>::max())
+        {
+          return std::numeric_limits<int_t>::min();
+        }
+      }
+      return res;
     }
   };
   
