@@ -19,7 +19,7 @@ namespace vecmathlib {
     // first pass (lobits), so that the second pass (hibits) may be
     // omitted if the high bits are known to be zero.
     int_t lobits = FP::mantissa_bits;
-    int_t hibits = FP::bits - lobits;
+    // int_t hibits = FP::bits - lobits;
     
     // Convert lower bits
     intvec_t xlo = x & IV((U(1) << lobits) - 1);
