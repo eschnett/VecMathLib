@@ -86,9 +86,9 @@ namespace vecmathlib {
     static inline real_t convert_float(int_t x) { return real_t(x); }
     static inline int_t convert_int(real_t x)
     {
-      static_assert(sizeof(std::rint(x)) == sizeof(int_t),
-                    "rint() has wrong return type");
-      return std::rint(x);
+      static_assert(sizeof std::lrint(x) >= sizeof(int_t),
+                    "lrint() has wrong return type");
+      return std::lrint(x);
     }
   };
   
@@ -155,9 +155,9 @@ namespace vecmathlib {
     static inline real_t convert_float(int_t x) { return real_t(x); }
     static inline int_t convert_int(real_t x)
     {
-      static_assert(sizeof(std::llrint(x)) == sizeof(int_t),
-                    "llrint() has wrong return type");
-      return std::llrint(x);
+      static_assert(sizeof std::lrint(x) >= sizeof(int_t),
+                    "lrint() has wrong return type");
+      return std::lrint(x);
     }
   };
   
