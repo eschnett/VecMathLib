@@ -268,14 +268,14 @@ namespace vecmathlib {
       // before shifting, and subtract the shifted 0x80000000 after
       // shifting
       // Convert signed to unsiged
-      vlo += _mm_set1_epi32(U(1) << (bits-1));
-      vhi += _mm_set1_epi32(U(1) << (bits-1));
+      vlo = _mm_add_epi32(vlo, _mm_set1_epi32(U(1) << (bits-1)));
+      vhi = _mm_add_epi32(vhi, _mm_set1_epi32(U(1) << (bits-1)));
       // Shift
       vlo = _mm_srli_epi32(vlo, n);
       vhi = _mm_srli_epi32(vhi, n);
       // Undo conversion
-      vlo -= _mm_set1_epi32(U(1) << (bits-n));
-      vhi -= _mm_set1_epi32(U(1) << (bits-n));
+      vlo = _mm_sub_epi32(vlo, _mm_set1_epi32(U(1) << (bits-n)));
+      vhi = _mm_sub_epi32(vhi, _mm_set1_epi32(U(1) << (bits-n)));
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator<<(int_t n) const
@@ -306,16 +306,20 @@ namespace vecmathlib {
       __m128i nvlo = _mm256_castsi256_si128(n.v);
       __m128i nvhi = _mm256_extractf128_si256(n.v, 1);
       // Convert signed to unsiged
-      vlo += _mm_set1_epi32(U(1) << (bits-1));
-      vhi += _mm_set1_epi32(U(1) << (bits-1));
+      vlo = _mm_add_epi32(vlo, _mm_set1_epi32(U(1) << (bits-1)));
+      vhi = _mm_add_epi32(vhi, _mm_set1_epi32(U(1) << (bits-1)));
       // Shift
       vlo = _mm_srl_epi32(vlo, nvlo);
       vhi = _mm_srl_epi32(vhi, nvhi);
       // Undo conversion
-      vlo -= _mm_sll_epi32(_mm_set1_epi32(1),
-                           _mm_sub_epi32(_mm_set1_epi32(bits), nvlo));
-      vhi -= _mm_sll_epi32(_mm_set1_epi32(1),
-                           _mm_sub_epi32(_mm_set1_epi32(bits), nvhi));
+      vlo = _mm_sub_epi32(vlo,
+                          _mm_sll_epi32(_mm_set1_epi32(1),
+                                        _mm_sub_epi32(_mm_set1_epi32(bits),
+                                                      nvlo)));
+      vhi = _mm_sub_epi32(vhi,
+                          _mm_sll_epi32(_mm_set1_epi32(1),
+                                        _mm_sub_epi32(_mm_set1_epi32(bits),
+                                                      nvhi)));
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator<<(intvec n) const
