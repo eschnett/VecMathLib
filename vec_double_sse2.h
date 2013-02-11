@@ -496,7 +496,7 @@ namespace vecmathlib {
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec ceil() const { return _mm_ceil_pd(v); }
     realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
-    realvec cos() const { return MF::vml_cos(*this); }
+    realvec cos() const { return MF::vml_cos_chebyshev_double(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
     realvec exp() const { return MF::vml_exp(*this); }
     realvec exp10() const { return MF::vml_exp10(*this); }
@@ -525,7 +525,7 @@ namespace vecmathlib {
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     boolvec_t signbit() const { return v; }
-    realvec sin() const { return MF::vml_sin(*this); }
+    realvec sin() const { return MF::vml_sin_chebyshev_double(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
     realvec sqrt() const { return _mm_sqrt_pd(v); }
     realvec tan() const { return MF::vml_tan(*this); }
