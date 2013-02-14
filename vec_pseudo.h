@@ -524,13 +524,13 @@ namespace vecmathlib {
     intvec_t as_int() const
     {
       intvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = as_int(v[d]);
+      for (int d=0; d<size; ++d) res.v[d] = FP::as_int(v[d]);
       return res;
     }
     intvec_t convert_int() const
     {
       intvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = floatprops<T>::convert_int(v[d]);
+      for (int d=0; d<size; ++d) res.v[d] = FP::convert_int(v[d]);
       return res;
     }
     
@@ -770,7 +770,7 @@ namespace vecmathlib {
   inline auto intpseudovec<T,N>::as_float() const -> realvec_t
   {
     realvec_t res;
-    for (int d=0; d<size; ++d) res.v[d] = as_float(v[d]);
+    for (int d=0; d<size; ++d) res.v[d] = FP::as_float(v[d]);
     return res;
   }
   
@@ -778,7 +778,7 @@ namespace vecmathlib {
   inline auto intpseudovec<T,N>::convert_float() const -> realvec_t
   {
     realvec_t res;
-    for (int d=0; d<size; ++d) res.v[d] = floatprops<T>::convert_float(v[d]);
+    for (int d=0; d<size; ++d) res.v[d] = FP::convert_float(v[d]);
     return res;
   }
   
