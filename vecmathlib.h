@@ -3,7 +3,14 @@
 #ifndef VECMATHLIB_H
 #define VECMATHLIB_H
 
-#define VML_DEBUG
+#if defined VML_DEBUG || defined VML_NODEBUG
+#  if defined VML_DEBUG && defined VML_NODEBUG
+#    error "Only one of VML_DEBUG or VML_NODEBUG may be defined"
+#  endif
+#else
+// default
+#  define VML_DEBUG
+#endif
 
 #undef VML_HAVE_DENORMALS
 #undef VML_HAVE_INF

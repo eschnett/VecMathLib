@@ -1,6 +1,7 @@
 // -*-C++-*-
 
 #define NDEBUG
+#define VML_NODEBUG
 
 #include "vecmathlib.h"
 
