@@ -599,7 +599,7 @@ namespace vecmathlib {
     }
     real_t sum() const
     {
-      real_t res = R(1.0);
+      real_t res = R(0.0);
       for (int d=0; d<size; ++d) res += v[d];
       return res;
     }
