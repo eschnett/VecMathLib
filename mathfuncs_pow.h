@@ -22,7 +22,8 @@ namespace vecmathlib {
     realvec_t r = exp(log(fabs(x)) * y);
     
     // The result is negative if x<0 and if y is integer and odd
-    realvec_t sign = fmod(copysign(y, x), RV(2.0)) + RV(0.5);
+    realvec_t mod_y = fabs(y) - RV(2.0) * floor(RV(0.5) * fabs(y));
+    realvec_t sign = copysign(mod_y, x) + RV(0.5);
     r = copysign(r, sign);
     
     // Handle zero
