@@ -401,17 +401,24 @@ struct vecmathlib_test {
     
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-1.0e+10), R(+1.0e+10));
-      intvec_t const n = random(int_t(-1000000), int_t(+1000000));
-      realvec_t const fn = vecmathlib::convert_float(n);
+      intvec_t const n1 = random(int_t(-100), int_t(+100));
+      intvec_t const n2 = random(int_t(-1000000000), int_t(+1000000000));
+      realvec_t const fn1 = vecmathlib::convert_float(n1);
+      realvec_t const fn2 = vecmathlib::convert_float(n2);
       check("convert_float",
-            FP::convert_float, vecmathlib::convert_float, n, accuracy());
+            FP::convert_float, vecmathlib::convert_float, n1, accuracy());
+      check("convert_float",
+            FP::convert_float, vecmathlib::convert_float, n2, accuracy());
       check("convert_int", FP::convert_int, vecmathlib::convert_int, x);
       check("ceil", ceil, vecmathlib::ceil, x, accuracy());
-      check("ceil", ceil, vecmathlib::ceil, fn, accuracy());
+      check("ceil", ceil, vecmathlib::ceil, fn1, accuracy());
+      check("ceil", ceil, vecmathlib::ceil, fn2, accuracy());
       check("floor", floor, vecmathlib::floor, x, accuracy());
-      check("floor", floor, vecmathlib::floor, fn, accuracy());
+      check("floor", floor, vecmathlib::floor, fn1, accuracy());
+      check("floor", floor, vecmathlib::floor, fn2, accuracy());
       check("round", round, vecmathlib::round, x, accuracy());
-      check("round", round, vecmathlib::round, fn, accuracy());
+      check("round", round, vecmathlib::round, fn1, accuracy());
+      check("round", round, vecmathlib::round, fn2, accuracy());
     }
   }
   
