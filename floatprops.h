@@ -187,19 +187,6 @@ namespace vecmathlib {
   
   
   
-  template<typename int_t>
-  inline typename intprops<int_t>::real_t as_float(int_t x)
-  {
-    typedef typename intprops<int_t>::real_t real_t;
-    return floatprops<real_t>::as_float(x);
-  }
-  
-  template<typename real_t>
-  inline typename floatprops<real_t>::int_t as_int(real_t x)
-  {
-    return floatprops<real_t>::as_int(x);
-  }
-  
 } // namespace vecmathlib
 
 #endif  // #ifndef FLOATPROPS_H
