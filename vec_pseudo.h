@@ -101,8 +101,18 @@ namespace vecmathlib {
       return res;
     }
     
-    bool all() const;
-    bool any() const;
+    bool all() const
+    {
+      bool res = true;
+      for (int d=0; d<size; ++d) res = res && v[d];
+      return res;
+    }
+    bool any() const
+    {
+      bool res = false;
+      for (int d=0; d<size; ++d) res = res || v[d];
+      return res;
+    }
     
     
     
@@ -731,24 +741,6 @@ namespace vecmathlib {
   {
     intvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = v[d];
-    return res;
-  }
-  
-  template<typename T, int N>
-  inline
-  bool boolpseudovec<T,N>::all() const
-  {
-    bool res = true;
-    for (int d=0; d<size; ++d) res = res && v[d];
-    return res;
-  }
-  
-  template<typename T, int N>
-  inline
-  bool boolpseudovec<T,N>::any() const
-  {
-    bool res = false;
-    for (int d=0; d<size; ++d) res = res || v[d];
     return res;
   }
   
