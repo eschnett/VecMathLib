@@ -11,6 +11,9 @@
 
 // SSE2 intrinsics
 #include <emmintrin.h>
+#ifdef __SSE3__                 // Intel's SSE 3
+#  include <pmmintrin.h>
+#endif
 #ifdef __SSE4_1__               // Intel's SSE 4.1
 #  include <smmintrin.h>
 #endif
@@ -455,8 +458,11 @@ namespace vecmathlib {
     }
     real_t sum() const
     {
-      // return (*this)[0] + (*this)[1];
+#ifdef __SSE3__
       return _mm_cvtsd_f64(_mm_hadd_pd(v, v));
+#else
+      return (*this)[0] + (*this)[1];
+#endif
     }
     
     
@@ -494,7 +500,14 @@ namespace vecmathlib {
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
-    realvec ceil() const { return _mm_ceil_pd(v); }
+    realvec ceil() const
+    {
+#ifdef __SSE4_1__
+      return _mm_ceil_pd(v);
+#else
+      return MF::vml_ceil(*this);
+#endif
+ }
     realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
     realvec cos() const { return MF::vml_cos_chebyshev_double(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
@@ -504,7 +517,14 @@ namespace vecmathlib {
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return MF::vml_fabs(*this); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return _mm_floor_pd(v); }
+    realvec floor() const
+    {
+#ifdef __SSE4_1__
+      return _mm_floor_pd(v);
+#else
+      return MF::vml_floor(*this);
+#endif
+ }
     realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
     realvec fmax(realvec y) const { return _mm_max_pd(v, y.v); }
     realvec fmin(realvec y) const { return _mm_min_pd(v, y.v); }
@@ -521,7 +541,14 @@ namespace vecmathlib {
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return _mm_div_pd(_mm_set1_pd(1.0), v); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec round() const { return _mm_round_pd(v, _MM_FROUND_NINT); }
+    realvec round() const
+    {
+#ifdef __SSE4_1__
+      return _mm_round_pd(v, _MM_FROUND_NINT);
+#else
+      return MF::vml_round(*this);
+#endif
+    }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     realvec scalbn(int_t n) const { return MF::vml_scalbn(*this, n); }
     realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
@@ -577,7 +604,12 @@ namespace vecmathlib {
   inline
   auto boolvec<double,2>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
   {
+#ifdef __SSE4_1__
     return _mm_blendv_pd(y.v, x.v, v);
+#else
+    return ((-convert_int() & x.as_int()) |
+            (~-convert_int() & y.as_int())).as_float();
+#endif
   }
   
   
