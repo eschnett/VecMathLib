@@ -21,8 +21,8 @@ namespace vecmathlib {
     static int const size = realvec_t::size;
     
     // typedef realvec<real_t, size> realvec_t;
-    typedef intvec<real_t, size> intvec_t;
-    typedef boolvec<real_t, size> boolvec_t;
+    typedef typename realvec_t::intvec_t intvec_t;
+    typedef typename realvec_t::boolvec_t boolvec_t;
     
     // Short names for type casts
     typedef real_t R;
