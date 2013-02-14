@@ -383,7 +383,7 @@ namespace vecmathlib {
         if (typeid(T) == typeid(float)) base = "float";
         else if (typeid(T) == typeid(double)) base = "double";
         else base = typeid(T).name();
-        name_ = std::string("<") + std::to_string(N) + "*" + base + ">";
+        name_ = std::string("<libm:") + std::to_string(N) + "*" + base + ">";
       }
       return name_.c_str();
     }
