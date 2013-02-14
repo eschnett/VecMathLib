@@ -112,15 +112,17 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ceil(realvec_t x)
   {
-    real_t offset = R(0.5) - std::scalbn(fabs(x), -FP::mantissa_bits);
-    return round(x + RV(offset));
+    boolvec_t iszero = x == RV(0.0);
+    realvec_t offset = RV(0.5) - scalbn(fabs(x), I(-FP::mantissa_bits));
+    return ifthen(iszero, x, round(x + offset));
   }
   
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_floor(realvec_t x)
   {
-    real_t offset = R(0.5) - std::scalbn(fabs(x), -FP::mantissa_bits);
-    return round(x - RV(offset));
+    boolvec_t iszero = x == RV(0.0);
+    realvec_t offset = RV(0.5) - scalbn(fabs(x), I(-FP::mantissa_bits));
+    return ifthen(iszero, x, round(x - offset));
   }
   
 }; // namespace vecmathlib
