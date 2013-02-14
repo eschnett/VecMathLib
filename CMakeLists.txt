@@ -7,6 +7,9 @@ add_executable (example example.cc)
 add_executable (loop loop.cc)
 add_executable (test test.cc)
 add_executable (bench bench.cc)
+add_executable (instantiations instantiations.cc)
+
+
 
 # GCC:
 # set (CMAKE_CXX_COMPILER "g++")
