@@ -511,6 +511,7 @@ namespace vecmathlib {
       r *= RV(1.5) - RV(0.5)*x * r*r; // one Newton iteration (see vml_rsqrt)
       return r;
     }
+    realvec scalbn(int_t n) const { return MF::vml_scalbn(*this, n); }
     realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     boolvec_t signbit() const { return v; }
     realvec sin() const { return MF::vml_sin_chebyshev_single(*this); }

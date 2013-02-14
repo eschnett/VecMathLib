@@ -523,6 +523,7 @@ namespace vecmathlib {
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
     realvec round() const { return _mm_round_pd(v, _MM_FROUND_NINT); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
+    realvec scalbn(int_t n) const { return MF::vml_scalbn(*this, n); }
     realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     boolvec_t signbit() const { return v; }
     realvec sin() const { return MF::vml_sin_chebyshev_double(*this); }

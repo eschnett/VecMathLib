@@ -694,6 +694,12 @@ namespace vecmathlib {
     }
     realpseudovec round() const { return map(std::round); }
     realpseudovec rsqrt() const { return sqrt().rcp(); }
+    realpseudovec scalbn(int_t n) const
+    {
+      realvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = std::scalbn(v[d], n);
+      return res;
+    }
     realpseudovec scalbn(intvec_t n) const
     {
       realvec_t res;
@@ -1184,6 +1190,14 @@ namespace vecmathlib {
   inline realpseudovec<real_t, size> rsqrt(realpseudovec<real_t, size> x)
   {
     return x.rsqrt();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realpseudovec<real_t, size> scalbn(realpseudovec<real_t, size> x,
+                                     typename intpseudovec<real_t, size>::int_t n)
+  {
+    return x.scalbn(n);
   }
   
   template<typename real_t, int size>

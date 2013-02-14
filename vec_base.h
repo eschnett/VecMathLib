@@ -427,6 +427,14 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realvec<real_t, size> scalbn(realvec<real_t, size> x,
+                               typename intvec<real_t, size>::int_t n)
+  {
+    return x.scalbn(n);
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realvec<real_t, size> scalbn(realvec<real_t, size> x,
                                intvec<real_t, size> n)
   {
     return x.scalbn(n);
