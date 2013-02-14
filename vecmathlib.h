@@ -27,21 +27,30 @@
 #  define VML_ASSERT(x) ((void)0)
 #endif
 
+// Scalarise all vector operations, and use libm's functions
 #include "vec_pseudo.h"
 
-#include "vec_float.h"
-#if defined __SSE2__            // Intel SSE 2
+// Scalarise all vector operations; don't use libm,, use only VML's
+// functions
+#include "vec_test.h"
+
+// Intel SSE 2
+#if defined __SSE2__
+#  include "vec_float_sse2_scalar.h"
 #  include "vec_float_sse2.h"
 #endif
-#if defined __AVX__             // Intel AVX
+// Intel AVX
+#if defined __AVX__
 #  include "vec_float_avx.h"
 #endif
 
-#include "vec_double.h"
-#if defined __SSE2__            // Intel SSE 2
+// Intel SSE 2
+#if defined __SSE2__
+#  include "vec_double_sse2_scalar.h"
 #  include "vec_double_sse2.h"
 #endif
-#if defined __AVX__             // Intel AVX
+// Intel AVX
+#if defined __AVX__
 #  include "vec_double_avx.h"
 #endif
 

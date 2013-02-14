@@ -595,29 +595,35 @@ int main(int argc, char** argv)
 
   cout << "Testing math functions:\n" << flush;
   
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   vecmathlib_test<realpseudovec<float,1>>::test();
+  vecmathlib_test<realtestvec<float,1>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   vecmathlib_test<realvec<float,1>>::test();
 #endif
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
   vecmathlib_test<realpseudovec<float,4>>::test();
+  vecmathlib_test<realtestvec<float,4>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
   vecmathlib_test<realvec<float,4>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
   vecmathlib_test<realpseudovec<float,8>>::test();
+  vecmathlib_test<realtestvec<float,8>>::test();
   vecmathlib_test<realvec<float,8>>::test();
 #endif
   
-#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   vecmathlib_test<realpseudovec<double,1>>::test();
+  vecmathlib_test<realtestvec<double,1>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
   vecmathlib_test<realvec<double,1>>::test();
 #endif
-#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
   vecmathlib_test<realpseudovec<double,2>>::test();
+  vecmathlib_test<realtestvec<double,2>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
   vecmathlib_test<realvec<double,2>>::test();
 #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
   vecmathlib_test<realpseudovec<double,4>>::test();
+  vecmathlib_test<realtestvec<double,4>>::test();
   vecmathlib_test<realvec<double,4>>::test();
 #endif
   
