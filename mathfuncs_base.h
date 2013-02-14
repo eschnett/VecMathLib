@@ -94,10 +94,6 @@ namespace vecmathlib {
     static realvec_t vml_cos(realvec_t x);
     static realvec_t vml_sin(realvec_t x);
     static realvec_t vml_tan(realvec_t x);
-    static realvec_t vml_cos_chebyshev_single(realvec_t x);
-    static realvec_t vml_cos_chebyshev_double(realvec_t x);
-    static realvec_t vml_sin_chebyshev_single(realvec_t x);
-    static realvec_t vml_sin_chebyshev_double(realvec_t x);
     
     // sinh
     static realvec_t vml_cosh(realvec_t x);
