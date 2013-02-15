@@ -21,42 +21,38 @@ namespace vecmathlib {
     x = scalbn(x, -ilogb_x);
     assert(all(x >= RV(1.0) && x < RV(2.0)));
     
-    // Approximate
-    // for |x|>0.01: (*)  log(x) = Sum[n=1,nmax,n%2==1] 2/n ((x-1) / (x+1))^n
-    // else:         (**) log(x) = Sum[n=1,nmax] (-1)^(n+1) 1/n (x-1)^n
     assert(all(x >= RV(1.0) && x < RV(2.0)));
     
-    // nmax   max_error of (*)
-    //    5   5.9e-5
-    //    7   1.3e-6
-    //    9   2.9e-8
-    //   15   4.4e-13
-    //   17   1.1e-14
-    //   19   3.0e-16
-    int const nmax = sizeof(real_t)==4 ? 9 : 17;
-    x *= RV(M_SQRT1_2);         // shift range to increase accuracy
+    realvec_t y = (x - RV(1.0)) / (x + RV(1.0));
+    realvec_t y2 = y*y;
     
-    realvec_t xm1 = x - RV(1.0);
-    boolvec_t near1 = fabs(xm1) < RV(0.0001); // epsilon^(1/niters)
-    
-    // for (*)
-    realvec_t xm1_xp1 = xm1 / (x + RV(1.0));
-    realvec_t xm1_xp1_2 = xm1_xp1 * xm1_xp1;
-    
-    // for (**)
-    realvec_t mxm1 = - xm1;
-    
-    realvec_t y  = ifthen(near1, xm1,  RV(2.0) * xm1_xp1);
-    realvec_t yf = ifthen(near1, mxm1, xm1_xp1_2);
-    y *= RV(M_LOG2E);
-    
-    realvec_t r = y;
-    for (int n=3, nn=2; n<nmax; n+=2, ++nn) {
-      y *= yf;
-      r += y * ifthen(near1, RV(R(1.0) / R(nn)), RV(R(1.0) / R(n)));
+    realvec_t r;
+    switch (sizeof(real_t)) {
+    case 4:
+      // float, error=5.98355642684398209498469870525e-9
+      r = RV(0.410981538282433293325329456838);
+      r = fma(r, y2, RV(0.402155483172044562892705980539));
+      r = fma(r, y2, RV(0.57755014627178237959721643293));
+      r = fma(r, y2, RV(0.96178780600659929206930296869));
+      r = fma(r, y2, RV(2.88539012786343587248965772685));
+      break;
+    case 8:
+      // double, error=9.45037202901655672811489051683e-17
+      r = RV(0.259935726478127940817401224248);
+      r = fma(r, y2, RV(0.140676370079882918464564658472));
+      r = fma(r, y2, RV(0.196513478841924000569879320851));
+      r = fma(r, y2, RV(0.221596471338300882039273355617));
+      r = fma(r, y2, RV(0.262327298560598641020007602127));
+      r = fma(r, y2, RV(0.320598261015170101859472461613));
+      r = fma(r, y2, RV(0.412198595799726905825871956187));
+      r = fma(r, y2, RV(0.57707801621733949207376840932));
+      r = fma(r, y2, RV(0.96179669392666302667713134701));
+      r = fma(r, y2, RV(2.88539008177792581277410991327));
+      break;
+    default:
+      __builtin_unreachable();
     }
-    
-    r += RV(0.5);               // correct result for range shift
+    r *= y;
     
     // Undo rescaling
     r += convert_float(ilogb_x);
