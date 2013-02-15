@@ -17,7 +17,18 @@ namespace vecmathlib {
   {
     // Rescale
     realvec_t x0 = x;
-    realvec_t round_x = round(x);
+    
+    // realvec_t round_x = round(x);
+    // intvec_t iround_x = convert_int(round_x);
+    // r = scalbn(r, iround_x);
+    
+    // Round by adding, then subtracting again a large number
+    // Add a large number to move the mantissa bits to the right
+    int_t large = (U(1) << FP::mantissa_bits) + FP::exponent_offset;
+    realvec_t tmp = x + RV(R(large));
+    tmp.barrier();
+    
+    realvec_t round_x = tmp - RV(R(large));
     x -= round_x;
     assert(all(x >= RV(-0.5) && x <= RV(0.5)));
     
@@ -54,8 +65,15 @@ namespace vecmathlib {
     }
     
     // Undo rescaling
-    intvec_t iround_x = convert_int(round_x);
-    r = ifthen(x0 < RV(R(FP::min_exponent)), RV(0.0), scalbn(r, iround_x));
+    // Extract integer as lowest mantissa bits (highest bits still
+    // contain offset, exponent, and sign)
+    intvec_t itmp = as_int(tmp);
+    // Construct scale factor by setting exponent (this shifts out the
+    // highest bits)
+    realvec_t scale = as_float(itmp << I(FP::mantissa_bits));
+    scale = ifthen(x0 < RV(R(FP::min_exponent)), RV(0.0), scale);
+    
+    r *= scale;
     
     return r;
   }
