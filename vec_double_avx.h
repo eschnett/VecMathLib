@@ -80,7 +80,7 @@ namespace vecmathlib {
       switch (n & 1){
       case 0: /* do nothing */ break;
       case 1: x = _mm_shuffle_pd(x, x, _MM_SHUFFLE2(0,1)); break;
-      default: assert(0);
+      default: __builtin_unreachable();
       }
       // return to_bool(FP::as_int(_mm_cvtss_f32(x)));
       return to_bool(_mm_cvtsi128_si64(_mm_castpd_si128(x)));
@@ -165,7 +165,7 @@ namespace vecmathlib {
       case 1: x = _mm_castpd_si128(_mm_shuffle_pd(_mm_castsi128_pd(x),
                                                   _mm_castsi128_pd(x),
                                                   _MM_SHUFFLE2(0,1))); break;
-      default: assert(0);
+      default: __builtin_unreachable();
       }
       return _mm_cvtsi128_si64(x);
     }
@@ -435,7 +435,7 @@ namespace vecmathlib {
       switch (n & 1){
       case 0: /* do nothing */ break;
       case 1: x = _mm_shuffle_pd(x, x, _MM_SHUFFLE2(0,1)); break;
-      default: assert(0);
+      default: __builtin_unreachable();
       }
       return _mm_cvtsd_f64(x);
     }
