@@ -19,29 +19,42 @@ namespace vecmathlib {
     realvec_t x0 = x;
     realvec_t round_x = round(x);
     x -= round_x;
-    intvec_t iround_x = convert_int(round_x);
-    
-    // Approximate
-    // exp(x) = Sum[n=0,nmax] x^n / n!
     assert(all(x >= RV(-0.5) && x <= RV(0.5)));
     
-    // nmax   max_error
-    //    5   4.2e-5
-    //    6   2.4e-6
-    //    7   1.2e-7
-    //   11   2.2e-13
-    //   12   6.3e-15
-    //   13   1.7e-16
-    int const nmax = sizeof(real_t)==4 ? 7 : 11;
-    x *= RV(M_LN2);
-    realvec_t y = x;            // x^n / n!
-    realvec_t r = RV(1.0) + y;
-    for (int n=2; n<nmax; ++n) {
-      y *= x * RV(R(1.0) / R(n));
-      r += y;
+    // Polynomial expansion
+    realvec_t r;
+    switch (sizeof(real_t)) {
+    case 4:
+      // float, error=4.55549108005200277750378992345e-9
+      r = RV(0.000154653240842602623787395880898);
+      r = fma(r, x, RV(0.00133952915439234389712105060319));
+      r = fma(r, x, RV(0.0096180399118156827664944870552));
+      r = fma(r, x, RV(0.055503406540531310853149866446));
+      r = fma(r, x, RV(0.240226511015459465468737123346));
+      r = fma(r, x, RV(0.69314720007380208630542805293));
+      r = fma(r, x, RV(0.99999999997182023878745628977));
+      break;
+    case 8:
+      // double, error=9.32016781355638010975628074746e-18
+      r = RV(4.45623165388261696886670014471e-10);
+      r = fma(r, x, RV(7.0733589360775271430968224806e-9));
+      r = fma(r, x, RV(1.01780540270960163558119510246e-7));
+      r = fma(r, x, RV(1.3215437348041505269462510712e-6));
+      r = fma(r, x, RV(0.000015252733849766201174247690629));
+      r = fma(r, x, RV(0.000154035304541242555115696403795));
+      r = fma(r, x, RV(0.00133335581463968601407096905671));
+      r = fma(r, x, RV(0.0096181291075949686712855561931));
+      r = fma(r, x, RV(0.055504108664821672870565883052));
+      r = fma(r, x, RV(0.240226506959101382690753994082));
+      r = fma(r, x, RV(0.69314718055994530864272481773));
+      r = fma(r, x, RV(0.9999999999999999978508676375));
+      break;
+    default:
+      __builtin_unreachable();
     }
     
     // Undo rescaling
+    intvec_t iround_x = convert_int(round_x);
     r = ifthen(x0 < RV(R(FP::min_exponent)), RV(0.0), scalbn(r, iround_x));
     
     return r;
