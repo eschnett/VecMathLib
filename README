@@ -6,7 +6,8 @@ vectorizable math functions such as sqrt, sin, or atan.
 The library is implemented in C++, and intended to be called on SIMD
 vectors, e.g. those provided by SSE, AVX, or available in Power7 and
 Blue Gene architectures. The same algorithms should also work
-efficiently on accelerators such as GPUs.
+efficiently on accelerators such as GPUs. Even without vectorization,
+vecmathlib's algorithms are efficient on standard CPUs.
 
 
 
