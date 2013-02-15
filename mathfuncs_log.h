@@ -16,12 +16,15 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_log2(realvec_t x)
   {
     // Rescale
-    assert(all(x > RV(0.0)));
-    intvec_t ilogb_x = ilogb(x);
-    x = scalbn(x, -ilogb_x);
-    assert(all(x >= RV(1.0) && x < RV(2.0)));
-    
-    assert(all(x >= RV(1.0) && x < RV(2.0)));
+    VML_ASSERT(all(x > RV(0.0)));
+    // intvec_t ilogb_x = ilogb(x);
+    // x = scalbn(x, -ilogb_x);
+    // sign bit is known to be zero
+    intvec_t ilogb_x = (lsr(as_int(x), I(FP::mantissa_bits)) -
+                        IV(FP::exponent_offset));
+    x = as_float((as_int(x) & IV(FP::mantissa_mask)) |
+                 IV(I(FP::exponent_offset) << I(FP::mantissa_bits)));
+    VML_ASSERT(all(x >= RV(1.0) && x < RV(2.0)));
     
     realvec_t y = (x - RV(1.0)) / (x + RV(1.0));
     realvec_t y2 = y*y;
