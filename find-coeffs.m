@@ -6,13 +6,15 @@
    Based on the "minimax" algorithm, but using least squares instead *)
 
 funcs =
-  {{Sin[2 Pi #]&, 0, 1/4, False, 1, 2, 10},
-   {Cos[2 Pi #]&, 0, 1/4, False, 0, 2, 10},
-   {Tan, 0, Pi/4, False, 1, 2, 20},
-   (* {Cot, 0, Pi/2, False, 0, 2, 10}, *)
-   {Log[(1+#)/(1-#)]&, 0, 1/3, False, 1, 2, 15},
-   {Exp, 0, 1, False, 0, 1, 15},
-   {ArcTan, 0, 1, False, 1, 2, 25}};
+  {
+    {Sin[2 Pi #]&, 0, 1/4, False, 1, 2, 10},
+    {Cos[2 Pi #]&, 0, 1/4, False, 0, 2, 10},
+    {Tan, 0, Pi/4, False, 1, 2, 20},
+    (* {Cot, 0, Pi/2, False, 0, 2, 10}, *)
+    {Log[(1+#)/(1-#)]&, 0, 1/3, False, 1, 2, 15},
+    {2^#&, -1/2, +1/2, False, 0, 1, 15},
+    {ArcTan, 0, 1, False, 1, 2, 25}
+  };
 
 findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
   Module[{prec, npts,
@@ -30,7 +32,7 @@ findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
          prec = 30;
          
          (* Number of test points *)
-         npts = 1000; (*10000;*)
+         npts = 10000;
          
          degree = (dmin + ndegrees dstep) / If[pade, 2, 1];
          
