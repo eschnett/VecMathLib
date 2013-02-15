@@ -575,15 +575,16 @@ struct vecmathlib_test {
     test_fabs();
     test_convert();
     
-    test_asin();
-    test_asinh();
+    // Test "basic" functions first
+    test_rcp();
+    test_sqrt();
     test_exp();
     test_log();
     test_pow();
-    test_rcp();
     test_sin();
     test_sinh();
-    test_sqrt();
+    test_asin();
+    test_asinh();
   }
 };
 
