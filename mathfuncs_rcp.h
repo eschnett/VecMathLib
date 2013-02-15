@@ -5,7 +5,6 @@
 
 #include "mathfuncs_base.h"
 
-#include <cassert>
 #include <cmath>
 
 
@@ -20,7 +19,7 @@ namespace vecmathlib {
     x = fabs(x);
     
     // Initial guess
-    assert(all(x > RV(0.0)));
+    VML_ASSERT(all(x > RV(0.0)));
     intvec_t ilogb_x = ilogb(x);
     // For stability, choose a starting value that is below the result
     realvec_t r = scalbn(RV(0.5), -ilogb_x);
@@ -29,7 +28,7 @@ namespace vecmathlib {
     int const nmax = 7;
     for (int n=1; n<nmax; ++n) {
       // Step
-      assert(all(x > RV(0.0)));
+      VML_ASSERT(all(x > RV(0.0)));
       // Newton method:
       // Solve   f(r) = 0   for   f(r) = x - 1/r
       //    r <- r - f(r) / f'(r)

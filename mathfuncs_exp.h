@@ -5,7 +5,6 @@
 
 #include "mathfuncs_base.h"
 
-#include <cassert>
 #include <cmath>
 
 
@@ -30,7 +29,7 @@ namespace vecmathlib {
     
     realvec_t round_x = tmp - RV(R(large));
     x -= round_x;
-    assert(all(x >= RV(-0.5) && x <= RV(0.5)));
+    VML_ASSERT(all(x >= RV(-0.5) && x <= RV(0.5)));
     
     // Polynomial expansion
     realvec_t r;

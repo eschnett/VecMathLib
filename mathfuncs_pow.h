@@ -5,7 +5,6 @@
 
 #include "mathfuncs_base.h"
 
-#include <cassert>
 #include <cmath>
 
 

@@ -1,7 +1,6 @@
 // Instantiante some functions to be able to inspect the generated
 // machine code
 
-#define NDEBUG
 #define VML_NODEBUG
 
 #include "vecmathlib.h"

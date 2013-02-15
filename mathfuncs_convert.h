@@ -5,7 +5,6 @@
 
 #include "mathfuncs_base.h"
 
-#include <cassert>
 #include <cmath>
 
 
@@ -73,7 +72,7 @@ namespace vecmathlib {
     
     intvec_t exponent = ilogb(x);
     for (int i=0; i<intvec_t::size; ++i) {
-      assert(exponent[i] >= FP::mantissa_bits);
+      VML_ASSERT(exponent[i] >= FP::mantissa_bits);
     }
     intvec_t ix = as_int(x) & IV(FP::mantissa_mask);
     // add hidden mantissa bit

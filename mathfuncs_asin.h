@@ -5,7 +5,6 @@
 
 #include "mathfuncs_base.h"
 
-#include <cassert>
 #include <cmath>
 
 
@@ -20,7 +19,7 @@ namespace vecmathlib {
     x = fabs(x);
     
     // Reduce range using 1/x identity
-    assert(all(x >= RV(0.0)));
+    VML_ASSERT(all(x >= RV(0.0)));
     boolvec_t gt_one = x > RV(1.0);
     x = ifthen(gt_one, rcp(x), x);
     
@@ -31,7 +30,7 @@ namespace vecmathlib {
     
     // Taylor expansion; see
     // <https://en.wikipedia.org/wiki/Inverse_trigonometric_functions>.
-    assert(all(x >= RV(0.0) && x <= RV(0.5)));
+    VML_ASSERT(all(x >= RV(0.0) && x <= RV(0.5)));
     int const nmax = 30;        // ???
     realvec_t y = x / (RV(1.0) + x*x);
     realvec_t x2 = x * y;

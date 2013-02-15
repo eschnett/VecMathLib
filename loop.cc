@@ -1,6 +1,5 @@
 // -*-C++-*-
 
-#define NDEBUG
 #define restrict __restrict__
 
 #include "vecmathlib.h"
