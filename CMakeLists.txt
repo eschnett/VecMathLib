@@ -9,6 +9,12 @@ add_executable (test test.cc)
 add_executable (bench bench.cc)
 add_executable (instantiations instantiations.cc)
 
+add_custom_command(
+  OUTPUT vecmathlib.cc
+  COMMAND ./vecmathlib.py > vecmathlib.cc
+  DEPENDS vecmathlib.py)
+add_library (vecmathlib vecmathlib.cc)
+
 
 
 # GCC:
