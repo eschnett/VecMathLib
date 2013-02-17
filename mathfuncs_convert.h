@@ -100,7 +100,7 @@ namespace vecmathlib {
   {
     realvec_t r = x;
     // Round by adding a large number, destroying all excess precision
-    realvec_t offset = copysign(RV(std::scalbn(R(1.0), FP::mantissa_bits)), x);
+    realvec_t offset = copysign(RV(std::ldexp(R(1.0), FP::mantissa_bits)), x);
     r += offset;
     // Ensure the rounding is not optimised away
     r.barrier();
@@ -112,7 +112,7 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_ceil(realvec_t x)
   {
     boolvec_t iszero = x == RV(0.0);
-    realvec_t offset = RV(0.5) - scalbn(fabs(x), I(-FP::mantissa_bits));
+    realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
     return ifthen(iszero, x, round(x + offset));
   }
   
@@ -120,8 +120,14 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_floor(realvec_t x)
   {
     boolvec_t iszero = x == RV(0.0);
-    realvec_t offset = RV(0.5) - scalbn(fabs(x), I(-FP::mantissa_bits));
+    realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
     return ifthen(iszero, x, round(x - offset));
+  }
+  
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_trunc(realvec_t x)
+  {
+    return copysign(floor(fabs(x)), x);
   }
   
 }; // namespace vecmathlib

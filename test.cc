@@ -369,10 +369,10 @@ struct vecmathlib_test {
   
   // Change signature: "int" -> "int_t"
   static int_t ilogb(real_t x) { return std::ilogb(x); }
-  static real_t scalbn(real_t x, int_t n) { return std::scalbn(x, n); }
+  static real_t ldexp(real_t x, int_t n) { return std::ldexp(x, n); }
   static void test_fabs()
   {
-    cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal scalbn signbit...\n" << flush;
+    cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(-10.0), R(+10.0));
       realvec_t const y = random(R(-10.0), R(+10.0));
@@ -389,7 +389,7 @@ struct vecmathlib_test {
       check("isinf", isinf, vecmathlib::isinf, x);
       check("isnan", isnan, vecmathlib::isnan, x);
       check("isnormal", isnormal, vecmathlib::isnormal, x);
-      check("scalbn", scalbn, vecmathlib::scalbn, x, n, 0.0);
+      check("ldexp", ldexp, vecmathlib::ldexp, x, n, 0.0);
       check("signbit", signbit, vecmathlib::signbit, x);
     }
   }
@@ -419,6 +419,9 @@ struct vecmathlib_test {
       check("round", round, vecmathlib::round, x, accuracy());
       check("round", round, vecmathlib::round, fn1, accuracy());
       check("round", round, vecmathlib::round, fn2, accuracy());
+      check("trunc", trunc, vecmathlib::trunc, x, accuracy());
+      check("trunc", trunc, vecmathlib::trunc, fn1, accuracy());
+      check("trunc", trunc, vecmathlib::trunc, fn2, accuracy());
     }
   }
   
@@ -558,6 +561,10 @@ struct vecmathlib_test {
     cout << "   testing rsqrt sqrt...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(0.0), R(1.0e+3));
+      realvec_t const y = random(-R(1.0e+3), R(1.0e+3));
+      realvec_t const z = random(-R(1.0e+3), R(1.0e+3));
+      check("cbrt", cbrt, vecmathlib::cbrt, x, accuracy());
+      check("hypot", hypot, vecmathlib::hypot, y, z, accuracy());
       check("rsqrt", rsqrt, vecmathlib::rsqrt, x, accuracy());
       check("sqrt", sqrt, vecmathlib::sqrt, x, accuracy());
     }

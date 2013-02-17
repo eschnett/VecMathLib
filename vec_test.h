@@ -610,6 +610,7 @@ namespace vecmathlib {
     realtestvec asinh() const { return MF::vml_asinh(*this); }
     realtestvec atan() const { return MF::vml_atan(*this); }
     realtestvec atanh() const { return MF::vml_atanh(*this); }
+    realtestvec cbrt() const { return MF::vml_cbrt(*this); }
     realtestvec ceil() const { return MF::vml_ceil(*this); }
     realtestvec copysign(realtestvec y) const { return MF::vml_copysign(*this, y); }
     realtestvec cos() const { return MF::vml_cos(*this); }
@@ -625,11 +626,14 @@ namespace vecmathlib {
     realtestvec fmax(realtestvec y) const { return MF::vml_fmax(*this, y); }
     realtestvec fmin(realtestvec y) const { return MF::vml_fmin(*this, y); }
     realtestvec fmod(realtestvec y) const { return MF::vml_fmod(*this, y); }
+    realtestvec hypot(realtestvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
     boolvec_t isinf() const { return MF::vml_isinf(*this); }
     boolvec_t isnan() const { return MF::vml_isnan(*this); }
     boolvec_t isnormal() const { return MF::vml_isnormal(*this); }
+    realtestvec ldexp(int_t n) const { return MF::vml_ldexp(*this, n); }
+    realtestvec ldexp(intvec_t n) const { return MF::vml_ldexp(*this, n); }
     realtestvec log() const { return MF::vml_log(*this); }
     realtestvec log10() const { return MF::vml_log10(*this); }
     realtestvec log1p() const { return MF::vml_log1p(*this); }
@@ -639,14 +643,13 @@ namespace vecmathlib {
     realtestvec remainder(realtestvec y) const { return MF::vml_remainder(*this, y); }
     realtestvec round() const { return MF::vml_round(*this); }
     realtestvec rsqrt() const { return MF::vml_rsqrt(*this); }
-    realtestvec scalbn(int_t n) const { return MF::vml_scalbn(*this, n); }
-    realtestvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
     realtestvec sin() const { return MF::vml_sin(*this); }
     realtestvec sinh() const { return MF::vml_sinh(*this); }
     realtestvec sqrt() const { return MF::vml_sqrt(*this); }
     realtestvec tan() const { return MF::vml_tan(*this); }
     realtestvec tanh() const { return MF::vml_tanh(*this); }
+    realtestvec trunc() const { return MF::vml_trunc(*this); }
   };
   
   
@@ -925,11 +928,17 @@ namespace vecmathlib {
   }
     
   template<typename real_t, int size>
+  inline realtestvec<real_t, size> cbrt(realtestvec<real_t, size> x)
+  {
+    return x.cbrt();
+  }
+    
+  template<typename real_t, int size>
   inline realtestvec<real_t, size> ceil(realtestvec<real_t, size> x)
   {
     return x.ceil();
   }
-
+  
   template<typename real_t, int size>
   inline realtestvec<real_t, size> copysign(realtestvec<real_t, size> x,
                                             realtestvec<real_t, size> y)
@@ -1022,6 +1031,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realtestvec<real_t, size> hypot(realtestvec<real_t, size> x,
+                                         realtestvec<real_t, size> y)
+  {
+    return x.hypot(y);
+  }
+  
+  template<typename real_t, int size>
   inline inttestvec<real_t, size> ilogb(realtestvec<real_t, size> x)
   {
     return x.ilogb();
@@ -1049,6 +1065,22 @@ namespace vecmathlib {
   inline booltestvec<real_t, size> isnormal(realtestvec<real_t, size> x)
   {
     return x.isnormal();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realtestvec<real_t, size> ldexp(realtestvec<real_t, size> x,
+                                  typename inttestvec<real_t, size>::int_t n)
+  {
+    return x.ldexp(n);
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realtestvec<real_t, size> ldexp(realtestvec<real_t, size> x,
+                                  inttestvec<real_t, size> n)
+  {
+    return x.ldexp(n);
   }
   
   template<typename real_t, int size>
@@ -1108,22 +1140,6 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline
-  realtestvec<real_t, size> scalbn(realtestvec<real_t, size> x,
-                                   typename inttestvec<real_t, size>::int_t n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
-  inline
-  realtestvec<real_t, size> scalbn(realtestvec<real_t, size> x,
-                                   inttestvec<real_t, size> n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
   inline booltestvec<real_t, size> signbit(realtestvec<real_t, size> x)
   {
     return x.signbit();
@@ -1157,6 +1173,12 @@ namespace vecmathlib {
   inline realtestvec<real_t, size> tanh(realtestvec<real_t, size> x)
   {
     return x.tanh();
+  }
+  
+  template<typename real_t, int size>
+  inline realtestvec<real_t, size> trunc(realtestvec<real_t, size> x)
+  {
+    return x.trunc();
   }
   
   

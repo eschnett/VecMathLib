@@ -371,6 +371,7 @@ namespace vecmathlib {
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
+    realvec cbrt() const { return MF::vml_cbrt(*this); }
     realvec ceil() const { return std::ceil(v); }
     realvec copysign(realvec y) const { return std::copysign(v, y.v); }
     realvec cos() const { return MF::vml_cos(*this); }
@@ -392,11 +393,14 @@ namespace vecmathlib {
       return to_float(_mm_min_ss(from_float(v), from_float(y.v)));
     }
     realvec fmod(realvec y) const { return std::fmod(v, y.v); }
+    realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return std::ilogb(v); }
     boolvec_t isfinite() const { return std::isfinite(v); }
     boolvec_t isinf() const { return std::isinf(v); }
     boolvec_t isnan() const { return std::isnan(v); }
     boolvec_t isnormal() const { return std::isnormal(v); }
+    realvec ldexp(int_t n) const { return std::ldexp(v, n); }
+    realvec ldexp(intvec_t n) const { return std::ldexp(v, n); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
@@ -415,8 +419,6 @@ namespace vecmathlib {
 #endif
     }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
-    realvec scalbn(int_t n) const { return std::scalbn(v, n); }
-    realvec scalbn(intvec_t n) const { return std::scalbn(v, n); }
     boolvec_t signbit() const { return std::signbit(v); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
@@ -424,6 +426,15 @@ namespace vecmathlib {
     realvec sqrt() const { return to_float(_mm_sqrt_ss(from_float(v))); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
+    realvec trunc() const
+    {
+#ifdef __SSE4_1__
+      return to_float(_mm_round_ss(from_float(v), from_float(v),
+                                   _MM_FROUND_TO_ZERO));
+#else
+      return MF::vml_trunc(*this);
+#endif
+    }
   };
   
   

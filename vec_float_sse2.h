@@ -476,6 +476,7 @@ namespace vecmathlib {
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
+    realvec cbrt() const { return MF::vml_cbrt(*this); }
     realvec ceil() const
     {
 #ifdef __SSE4_1__
@@ -505,11 +506,14 @@ namespace vecmathlib {
     realvec fmax(realvec y) const { return _mm_max_ps(v, y.v); }
     realvec fmin(realvec y) const { return _mm_min_ps(v, y.v); }
     realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
+    realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
     boolvec_t isinf() const { return MF::vml_isinf(*this); }
     boolvec_t isnan() const { return MF::vml_isnan(*this); }
     boolvec_t isnormal() const { return MF::vml_isnormal(*this); }
+    realvec ldexp(int_t n) const { return MF::vml_ldexp(*this, n); }
+    realvec ldexp(intvec_t n) const { return MF::vml_ldexp(*this, n); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
@@ -538,14 +542,20 @@ namespace vecmathlib {
       r *= RV(1.5) - RV(0.5)*x * r*r; // one Newton iteration (see vml_rsqrt)
       return r;
     }
-    realvec scalbn(int_t n) const { return MF::vml_scalbn(*this, n); }
-    realvec scalbn(intvec_t n) const { return MF::vml_scalbn(*this, n); }
     boolvec_t signbit() const { return v; }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
     realvec sqrt() const { return _mm_sqrt_ps(v); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
+    realvec trunc() const
+    {
+#ifdef __SSE4_1__
+      return _mm_round_ps(v, _MM_FROUND_TO_ZERO);
+#else
+      return MF::vml_trunc(*this);
+#endif
+    }
   };
   
   

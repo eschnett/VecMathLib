@@ -19,7 +19,7 @@ namespace vecmathlib {
     
     // realvec_t round_x = round(x);
     // intvec_t iround_x = convert_int(round_x);
-    // r = scalbn(r, iround_x);
+    // r = ldexp(r, iround_x);
     
     // Round by adding, then subtracting again a large number
     // Add a large number to move the mantissa bits to the right

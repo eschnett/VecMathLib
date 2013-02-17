@@ -22,7 +22,7 @@ namespace vecmathlib {
     VML_ASSERT(all(x > RV(0.0)));
     intvec_t ilogb_x = ilogb(x);
     // For stability, choose a starting value that is below the result
-    realvec_t r = scalbn(RV(0.5), -ilogb_x);
+    realvec_t r = ldexp(RV(0.5), -ilogb_x);
     
     // Iterate
     int const nmax = 7;

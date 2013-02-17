@@ -240,13 +240,19 @@ namespace vecmathlib {
   {
     return x.atanh();
   }
-    
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> cbrt(realvec<real_t, size> x)
+  {
+    return x.cbrt();
+  }
+  
   template<typename real_t, int size>
   inline realvec<real_t, size> ceil(realvec<real_t, size> x)
   {
     return x.ceil();
   }
-
+  
   template<typename real_t, int size>
   inline realvec<real_t, size> copysign(realvec<real_t, size> x,
                                         realvec<real_t, size> y)
@@ -339,6 +345,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> hypot(realvec<real_t, size> x,
+                                     realvec<real_t, size> y)
+  {
+    return x.hypot(y);
+  }
+  
+  template<typename real_t, int size>
   inline intvec<real_t, size> ilogb(realvec<real_t, size> x)
   {
     return x.ilogb();
@@ -366,6 +379,22 @@ namespace vecmathlib {
   inline boolvec<real_t, size> isnormal(realvec<real_t, size> x)
   {
     return x.isnormal();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realvec<real_t, size> ldexp(realvec<real_t, size> x,
+                              typename intvec<real_t, size>::int_t n)
+  {
+    return x.ldexp(n);
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realvec<real_t, size> ldexp(realvec<real_t, size> x,
+                               intvec<real_t, size> n)
+  {
+    return x.ldexp(n);
   }
   
   template<typename real_t, int size>
@@ -425,22 +454,6 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline
-  realvec<real_t, size> scalbn(realvec<real_t, size> x,
-                               typename intvec<real_t, size>::int_t n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
-  inline
-  realvec<real_t, size> scalbn(realvec<real_t, size> x,
-                               intvec<real_t, size> n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
   inline boolvec<real_t, size> signbit(realvec<real_t, size> x)
   {
     return x.signbit();
@@ -474,6 +487,12 @@ namespace vecmathlib {
   inline realvec<real_t, size> tanh(realvec<real_t, size> x)
   {
     return x.tanh();
+  }
+  
+  template<typename real_t, int size>
+  inline realvec<real_t, size> trunc(realvec<real_t, size> x)
+  {
+    return x.trunc();
   }
   
   

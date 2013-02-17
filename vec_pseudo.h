@@ -651,6 +651,7 @@ namespace vecmathlib {
     realpseudovec asinh() const { return map(std::asinh); }
     realpseudovec atan() const { return map(std::atan); }
     realpseudovec atanh() const { return map(std::atanh); }
+    realpseudovec cbrt() const { return map(std::cbrt); }
     realpseudovec ceil() const { return map(std::ceil); }
     realpseudovec copysign(realpseudovec y) const
     {
@@ -677,6 +678,7 @@ namespace vecmathlib {
     realpseudovec fmax(realpseudovec y) const { return map(std::fmax, y); }
     realpseudovec fmin(realpseudovec y) const { return map(std::fmin, y); }
     realpseudovec fmod(realpseudovec y) const { return map(std::fmod, y); }
+    realpseudovec hypot(realpseudovec y) const { return map(std::hypot, y); }
     intvec_t ilogb() const
     {
       intvec_t res;
@@ -687,6 +689,18 @@ namespace vecmathlib {
     boolvec_t isinf() const { return mapb(std::isinf); }
     boolvec_t isnan() const { return mapb(std::isnan); }
     boolvec_t isnormal() const { return mapb(std::isnormal); }
+    realpseudovec ldexp(int_t n) const
+    {
+      realvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = std::ldexp(v[d], n);
+      return res;
+    }
+    realpseudovec ldexp(intvec_t n) const
+    {
+      realvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = std::ldexp(v[d], n.v[d]);
+      return res;
+    }
     realpseudovec log() const { return map(std::log); }
     realpseudovec log10() const { return map(std::log10); }
     realpseudovec log1p() const { return map(std::log1p); }
@@ -704,24 +718,13 @@ namespace vecmathlib {
     }
     realpseudovec round() const { return map(std::round); }
     realpseudovec rsqrt() const { return sqrt().rcp(); }
-    realpseudovec scalbn(int_t n) const
-    {
-      realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::scalbn(v[d], n);
-      return res;
-    }
-    realpseudovec scalbn(intvec_t n) const
-    {
-      realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::scalbn(v[d], n.v[d]);
-      return res;
-    }
     boolvec_t signbit() const { return mapb(std::signbit); }
     realpseudovec sin() const { return map(std::sin); }
     realpseudovec sinh() const { return map(std::sinh); }
     realpseudovec sqrt() const { return map(std::sqrt); }
     realpseudovec tan() const { return map(std::tan); }
     realpseudovec tanh() const { return map(std::tanh); }
+    realpseudovec trunc() const { return map(std::trunc); }
   };
   
   
@@ -1000,13 +1003,19 @@ namespace vecmathlib {
   {
     return x.atanh();
   }
-    
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> cbrt(realpseudovec<real_t, size> x)
+  {
+    return x.cbrt();
+  }
+  
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> ceil(realpseudovec<real_t, size> x)
   {
     return x.ceil();
   }
-
+  
   template<typename real_t, int size>
   inline realpseudovec<real_t, size> copysign(realpseudovec<real_t, size> x,
                                               realpseudovec<real_t, size> y)
@@ -1099,6 +1108,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realpseudovec<real_t, size> hypot(realpseudovec<real_t, size> x,
+                                           realpseudovec<real_t, size> y)
+  {
+    return x.hypot(y);
+  }
+  
+  template<typename real_t, int size>
   inline intpseudovec<real_t, size> ilogb(realpseudovec<real_t, size> x)
   {
     return x.ilogb();
@@ -1126,6 +1142,22 @@ namespace vecmathlib {
   inline boolpseudovec<real_t, size> isnormal(realpseudovec<real_t, size> x)
   {
     return x.isnormal();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realpseudovec<real_t, size> ldexp(realpseudovec<real_t, size> x,
+                                    typename intpseudovec<real_t, size>::int_t n)
+  {
+    return x.ldexp(n);
+  }
+  
+  template<typename real_t, int size>
+  inline
+  realpseudovec<real_t, size> ldexp(realpseudovec<real_t, size> x,
+                                    intpseudovec<real_t, size> n)
+  {
+    return x.ldexp(n);
   }
   
   template<typename real_t, int size>
@@ -1185,22 +1217,6 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline
-  realpseudovec<real_t, size> scalbn(realpseudovec<real_t, size> x,
-                                     typename intpseudovec<real_t, size>::int_t n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
-  inline
-  realpseudovec<real_t, size> scalbn(realpseudovec<real_t, size> x,
-                                     intpseudovec<real_t, size> n)
-  {
-    return x.scalbn(n);
-  }
-  
-  template<typename real_t, int size>
   inline boolpseudovec<real_t, size> signbit(realpseudovec<real_t, size> x)
   {
     return x.signbit();
@@ -1234,6 +1250,12 @@ namespace vecmathlib {
   inline realpseudovec<real_t, size> tanh(realpseudovec<real_t, size> x)
   {
     return x.tanh();
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> trunc(realpseudovec<real_t, size> x)
+  {
+    return x.trunc();
   }
   
   

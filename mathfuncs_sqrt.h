@@ -9,9 +9,6 @@
 
 
 
-// For cbrt: Use "Halley's method with cubic convergence":
-// <http://press.mcs.anl.gov/gswjanuary12/files/2012/01/Optimizing-Single-Node-Performance-on-BlueGene.pdf>
-
 namespace vecmathlib {
   
   template<typename realvec_t>
@@ -25,11 +22,11 @@ namespace vecmathlib {
     VML_ASSERT(all(x > RV(0.0)));
 #if 0
     intvec_t ilogb_x = ilogb(x);
-    realvec_t r = scalbn(RV(M_SQRT2), ilogb_x >> 1);
+    realvec_t r = ldexp(RV(M_SQRT2), ilogb_x >> 1);
     // TODO: divide by M_SQRT2 if ilogb_x % 2 == 1 ?
 #else
     real_t correction =
-      std::scalbn(R(FP::exponent_offset & 1 ? M_SQRT2 : 1.0),
+      std::ldexp(R(FP::exponent_offset & 1 ? M_SQRT2 : 1.0),
                   FP::exponent_offset >> 1);
     realvec_t r = lsr(x.as_int(), 1).as_float() * RV(correction);
 #endif
@@ -56,6 +53,16 @@ namespace vecmathlib {
   
   
   
+  // TODO: Use "Halley's method with cubic convergence":
+  // <http://press.mcs.anl.gov/gswjanuary12/files/2012/01/Optimizing-Single-Node-Performance-on-BlueGene.pdf>
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_cbrt(realvec_t x)
+  {
+    return pow(x, RV(1.0/3.0));
+  }
+  
+  
+  
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_rsqrt(realvec_t x)
   {
@@ -68,6 +75,14 @@ namespace vecmathlib {
     return r * (1.5 - r*r * x_2);
 #endif
     return rcp(sqrt(x));
+  }
+  
+  
+  
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_hypot(realvec_t x, realvec_t y)
+  {
+    return sqrt(x*x + y*y);
   }
   
 }; // namespace vecmathlib

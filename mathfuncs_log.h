@@ -17,7 +17,7 @@ namespace vecmathlib {
     // Rescale
     VML_ASSERT(all(x > RV(0.0)));
     // intvec_t ilogb_x = ilogb(x);
-    // x = scalbn(x, -ilogb_x);
+    // x = ldexp(x, -ilogb_x);
     // sign bit is known to be zero
     intvec_t ilogb_x = (lsr(as_int(x), I(FP::mantissa_bits)) -
                         IV(FP::exponent_offset));
