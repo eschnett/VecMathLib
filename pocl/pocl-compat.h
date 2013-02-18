@@ -13,20 +13,6 @@
 
 
 
-// Generic conversion function
-template<typename A, typename B>
-static B bitcast(A a)
-{
-  B b;
-  std::memcpy(&b, &a, std::min(sizeof a, sizeof b));
-  if (sizeof b > sizeof a) {
-    std::memset((char*)&b + sizeof a, 0, sizeof b - sizeof a);
-  }
-  return b;
-}
-
-
-
 // Define vector types
 
 using std::int32_t;
@@ -76,3 +62,17 @@ typedef double double4  __attribute__((__ext_vector_type__( 4)));
 typedef double double8  __attribute__((__ext_vector_type__( 8)));
 typedef double double16 __attribute__((__ext_vector_type__(16)));
 #endif
+
+
+
+// Generic conversion function
+template<typename A, typename B>
+static B bitcast(A a)
+{
+  B b;
+  std::memcpy(&b, &a, std::min(sizeof a, sizeof b));
+  if (sizeof b > sizeof a) {
+    std::memset((char*)&b + sizeof a, 0, sizeof b - sizeof a);
+  }
+  return b;
+}

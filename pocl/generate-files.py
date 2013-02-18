@@ -1,19 +1,21 @@
 #! /usr/bin/env python
 
-import re
+import re, sys
 
 
 
 # Types:
 SI = "SI"                       # int/long
-SJ = "SJ"                       # int (even for double)
+SK = "SK"                       # int (even for double)
 SF = "SF"                       # float/double
 VB = "VB"                       # boolN
-VF = "VF"                       # floatN/doubleN
 VI = "VI"                       # intN/longN
 VJ = "VJ"                       # intN/longN (except int1 for double1)
 VK = "VK"                       # intN (even for doubleN)
 VU = "VU"                       # uintN/ulongN
+VF = "VF"                       # floatN/doubleN
+PVK = "PVK"                     # pointer to VK
+PVF = "PVF"                     # pointer to VF
 
 # Each function is described by a tuple with the following entries:
 #    1. name
@@ -24,134 +26,150 @@ VU = "VU"                       # uintN/ulongN
 # This allows generating externally visible functions with different
 # signatures, e.g. to support OpenCL.
 vmlfuncs = [
-    ("acos"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("acosh"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("asin"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("asinh"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("atan"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("atanh"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("cbrt"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("ceil"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("copysign" , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("cos"      , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("cosh"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("exp"      , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("exp2"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("exp10"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("expm1"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("fabs"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("fdim"     , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("floor"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("fma"      , [VF, VF, VF], VF, [VF, VF, VF], VF), # 6.12.2
-    ("fmax"     , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("fmin"     , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("fmod"     , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("hypot"    , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("ilogb"    , [VF        ], VJ, [VF        ], VI), # 6.12.2 (but should return VK)
-    ("ldexp"    , [VF, VJ    ], VF, [VF, VI    ], VF), # 6.12.2 (but should take VK)
-    ("ldexp"    , [VF, SJ    ], VF, [VF, SI    ], VF), # 6.12.2
-    ("log"      , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("log2"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("log10"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("log1p"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("pow"      , [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("remainder", [VF, VF    ], VF, [VF, VF    ], VF), # 6.12.2
-    ("round"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("rsqrt"    , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("sin"      , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("sinh"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("sqrt"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("tan"      , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("tanh"     , [VF        ], VF, [VF        ], VF), # 6.12.2
-    ("trunc"    , [VF        ], VF, [VF        ], VF), # 6.12.2
+    # Section 6.12.2
+    ("acos"     , [VF        ], VF, [VF        ], VF),
+    ("acosh"    , [VF        ], VF, [VF        ], VF),
+    ("asin"     , [VF        ], VF, [VF        ], VF),
+    ("asinh"    , [VF        ], VF, [VF        ], VF),
+    ("atan"     , [VF        ], VF, [VF        ], VF),
+    ("atanh"    , [VF        ], VF, [VF        ], VF),
+    ("cbrt"     , [VF        ], VF, [VF        ], VF),
+    ("ceil"     , [VF        ], VF, [VF        ], VF),
+    ("copysign" , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("cos"      , [VF        ], VF, [VF        ], VF),
+    ("cosh"     , [VF        ], VF, [VF        ], VF),
+    ("exp"      , [VF        ], VF, [VF        ], VF),
+    ("exp2"     , [VF        ], VF, [VF        ], VF),
+    ("exp10"    , [VF        ], VF, [VF        ], VF),
+    ("expm1"    , [VF        ], VF, [VF        ], VF),
+    ("fabs"     , [VF        ], VF, [VF        ], VF),
+    ("fdim"     , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("floor"    , [VF        ], VF, [VF        ], VF),
+    ("fma"      , [VF, VF, VF], VF, [VF, VF, VF], VF),
+    ("fmax"     , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("fmin"     , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("fmod"     , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("hypot"    , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("ilogb_"   , [VF        ], VJ, [VF        ], VI), # should return VK
+    ("ldexp_"   , [VF, VJ    ], VF, [VF, VI    ], VF), # should take VK
+    ("ldexp_"   , [VF, SK    ], VF, [VF, SI    ], VF), # should take VK
+    ("log"      , [VF        ], VF, [VF        ], VF),
+    ("log2"     , [VF        ], VF, [VF        ], VF),
+    ("log10"    , [VF        ], VF, [VF        ], VF),
+    ("log1p"    , [VF        ], VF, [VF        ], VF),
+    ("pow"      , [VF, VF    ], VF, [VF, VF    ], VF),
+    ("remainder", [VF, VF    ], VF, [VF, VF    ], VF),
+    ("round"    , [VF        ], VF, [VF        ], VF),
+    ("rsqrt"    , [VF        ], VF, [VF        ], VF),
+    ("sin"      , [VF        ], VF, [VF        ], VF),
+    ("sinh"     , [VF        ], VF, [VF        ], VF),
+    ("sqrt"     , [VF        ], VF, [VF        ], VF),
+    ("tan"      , [VF        ], VF, [VF        ], VF),
+    ("tanh"     , [VF        ], VF, [VF        ], VF),
+    ("trunc"    , [VF        ], VF, [VF        ], VF),
     
-    ("isfinite" , [VF        ], VJ, [VF        ], VB), # 6.12.6
-    ("isinf"    , [VF        ], VJ, [VF        ], VB), # 6.12.6
-    ("isnan"    , [VF        ], VJ, [VF        ], VB), # 6.12.6
-    ("isnormal" , [VF        ], VJ, [VF        ], VB), # 6.12.6
-    ("signbit"  , [VF        ], VJ, [VF        ], VB), # 6.12.6
+    # Section 6.12.6
+    ("isfinite" , [VF        ], VJ, [VF        ], VB),
+    ("isinf"    , [VF        ], VJ, [VF        ], VB),
+    ("isnan"    , [VF        ], VJ, [VF        ], VB),
+    ("isnormal" , [VF        ], VJ, [VF        ], VB),
+    ("signbit"  , [VF        ], VJ, [VF        ], VB),
     ]
 
 
 
 directfuncs = [
-    ("acospi"       , [VF        ], VF, "acos(x0)/(scalar_t)M_PI"),     # 6.12.2
-    ("asinpi"       , [VF        ], VF, "asin(x0)/(scalar_t)M_PI"),     # 6.12.2
-    ("atanpi"       , [VF        ], VF, "atan(x0)/(scalar_t)M_PI"),     # 6.12.2
-    ("atan2pi"      , [VF, VF    ], VF, "atan2(x0,x1)/(scalar_t)M_PI"), # 6.12.2
-    ("cospi"        , [VF        ], VF, "cos((scalar_t)M_PI*x0)"),      # 6.12.2
-    ("fmax"         , [VF, SF    ], VF, "fmax(x0,(vector_t)x1)"),       # 6.12.2
-    ("fmin"         , [VF, SF    ], VF, "fmin(x0,(vector_t)x1)"),       # 6.12.2
-    ("mad"          , [VF, VF, VF], VF, "fma(x0,x1,x2)"),               # 6.12.2
-    ("maxmag"       , [VF, VF    ], VF, "fabs(x0)>fabs(x1) ? x0 : fabs(x1)>fabs(x0) ? x1 : fmax(x0,x1)"), # 6.12.2
-    ("minmag"       , [VF, VF    ], VF, "fabs(x0)<fabs(x1) ? x0 : fabs(x1)<fabs(x0) ? x1 : fmin(x0,x1)"), # 6.12.2
-    ("nan"          , [VU        ], VF, "(scalar_t)0.0/(scalar_t)0.0"), # 6.12.2
-    ("pown"         , [VF, VK    ], VF, "pow(x0,convert_vector_t(x1))"), # 6.12.2
-    ("powr"         , [VF, VF    ], VF, "pow(x0,x1)"), # 6.12.2
-    ("rint"         , [VF        ], VF, "round(x0)"),  # 6.12.2
-    ("rootn"        , [VF, VK    ], VF, "pow(x0,(scalar_t)1.0/convert_vector_t(x1))"), # 6.12.2
-    ("sinpi"        , [VF        ], VF, "sin((scalar_t)M_PI*x0)"), # 6.12.2
-    ("tanpi"        , [VF        ], VF, "tan((scalar_t)M_PI*x0)"), # 6.12.2
+    # Section 6.12.2
+    ("acospi"        , [VF         ], VF, "acos(x0)/(scalar_t)M_PI"),
+    ("asinpi"        , [VF         ], VF, "asin(x0)/(scalar_t)M_PI"),
+    ("atanpi"        , [VF         ], VF, "atan(x0)/(scalar_t)M_PI"),
+    ("atan2"         , [VF, VF     ], VF, "({ vector_t a=atan(x0/x1); x1>(scalar_t)0.0 ? a : x1<(scalar_t)0.0 ? a+copysign((scalar_t)M_PI,x0) : copysign((scalar_t)M_PI_2,x0); })"),
+    ("atan2pi"       , [VF, VF     ], VF, "atan2(x0,x1)/(scalar_t)M_PI"),
+    ("cospi"         , [VF         ], VF, "cos((scalar_t)M_PI*x0)"),
+    ("fmax"          , [VF, SF     ], VF, "fmax(x0,(vector_t)x1)"),
+    ("fmin"          , [VF, SF     ], VF, "fmin(x0,(vector_t)x1)"),
+    ("fract"         , [VF, PVF    ], VF, "*x1=floor(x0), fmin(x0-floor(x0), sizeof(scalar_t)==sizeof(float) ? (scalar_t)0x1.fffffep-1f : (scalar_t)0x1.fffffffffffffp-1)"),
+    ("frexp"         , [VF, PVK    ], VF, "*x1=ilogb(x0), ldexp(x0,-ilogb(x0))"),
+    ("ilogb"         , [VF         ], VK, "convert_kvector_t(({ __attribute__((__overloadable__)) jvector_t ilogb_(vector_t); ilogb_(x0); }))"),
+    ("ldexp"         , [VF, VK     ], VF, "({ __attribute__((__overloadable__)) vector_t ldexp_(vector_t,jvector_t); ldexp_(x0,convert_ivector_t(x1)); })"),
+    ("ldexp"         , [VF, SK     ], VF, "({ __attribute__((__overloadable__)) vector_t ldexp_(vector_t,kscalar_t); ldexp_(x0,(kscalar_t)x1); })"),
+    ("logb"          , [VF         ], VF, "convert_vector_t(ilogb(x0))"),
+    ("mad"           , [VF, VF, VF ], VF, "fma(x0,x1,x2)"),
+    ("maxmag"        , [VF, VF     ], VF, "fabs(x0)>fabs(x1) ? x0 : fabs(x1)>fabs(x0) ? x1 : fmax(x0,x1)"),
+    ("minmag"        , [VF, VF     ], VF, "fabs(x0)<fabs(x1) ? x0 : fabs(x1)<fabs(x0) ? x1 : fmin(x0,x1)"),
+    ("modf"          , [VF, PVF    ], VF, "*x1=trunc(x0), copysign(x0-trunc(x0),x0)"),
+    ("nan"           , [VU         ], VF, "(scalar_t)0.0/(scalar_t)0.0"),
+    ("pown"          , [VF, VK     ], VF, "pow(x0,convert_vector_t(x1))"),
+    ("powr"          , [VF, VF     ], VF, "pow(x0,x1)"),
+    ("remquo"        , [VF, VF, PVK], VF, "({ vector_t k=rint(x0/x1); *x2=(convert_kvector_t(k)&0x7f)*(1-2*convert_kvector_t(signbit(k))); x0-k*x1; })"),
+    ("rint"          , [VF         ], VF, "round(x0)"),
+    ("rootn"         , [VF, VK     ], VF, "pow(x0,(scalar_t)1.0/convert_vector_t(x1))"),
+    ("sincos"        , [VF, PVF    ], VF, "*x1=cos(x0), sin(x0)"),
+    ("sinpi"         , [VF         ], VF, "sin((scalar_t)M_PI*x0)"),
+    ("tanpi"         , [VF         ], VF, "tan((scalar_t)M_PI*x0)"),
     
-    ("half_cos"     , [VF        ], VF, "cos(x0)"),          # 6.12.2
-    ("half_divide"  , [VF, VF    ], VF, "x0/x1"),            # 6.12.2
-    ("half_exp"     , [VF        ], VF, "exp(x0)"),          # 6.12.2
-    ("half_exp2"    , [VF        ], VF, "exp2(x0)"),         # 6.12.2
-    ("half_exp10"   , [VF        ], VF, "exp10(x0)"),        # 6.12.2
-    ("half_log"     , [VF        ], VF, "log(x0)"),          # 6.12.2
-    ("half_log2"    , [VF        ], VF, "log2(x0)"),         # 6.12.2
-    ("half_log10"   , [VF        ], VF, "log10(x0)"),        # 6.12.2
-    ("half_powr"    , [VF, VF    ], VF, "powr(x0,x1)"),      # 6.12.2
-    ("half_recip"   , [VF        ], VF, "(scalar_t)1.0/x0"), # 6.12.2
-    ("half_rsqrt"   , [VF        ], VF, "rsqrt(x0)"),        # 6.12.2
-    ("half_sin"     , [VF        ], VF, "sin(x0)"),          # 6.12.2
-    ("half_sqrt"    , [VF        ], VF, "sqrt(x0)"),         # 6.12.2
-    ("half_tan"     , [VF        ], VF, "tan(x0)"),          # 6.12.2
+    # Section 6.12.2, half_ functions
+    ("half_cos"      , [VF         ], VF, "cos(x0)"),
+    ("half_divide"   , [VF, VF     ], VF, "x0/x1"),
+    ("half_exp"      , [VF         ], VF, "exp(x0)"),
+    ("half_exp2"     , [VF         ], VF, "exp2(x0)"),
+    ("half_exp10"    , [VF         ], VF, "exp10(x0)"),
+    ("half_log"      , [VF         ], VF, "log(x0)"),
+    ("half_log2"     , [VF         ], VF, "log2(x0)"),
+    ("half_log10"    , [VF         ], VF, "log10(x0)"),
+    ("half_powr"     , [VF, VF     ], VF, "powr(x0,x1)"),
+    ("half_recip"    , [VF         ], VF, "(scalar_t)1.0/x0"),
+    ("half_rsqrt"    , [VF         ], VF, "rsqrt(x0)"),
+    ("half_sin"      , [VF         ], VF, "sin(x0)"),
+    ("half_sqrt"     , [VF         ], VF, "sqrt(x0)"),
+    ("half_tan"      , [VF         ], VF, "tan(x0)"),
+    # Section 6.12.2, native_ functions
+    ("native_cos"    , [VF         ], VF, "cos(x0)"),
+    ("native_divide" , [VF, VF     ], VF, "x0/x1"),
+    ("native_exp"    , [VF         ], VF, "exp(x0)"),
+    ("native_exp2"   , [VF         ], VF, "exp2(x0)"),
+    ("native_exp10"  , [VF         ], VF, "exp10(x0)"),
+    ("native_log"    , [VF         ], VF, "log(x0)"),
+    ("native_log2"   , [VF         ], VF, "log2(x0)"),
+    ("native_log10"  , [VF         ], VF, "log10(x0)"),
+    ("native_powr"   , [VF, VF     ], VF, "powr(x0,x1)"),
+    ("native_recip"  , [VF         ], VF, "(scalar_t)1.0/x0"),
+    ("native_rsqrt"  , [VF         ], VF, "rsqrt(x0)"),
+    ("native_sin"    , [VF         ], VF, "sin(x0)"),
+    ("native_sqrt"   , [VF         ], VF, "sqrt(x0)"),
+    ("native_tan"    , [VF         ], VF, "tan(x0)"),
     
-    ("native_cos"   , [VF        ], VF, "cos(x0)"),          # 6.12.2
-    ("native_divide", [VF, VF    ], VF, "x0/x1"),            # 6.12.2
-    ("native_exp"   , [VF        ], VF, "exp(x0)"),          # 6.12.2
-    ("native_exp2"  , [VF        ], VF, "exp2(x0)"),         # 6.12.2
-    ("native_exp10" , [VF        ], VF, "exp10(x0)"),        # 6.12.2
-    ("native_log"   , [VF        ], VF, "log(x0)"),          # 6.12.2
-    ("native_log2"  , [VF        ], VF, "log2(x0)"),         # 6.12.2
-    ("native_log10" , [VF        ], VF, "log10(x0)"),        # 6.12.2
-    ("native_powr"  , [VF, VF    ], VF, "powr(x0,x1)"),      # 6.12.2
-    ("native_recip" , [VF        ], VF, "(scalar_t)1.0/x0"), # 6.12.2
-    ("native_rsqrt" , [VF        ], VF, "rsqrt(x0)"),        # 6.12.2
-    ("native_sin"   , [VF        ], VF, "sin(x0)"),          # 6.12.2
-    ("native_sqrt"  , [VF        ], VF, "sqrt(x0)"),         # 6.12.2
-    ("native_tan"   , [VF        ], VF, "tan(x0)"),          # 6.12.2
+    # Section 6.12.4
+    ("clamp"         , [VF, VF, VF ], VF, "fmin(fmax(x0,x1),x2)"),
+    ("clamp"         , [VF, SF, SF ], VF, "fmin(fmax(x0,x1),x2)"),
+    ("degrees"       , [VF         ], VF, "(scalar_t)(180.0/M_PI)*x0"),
+    ("max"           , [VF, VF     ], VF, "fmax(x0,x1)"),
+    ("max"           , [VF, SF     ], VF, "fmax(x0,x1)"),
+    ("min"           , [VF, VF     ], VF, "fmin(x0,x1)"),
+    ("min"           , [VF, SF     ], VF, "fmin(x0,x1)"),
+    ("mix"           , [VF, VF, VF ], VF, "x0+(x1-x0)*x2"),
+    ("mix"           , [VF, VF, SF ], VF, "x0+(x1-x0)*x2"),
+    ("radians"       , [VF         ], VF, "(scalar_t)(M_PI/180.0)*x0"),
+    ("step"          , [VF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"),
+    ("step"          , [SF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"),
+    ("smoothstep"    , [VF, VF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
+    ("smoothstep"    , [SF, SF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
+    ("sign"          , [VF         ], VF, "copysign(x0!=(scalar_t)0.0 ? (vector_t)(scalar_t)1.0 : (vector_t)(scalar_t)0.0,x0)"),
     
-    ("clamp"        , [VF, VF, VF], VF, "fmin(fmax(x0,x1),x2)"), # 6.12.4
-    ("clamp"        , [VF, SF, SF], VF, "fmin(fmax(x0,x1),x2)"), # 6.12.4
-    ("degrees"      , [VF        ], VF, "(scalar_t)(180.0/M_PI)*x0"), # 6.12.4
-    ("max"          , [VF, VF    ], VF, "fmax(x0,x1)"),   # 6.12.4
-    ("max"          , [VF, SF    ], VF, "fmax(x0,x1)"),   # 6.12.4
-    ("min"          , [VF, VF    ], VF, "fmin(x0,x1)"),   # 6.12.4
-    ("min"          , [VF, SF    ], VF, "fmin(x0,x1)"),   # 6.12.4
-    ("mix"          , [VF, VF, VF], VF, "x0+(x1-x0)*x2"), # 6.12.4
-    ("mix"          , [VF, VF, SF], VF, "x0+(x1-x0)*x2"), # 6.12.4
-    ("radians"      , [VF        ], VF, "(scalar_t)(M_PI/180.0)*x0"), # 6.12.4
-    ("step"         , [VF, VF    ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"), # 6.12.4
-    ("step"         , [SF, VF    ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"), # 6.12.4
-    ("smoothstep"   , [VF, VF, VF], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"), # 6.12.4
-    ("smoothstep"   , [SF, SF, VF], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"), # 6.12.4
-    ("sign"         , [VF        ], VF, "copysign(x0!=(scalar_t)0.0 ? (vector_t)(scalar_t)1.0 : (vector_t)(scalar_t)0.0,x0)"), # 6.12.4
-    
-    ("isequal"       , [VF, VF    ], VJ, "x0==x1"),                 # 6.12.6
-    ("isnotequal"    , [VF, VF    ], VJ, "x0!=x1"),                 # 6.12.6
-    ("isgreater"     , [VF, VF    ], VJ, "x0>x1"),                  # 6.12.6
-    ("isgreaterequal", [VF, VF    ], VJ, "x0>=x1"),                 # 6.12.6
-    ("isless"        , [VF, VF    ], VJ, "x0<x1"),                  # 6.12.6
-    ("islessequal"   , [VF, VF    ], VJ, "x0<=x1"),                 # 6.12.6
-    ("islessgreater" , [VF, VF    ], VJ, "x0<x1 || x0>x1"),         # 6.12.6
-    ("isordered"     , [VF, VF    ], VJ, "!isunordered(x0,x1)"),    # 6.12.6
-    ("isunordered"   , [VF, VF    ], VJ, "isnan(x0) || isnan(x1)"), # 6.12.6
+    # Section 6.12.6
+    ("isequal"       , [VF, VF     ], VJ, "x0==x1"),
+    ("isnotequal"    , [VF, VF     ], VJ, "x0!=x1"),
+    ("isgreater"     , [VF, VF     ], VJ, "x0>x1"),
+    ("isgreaterequal", [VF, VF     ], VJ, "x0>=x1"),
+    ("isless"        , [VF, VF     ], VJ, "x0<x1"),
+    ("islessequal"   , [VF, VF     ], VJ, "x0<=x1"),
+    ("islessgreater" , [VF, VF     ], VJ, "x0<x1 || x0>x1"),
+    ("isordered"     , [VF, VF     ], VJ, "!isunordered(x0,x1)"),
+    ("isunordered"   , [VF, VF     ], VJ, "isnan(x0) || isnan(x1)"),
 ]
 
-# Missing functions from 6.12.2: atan2, erfc, erf, fract, frexp,
-# lgamma, lgamma_r, logb, modf, nextafter, remquo, sincos, tgamma
+# Missing functions from 6.12.2: erfc, erf, lgamma, lgamma_r,
+# nextafter, tgamma
 
 # Unchecked: 6.12.3 (integer functions)
 
@@ -176,7 +194,8 @@ def out_open(name):
         outfile = open(name, "w")
         outfile.close()
         outfile_did_truncate.add(name)
-        print name
+        print name,
+        sys.stdout.flush()
     outfile = open(name, "a")
     return is_first_open
 def out_close():
@@ -201,28 +220,33 @@ def decl_close():
 
 
 def mktype(tp, vectype):
-    (basetype, size) = re.match("([A-Za-z]+)([0-9]*)", vectype).groups()
-    size = 1 if size=="" else int(size)
-    if tp==SJ:
+    (space, basetype, sizename) = re.match("(global|local|private)?(float|double)([0-9]*)", vectype).groups()
+    size = 1 if sizename=="" else int(sizename)
+    if tp==SK:
         if size==1: return "int"
         return "int" if basetype=="float" else "long"
     if tp==SF:
         return basetype
     if tp==VI:
         ibasetype = "int" if basetype=="float" else "long"
-        return "%s%s" % (ibasetype, "" if size==1 else str(size))
+        return "%s%s" % (ibasetype, sizename)
     if tp==VJ:
         if size==1: return "int"
         ibasetype = "int" if basetype=="float" else "long"
-        return "%s%d" % (ibasetype, size)
+        return "%s%s" % (ibasetype, sizename)
     if tp==VK:
-        if size==1: return "int"
-        return "int%d" % size
+        return "int%s" % sizename
+    if tp==PVK:
+        if space=="": raise "wrong address space"
+        return "%s int%s*" % (space, sizename)
     if tp==VU:
         ibasetype = "uint" if basetype=="float" else "ulong"
-        return "%s%s" % (ibasetype, "" if size==1 else str(size))
+        return "%s%s" % (ibasetype, sizename)
     if tp==VF:
-        return vectype
+        return "%s%s" % (basetype, sizename)
+    if tp==PVF:
+        if space=="": raise "wrong address space"
+        return "%s %s%s*" % (space, basetype, sizename)
     raise "unreachable"
 
 def mkvmltype(tp, vectype):
@@ -257,7 +281,8 @@ def output_vmlfunc_vml(func, vectype):
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
     callretstr = mkvmltype(vmlret, vmltype)
-    out("  %s r = vecmathlib::%s(%s);" % (callretstr, name, callargstr))
+    name1 = name[:-1] if name.endswith("_") else name
+    out("  %s r = vecmathlib::%s(%s);" % (callretstr, name1, callargstr))
     # We may need to convert from the VML type to the OpenCL type
     # before bitcasting. This may be a real conversion, e.g. bool to
     # int. This may also involve a change in size (e.g. long to int),
@@ -371,8 +396,8 @@ def output_vmlfunc_split(func, vectype):
 def output_directfunc_direct(func, vectype):
     (name, args, ret, impl) = func
     out("// Implement %s directly" % name)
-    (basetype, size) = re.match("([A-Za-z]+)([0-9]*)", vectype).groups()
-    size = 1 if size=="" else int(size)
+    (space, basetype, sizename) = re.match("(global|local|private)?(float|double)([0-9]*)", vectype).groups()
+    size = 1 if sizename=="" else int(sizename)
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
@@ -381,10 +406,20 @@ def output_directfunc_direct(func, vectype):
     out("__attribute__((__overloadable__))");
     out("%s __vml_%s(%s)" % (funcretstr, name, funcargstr))
     out("{")
-    out("  typedef %s scalar_t;" % basetype)
-    out("  typedef %s vector_t;" % vectype)
-    out("#define convert_vector_t convert_%s" % vectype)
+    out("  typedef %s kscalar_t;" % mktype(SK, vectype))
+    out("  typedef %s scalar_t;" % mktype(SF, vectype))
+    out("  typedef %s ivector_t;" % mktype(VI, vectype))
+    out("  typedef %s jvector_t;" % mktype(VJ, vectype))
+    out("  typedef %s kvector_t;" % mktype(VK, vectype))
+    out("  typedef %s vector_t;" % mktype(VF, vectype))
+    out("#define convert_ivector_t convert_%s" % mktype(VI, vectype))
+    out("#define convert_jvector_t convert_%s" % mktype(VJ, vectype))
+    out("#define convert_kvector_t convert_%s" % mktype(VK, vectype))
+    out("#define convert_vector_t convert_%s" % mktype(VF, vectype))
     out("  return %s;" % impl)
+    out("#undef convert_ivector_t")
+    out("#undef convert_jvector_t")
+    out("#undef convert_kvector_t")
     out("#undef convert_vector_t")
     out("}")
 
@@ -414,7 +449,7 @@ def output_vmlfunc(func):
         for size in [1, 2, 3, 4, 8, 16]:
             # Ignore this prototype for size==1 if there are any
             # scalar arguments; this prevents duplicate definitions
-            if size==1 and any(map(lambda arg: arg in (SI, SJ, SF), args)):
+            if size==1 and any(map(lambda arg: arg in (SI, SK, SF), args)):
                 continue
             sizename = '' if size==1 else str(size)
             vectype = basetype + sizename
@@ -460,6 +495,10 @@ def output_directfunc(func):
     decl("#undef %s" % name)
     decl("#define %s __vml_%s" % (name, name))
     out("// %s: %s -> %s" % (name, args, ret))
+    if any(map(lambda arg: arg in (PVK, PVF), args)):
+        spaces = ["global", "local", "private"]
+    else:
+        spaces = [""]
     for basetype in ["float", "double"]:
         if ((name.startswith("half_") or name.startswith("native_")) and
             basetype=="double"):
@@ -470,14 +509,15 @@ def output_directfunc(func):
         for size in [1, 2, 3, 4, 8, 16]:
             # Ignore this prototype for size==1 if there are any
             # scalar arguments; this prevents duplicate definitions
-            if size==1 and any(map(lambda arg: arg in (SI, SJ, SF), args)):
+            if size==1 and any(map(lambda arg: arg in (SI, SK, SF), args)):
                 continue
             sizename = '' if size==1 else str(size)
-            vectype = basetype + sizename
-            # always use vecmathlib if available
-            out("")
-            out("// %s: VF=%s" % (name, vectype))
-            output_directfunc_direct(func, vectype)
+            for space in spaces:
+                vectype = space + basetype + sizename
+                # always use vecmathlib if available
+                out("")
+                out("// %s: VF=%s" % (name, vectype))
+                output_directfunc_direct(func, vectype)
         if basetype=="double":
             out("")
             out("#endif // #ifdef cl_khr_fp64")
@@ -494,3 +534,4 @@ map(output_directfunc, directfuncs)
 decl("")
 decl("#endif // #ifndef KERNEL_VECMATHLIB_H")
 decl_close()
+print
