@@ -259,18 +259,8 @@ namespace vecmathlib {
     {
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
-      // There is no _mm_srai_epi32. To emulate it, add 0x80000000
-      // before shifting, and subtract the shifted 0x80000000 after
-      // shifting
-      // Convert signed to unsiged
-      vlo = _mm_add_epi32(vlo, _mm_set1_epi32(U(1) << (bits-1)));
-      vhi = _mm_add_epi32(vhi, _mm_set1_epi32(U(1) << (bits-1)));
-      // Shift
-      vlo = _mm_srli_epi32(vlo, n);
-      vhi = _mm_srli_epi32(vhi, n);
-      // Undo conversion
-      vlo = _mm_sub_epi32(vlo, _mm_set1_epi32(U(1) << (bits-n)));
-      vhi = _mm_sub_epi32(vhi, _mm_set1_epi32(U(1) << (bits-n)));
+      vlo = _mm_srai_epi32(vlo, n);
+      vhi = _mm_srai_epi32(vhi, n);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator<<(int_t n) const
