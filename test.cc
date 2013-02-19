@@ -160,7 +160,7 @@ struct vecmathlib_test {
     boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
       ++ num_errors;
-      cout << setprecision(realvec_t::digits10+1)
+      cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
            << "   fvml(x,y)=" << rvml << "\n"
@@ -189,7 +189,7 @@ struct vecmathlib_test {
             realvec_t(accuracy) * (fabs(rstd) + fabs(rvml) + realvec_t(1.0))))
     {
       ++ num_errors;
-      cout << setprecision(realvec_t::digits10+1)
+      cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y<< "," << z << "):\n"
            << "   fstd(x,y,z)=" << rstd << "\n"
            << "   fvml(x,y,z)=" << rvml << "\n"
@@ -209,7 +209,8 @@ struct vecmathlib_test {
     intvec_t const rvml = fvml(x);
     intvec_t const dr = rstd - rvml;
     if (any(convert_bool(dr))) {
-      cout << setprecision(realvec_t::digits10+1)
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
            << "   fvml(x)=" << rvml << "\n"
@@ -231,7 +232,7 @@ struct vecmathlib_test {
     intvec_t const dr = rstd - rvml;
     if (any(convert_bool(dr))) {
       ++ num_errors;
-      cout << setprecision(realvec_t::digits10+1)
+      cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
            << "   fvml(x,y)=" << rvml << "\n"
@@ -251,7 +252,8 @@ struct vecmathlib_test {
     boolvec_t const rvml = fvml(x);
     boolvec_t const dr = rstd != rvml;
     if (any(dr)) {
-      cout << setprecision(realvec_t::digits10+1)
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
            << "   fvml(x)=" << rvml << "\n"
