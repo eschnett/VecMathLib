@@ -228,9 +228,30 @@ namespace vecmathlib {
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
     intvec& operator<<=(int_t n) { return *this=*this<<n; }
     
-    intvec lsr(intvec n) const { return _mm_srl_epi32(v, n.v); }
-    intvec operator>>(intvec n) const { return _mm_sra_epi32(v, n.v); }
-    intvec operator<<(intvec n) const { return _mm_sll_epi32(v, n.v); }
+    intvec lsr(intvec n) const
+    {
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, U(r[i]) >> U(n[i]));
+      }
+      return r;
+    }
+    intvec operator>>(intvec n) const
+    {
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] >> n[i]);
+      }
+      return r;
+    }
+    intvec operator<<(intvec n) const
+    {
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] << n[i]);
+      }
+      return r;
+    }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
     

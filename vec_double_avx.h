@@ -288,61 +288,27 @@ namespace vecmathlib {
     
     intvec lsr(intvec n) const
     {
-      __m128i vlo = _mm256_castsi256_si128(v);
-      __m128i vhi = _mm256_extractf128_si256(v, 1);
-      __m128i nvlo = _mm256_castsi256_si128(n.v);
-      __m128i nvhi = _mm256_extractf128_si256(n.v, 1);
-      vlo = _mm_srl_epi64(vlo, nvlo);
-      vhi = _mm_srl_epi64(vhi, nvhi);
-      return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, U(r[i]) >> U(n[i]));
+      }
+      return r;
     }
     intvec operator>>(intvec n) const
     {
-      __m128i vlo = _mm256_castsi256_si128(v);
-      __m128i vhi = _mm256_extractf128_si256(v, 1);
-      __m128i nvlo = _mm256_castsi256_si128(n.v);
-      __m128i nvhi = _mm256_extractf128_si256(n.v, 1);
-#if 0
-      // There is no _mm_srai_epi64. To emulate it, invert all bits
-      // before and after shifting if the sign bit is set.
-      __m128i signmask01 = _mm_sub_epi64(_mm_set1_epi64x(0),
-                                         _mm_srli_epi64(vlo, 63));
-      __m128i signmask23 = _mm_sub_epi64(_mm_set1_epi64x(0),
-                                         _mm_srli_epi64(vhi, 63));
-      vlo = _mm_xor_si128(signmask01, vlo);
-      vhi = _mm_xor_si128(signmask23, vhi);
-      vlo = _mm_srl_epi64(vlo, nvlo);
-      vhi = _mm_srl_epi64(vhi, nvhi);
-      vlo = _mm_xor_si128(signmask01, vlo);
-      vhi = _mm_xor_si128(signmask23, vhi);
-#else
-      // Convert signed to unsiged
-      vlo = _mm_add_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-1)));
-      vhi = _mm_add_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1)));
-      // Shift
-      vlo = _mm_srl_epi64(vlo, nvlo);
-      vhi = _mm_srl_epi64(vhi, nvhi);
-      // Undo conversion
-      vlo = _mm_sub_epi64(vlo,
-                          _mm_sll_epi64(_mm_set1_epi64x(1),
-                                        _mm_sub_epi64(_mm_set1_epi64x(bits),
-                                                      nvlo)));
-      vhi = _mm_sub_epi64(vhi,
-                          _mm_sll_epi64(_mm_set1_epi64x(1),
-                                        _mm_sub_epi64(_mm_set1_epi64x(bits),
-                                                      nvhi)));
-#endif
-      return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] >> n[i]);
+      }
+      return r;
     }
     intvec operator<<(intvec n) const
     {
-      __m128i vlo = _mm256_castsi256_si128(v);
-      __m128i vhi = _mm256_extractf128_si256(v, 1);
-      __m128i nvlo = _mm256_castsi256_si128(n.v);
-      __m128i nvhi = _mm256_extractf128_si256(n.v, 1);
-      vlo = _mm_sll_epi64(vlo, nvlo);
-      vhi = _mm_sll_epi64(vhi, nvhi);
-      return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] << n[i]);
+      }
+      return r;
     }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }

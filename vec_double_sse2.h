@@ -242,22 +242,30 @@ namespace vecmathlib {
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
     intvec& operator<<=(int_t n) { return *this=*this<<n; }
     
-    intvec lsr(intvec n) const { return _mm_srl_epi64(v, n.v); }
+    intvec lsr(intvec n) const
+    {
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, U(r[i]) >> U(n[i]));
+      }
+      return r;
+    }
     intvec operator>>(intvec n) const
     {
-      // There is no _mm_srai_epi64. To emulate it, add 0x80000000
-      // before shifting, and subtract the shifted 0x80000000 after
-      // shifting
-      intvec x = *this;
-      // Convert signed to unsiged
-      x += U(1) << (bits-1);
-      // Shift
-      x = x.lsr(n);
-      // Undo conversion
-      x -= IV(1) << (IV(bits) - n);
-      return x;
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] >> n[i]);
+      }
+      return r;
     }
-    intvec operator<<(intvec n) const { return _mm_sll_epi64(v, n.v); }
+    intvec operator<<(intvec n) const
+    {
+      intvec r = *this;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, r[i] << n[i]);
+      }
+      return r;
+    }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
     
