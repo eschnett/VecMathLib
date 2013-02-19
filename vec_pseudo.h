@@ -716,6 +716,7 @@ namespace vecmathlib {
     {
       return map(std::remainder, y);
     }
+    realpseudovec rint() const { return map(std::rint); }
     realpseudovec round() const { return map(std::round); }
     realpseudovec rsqrt() const { return sqrt().rcp(); }
     boolvec_t signbit() const { return mapb(std::signbit); }
@@ -1202,6 +1203,12 @@ namespace vecmathlib {
                                                realpseudovec<real_t, size> y)
   {
     return x.remainder(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> rint(realpseudovec<real_t, size> x)
+  {
+    return x.rint();
   }
   
   template<typename real_t, int size>

@@ -53,6 +53,7 @@ namespace vecmathlib {
     static realvec_t vml_convert_float(intvec_t x);
     static intvec_t vml_convert_int(realvec_t x);
     static realvec_t vml_floor(realvec_t x);
+    static realvec_t vml_rint(realvec_t x);
     static realvec_t vml_round(realvec_t x);
     static realvec_t vml_trunc(realvec_t x);
     

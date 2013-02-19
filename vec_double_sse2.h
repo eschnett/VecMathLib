@@ -545,14 +545,15 @@ namespace vecmathlib {
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return _mm_div_pd(_mm_set1_pd(1.0), v); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec round() const
+    realvec rint() const
     {
 #ifdef __SSE4_1__
-      return _mm_round_pd(v, _MM_FROUND_NINT);
+      return _mm_round_pd(v, _MM_FROUND_TO_NEAREST_INT);
 #else
-      return MF::vml_round(*this);
+      return MF::vml_rint(*this);
 #endif
     }
+    realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     boolvec_t signbit() const { return v; }
     realvec sin() const { return MF::vml_sin(*this); }

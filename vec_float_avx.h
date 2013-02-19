@@ -604,7 +604,11 @@ namespace vecmathlib {
       return r;
     }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec round() const { return _mm256_round_ps(v, _MM_FROUND_NINT); }
+    realvec rint() const
+    {
+      return _mm256_round_ps(v, _MM_FROUND_TO_NEAREST_INT);
+    }
+    realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const
     {
       realvec x = *this;

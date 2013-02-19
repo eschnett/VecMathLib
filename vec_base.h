@@ -442,6 +442,12 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> rint(realvec<real_t, size> x)
+  {
+    return x.rint();
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> round(realvec<real_t, size> x)
   {
     return x.round();

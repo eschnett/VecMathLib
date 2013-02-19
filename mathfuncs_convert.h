@@ -95,8 +95,10 @@ namespace vecmathlib {
   
   
   
+  // Round to nearest integer, breaking ties using prevailing rounding
+  // mode (default: round to even)
   template<typename realvec_t>
-  realvec_t mathfuncs<realvec_t>::vml_round(realvec_t x)
+  realvec_t mathfuncs<realvec_t>::vml_rint(realvec_t x)
   {
     realvec_t r = x;
     // Round by adding a large number, destroying all excess precision
@@ -108,22 +110,32 @@ namespace vecmathlib {
     return r;
   }
   
+  // Round to next integer above
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ceil(realvec_t x)
   {
     boolvec_t iszero = x == RV(0.0);
     realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
-    return ifthen(iszero, x, round(x + offset));
+    return ifthen(iszero, x, rint(x + offset));
   }
   
+  // Round to next integer below
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_floor(realvec_t x)
   {
     boolvec_t iszero = x == RV(0.0);
     realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
-    return ifthen(iszero, x, round(x - offset));
+    return ifthen(iszero, x, rint(x - offset));
   }
   
+  // Round to nearest integer, breaking ties away from zero
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_round(realvec_t x)
+  {
+    return copysign(floor(fabs(x)+RV(0.5)), x);
+  }
+  
+  // Round towards zero
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_trunc(realvec_t x)
   {

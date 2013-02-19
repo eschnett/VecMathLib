@@ -612,7 +612,10 @@ namespace vecmathlib {
     realtestvec atanh() const { return MF::vml_atanh(*this); }
     realtestvec cbrt() const { return MF::vml_cbrt(*this); }
     realtestvec ceil() const { return MF::vml_ceil(*this); }
-    realtestvec copysign(realtestvec y) const { return MF::vml_copysign(*this, y); }
+    realtestvec copysign(realtestvec y) const
+    {
+      return MF::vml_copysign(*this, y);
+    }
     realtestvec cos() const { return MF::vml_cos(*this); }
     realtestvec cosh() const { return MF::vml_cosh(*this); }
     realtestvec exp() const { return MF::vml_exp(*this); }
@@ -622,7 +625,10 @@ namespace vecmathlib {
     realtestvec fabs() const { return MF::vml_fabs(*this); }
     realtestvec fdim(realtestvec y) const { return MF::vml_fdim(*this, y); }
     realtestvec floor() const { return MF::vml_floor(*this); }
-    realtestvec fma(realtestvec y, realtestvec z) const { return MF::vml_fma(*this, y, z); }
+    realtestvec fma(realtestvec y, realtestvec z) const 
+    {
+      return MF::vml_fma(*this, y, z);
+    }
     realtestvec fmax(realtestvec y) const { return MF::vml_fmax(*this, y); }
     realtestvec fmin(realtestvec y) const { return MF::vml_fmin(*this, y); }
     realtestvec fmod(realtestvec y) const { return MF::vml_fmod(*this, y); }
@@ -640,7 +646,11 @@ namespace vecmathlib {
     realtestvec log2() const { return MF::vml_log2(*this); }
     realtestvec pow(realtestvec y) const { return MF::vml_pow(*this, y); }
     realtestvec rcp() const { return MF::vml_rcp(*this); }
-    realtestvec remainder(realtestvec y) const { return MF::vml_remainder(*this, y); }
+    realtestvec remainder(realtestvec y) const
+    {
+      return MF::vml_remainder(*this, y);
+    }
+    realtestvec rint() const { return MF::vml_rint(*this); }
     realtestvec round() const { return MF::vml_round(*this); }
     realtestvec rsqrt() const { return MF::vml_rsqrt(*this); }
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
@@ -1125,6 +1135,12 @@ namespace vecmathlib {
                                              realtestvec<real_t, size> y)
   {
     return x.remainder(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realtestvec<real_t, size> rint(realtestvec<real_t, size> x)
+  {
+    return x.rint();
   }
   
   template<typename real_t, int size>

@@ -396,7 +396,7 @@ struct vecmathlib_test {
   
   static void test_convert()
   {
-    cout << "   testing ceil convert_float convert_int floor round...\n"
+    cout << "   testing ceil convert_float convert_int floor rint round trunc...\n"
          << flush;
     
     for (int i=0; i<imax; ++i) {
@@ -405,6 +405,8 @@ struct vecmathlib_test {
       intvec_t const n2 = random(int_t(-1000000000), int_t(+1000000000));
       realvec_t const fn1 = vecmathlib::convert_float(n1);
       realvec_t const fn2 = vecmathlib::convert_float(n2);
+      realvec_t const fn1h = vecmathlib::convert_float(n1) * RV(0.25);
+      realvec_t const fn2h = vecmathlib::convert_float(n2) * RV(0.25);
       check("convert_float",
             FP::convert_float, vecmathlib::convert_float, n1, accuracy());
       check("convert_float",
@@ -413,15 +415,28 @@ struct vecmathlib_test {
       check("ceil", ceil, vecmathlib::ceil, x, accuracy());
       check("ceil", ceil, vecmathlib::ceil, fn1, accuracy());
       check("ceil", ceil, vecmathlib::ceil, fn2, accuracy());
+      check("ceil", ceil, vecmathlib::ceil, fn1h, accuracy());
+      check("ceil", ceil, vecmathlib::ceil, fn2h, accuracy());
       check("floor", floor, vecmathlib::floor, x, accuracy());
       check("floor", floor, vecmathlib::floor, fn1, accuracy());
       check("floor", floor, vecmathlib::floor, fn2, accuracy());
+      check("floor", floor, vecmathlib::floor, fn1h, accuracy());
+      check("floor", floor, vecmathlib::floor, fn2h, accuracy());
+      check("rint", rint, vecmathlib::rint, x, accuracy());
+      check("rint", rint, vecmathlib::rint, fn1, accuracy());
+      check("rint", rint, vecmathlib::rint, fn2, accuracy());
+      check("rint", rint, vecmathlib::rint, fn1h, accuracy());
+      check("rint", rint, vecmathlib::rint, fn2h, accuracy());
       check("round", round, vecmathlib::round, x, accuracy());
       check("round", round, vecmathlib::round, fn1, accuracy());
       check("round", round, vecmathlib::round, fn2, accuracy());
+      check("round", round, vecmathlib::round, fn1h, accuracy());
+      check("round", round, vecmathlib::round, fn2h, accuracy());
       check("trunc", trunc, vecmathlib::trunc, x, accuracy());
       check("trunc", trunc, vecmathlib::trunc, fn1, accuracy());
       check("trunc", trunc, vecmathlib::trunc, fn2, accuracy());
+      check("trunc", trunc, vecmathlib::trunc, fn1h, accuracy());
+      check("trunc", trunc, vecmathlib::trunc, fn2h, accuracy());
     }
   }
   
@@ -558,7 +573,7 @@ struct vecmathlib_test {
   static real_t rsqrt(real_t x) { return R(1.0)/sqrt(x); }
   static void test_sqrt()
   {
-    cout << "   testing rsqrt sqrt...\n" << flush;
+    cout << "   testing cbrt hypot rsqrt sqrt...\n" << flush;
     for (int i=0; i<imax; ++i) {
       realvec_t const x = random(R(0.0), R(1.0e+3));
       realvec_t const y = random(-R(1.0e+3), R(1.0e+3));

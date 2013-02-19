@@ -18,7 +18,7 @@ namespace vecmathlib {
     x *= RV(1.0/(2.0*M_PI));
     
     // Reduce range: sin(x) = sin(x + 2pi)
-    x -= round(x);
+    x -= rint(x);
     VML_ASSERT(all(x >= RV(-0.5) && x <= RV(+0.5)));
     
     // Reduce range: sin(x) = -sin(-x)

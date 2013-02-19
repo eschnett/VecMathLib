@@ -408,21 +408,20 @@ namespace vecmathlib {
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return R(1.0)/v; }
     realvec remainder(realvec y) const { return std::remainder(v, y.v); }
-    realvec round1() const { return std::round(v); }
-    realvec round() const
+    realvec rint() const
     {
 #ifdef __SSE4_1__
       return to_double(_mm_round_sd(from_double(v), from_double(v),
-                                    _MM_FROUND_NINT));
+                                    _MM_FROUND_TO_NEAREST_INT));
 #else
-      return MF::vml_round(*this);
+      return MF::vml_rint(*this);
 #endif
     }
+    realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     boolvec_t signbit() const { return std::signbit(v); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
-    realvec sqrt1() const { return std::sqrt(v); }
     realvec sqrt() const
     {
       return to_double(_mm_sqrt_sd(from_double(v), from_double(v)));

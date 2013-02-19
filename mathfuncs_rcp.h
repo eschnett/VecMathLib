@@ -47,7 +47,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_remainder(realvec_t x, realvec_t y)
   {
-    return x - round(x / y) * y;
+    return x - rint(x / y) * y;
   }
   
   template<typename realvec_t>
