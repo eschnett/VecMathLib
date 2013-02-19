@@ -31,8 +31,3 @@ namespace vecmathlib {
 #endif
   
 }
-
-int main()
-{
-  return 0;
-}
