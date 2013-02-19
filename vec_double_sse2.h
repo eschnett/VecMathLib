@@ -599,7 +599,7 @@ namespace vecmathlib {
 #ifdef __SSE4_1__
     return _mm_blendv_pd(y.v, x.v, v);
 #else
-    return ((-convert_int() & x.as_int()) |
+    return (( -convert_int() & x.as_int()) |
             (~-convert_int() & y.as_int())).as_float();
 #endif
   }
