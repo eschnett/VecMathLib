@@ -81,21 +81,10 @@ namespace vecmathlib {
     v(_mm_castsi128_pd(_mm_set_epi64x(from_bool(as[1]), from_bool(as[0])))) {}
     
     operator bvector_t() const { return v; }
-    bool operator[](int n) const
-    {
-      // return to_bool(((uint_t const*)&v)[n]);
-      boolvec x = *this;
-      switch (n){
-      case 0: /* do nothing */ break;
-      case 1: x = _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1)); break;
-      default: __builtin_unreachable();
-      }
-      // return to_bool(FP::as_int(_mm_cvtsd_f64(x.v)));
-      return to_bool(_mm_cvtsi128_si64(_mm_castpd_si128(x.v)));
-    }
+    bool operator[](int n) const { return to_bool(((uint_t const*)&v)[n]); }
     boolvec& set_elt(int n, bool a)
     {
-      return ((int_t*)&v)[n] = from_bool(a), *this;
+      return ((uint_t*)&v)[n]=from_bool(a), *this;
     }
     
     
@@ -331,17 +320,7 @@ namespace vecmathlib {
     realvec(real_t const* as): v(_mm_set_pd(as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const
-    {
-      // return ((real_t const*)&v)[n];
-      realvec x = *this;
-      switch (n){
-      case 0: /* do nothing */ break;
-      case 1: x = _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1)); break;
-      default: __builtin_unreachable();
-      }
-      return _mm_cvtsd_f64(x.v);
-    }
+    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
     

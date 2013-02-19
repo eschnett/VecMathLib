@@ -76,24 +76,10 @@ namespace vecmathlib {
                                            from_bool(as[0])))) {}
     
     operator bvector_t() const { return v; }
-    bool operator[](int n) const
-    {
-      // return to_bool(((uint_t const*)&v)[n]);
-      __m128 x =
-        n & 4 ? _mm256_extractf128_ps(v, 1) : _mm256_castps256_ps128(v);
-      switch (n & 3){
-      case 0: /* do nothing */ break;
-      case 1: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(2,3,0,1)); break;
-      case 2: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(1,0,3,2)); break;
-      case 3: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(0,1,2,3)); break;
-      default: __builtin_unreachable();
-      }
-      // return to_bool(FP::as_int(_mm_cvtss_f32(x)));
-      return to_bool(_mm_cvtsi128_si32(_mm_castps_si128(x)));
-    }
+    bool operator[](int n) const { return to_bool(((uint_t const*)&v)[n]); }
     boolvec& set_elt(int n, bool a)
     {
-      return ((int_t*)&v)[n] = from_bool(a), *this;
+      return ((uint_t*)&v)[n]=from_bool(a), *this;
     }
     
     
@@ -162,20 +148,7 @@ namespace vecmathlib {
     static intvec iota() { return _mm256_set_epi32(7, 6, 5, 4, 3, 2, 1, 0); }
     
     operator ivector_t() const { return v; }
-    int_t operator[](int n) const
-    {
-      // return ((int_t const*)&v)[n];
-      __m128i x =
-        n & 4 ? _mm256_extractf128_si256(v, 1) : _mm256_castsi256_si128(v);
-      switch (n & 3){
-      case 0: /* do nothing */ break;
-      case 1: x = _mm_shuffle_epi32(x, _MM_SHUFFLE(2,3,0,1)); break;
-      case 2: x = _mm_shuffle_epi32(x, _MM_SHUFFLE(1,0,3,2)); break;
-      case 3: x = _mm_shuffle_epi32(x, _MM_SHUFFLE(0,1,2,3)); break;
-      default: __builtin_unreachable();
-      }
-      return _mm_cvtsi128_si32(x);
-    }
+    int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
     intvec& set_elt(int n, int_t a) { return ((int_t*)&v)[n]=a, *this; }
     
     
@@ -391,20 +364,7 @@ namespace vecmathlib {
                                                as[3], as[2], as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const
-    {
-      // return ((real_t const*)&v)[n];
-      __m128 x =
-        n & 4 ? _mm256_extractf128_ps(v, 1) : _mm256_castps256_ps128(v);
-      switch (n & 3){
-      case 0: /* do nothing */ break;
-      case 1: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(2,3,0,1)); break;
-      case 2: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(1,0,3,2)); break;
-      case 3: x = _mm_shuffle_ps(x, x, _MM_SHUFFLE(0,1,2,3)); break;
-      default: __builtin_unreachable();
-      }
-      return _mm_cvtss_f32(x);
-    }
+    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
     realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
     
     
