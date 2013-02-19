@@ -11,8 +11,8 @@ using namespace std;
 int main(int argc, char** argv)
 {
   using namespace vecmathlib;
-  typedef realvec<float,1> realvec_t;
-  // typedef realvec<double,4> realvec_t;
+  // typedef realvec<float,1> realvec_t;
+  typedef realvec<double,2> realvec_t;
   typedef realvec_t::boolvec_t boolvec_t;
   typedef realvec_t::intvec_t intvec_t;
   
