@@ -14,7 +14,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_copysign(realvec_t x, realvec_t y)
   {
-    intvec_t value = as_int(x) & IV(~FP::signbit_mask);
+    intvec_t value = as_int(x) & IV(U(~FP::signbit_mask));
     intvec_t sign = as_int(y) & IV(FP::signbit_mask);
     return as_float(sign | value);
   }
@@ -22,7 +22,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_fabs(realvec_t x)
   {
-    return as_float(as_int(x) & IV(~FP::signbit_mask));
+    return as_float(as_int(x) & IV(U(~FP::signbit_mask)));
   }
   
   template<typename realvec_t>

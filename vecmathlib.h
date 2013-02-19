@@ -37,20 +37,16 @@
 // Intel SSE 2
 #if defined __SSE2__
 #  include "vec_float_sse2_scalar.h"
-#  include "vec_float_sse2.h"
-#endif
-// Intel AVX
-#if defined __AVX__
-#  include "vec_float_avx.h"
-#endif
-
-// Intel SSE 2
-#if defined __SSE2__
 #  include "vec_double_sse2_scalar.h"
+#  include "vec_float_sse2.h"
 #  include "vec_double_sse2.h"
 #endif
+
 // Intel AVX
 #if defined __AVX__
+#  include "vec_fp8_avx.h"
+#  include "vec_fp16_avx.h"
+#  include "vec_float_avx.h"
 #  include "vec_double_avx.h"
 #endif
 

@@ -3,6 +3,8 @@
 #ifndef FLOATPROPS_H
 #define FLOATPROPS_H
 
+#include "floattypes.h"
+
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -27,8 +29,116 @@ namespace vecmathlib {
     //    max_exponent
   };
   
-  template<typename int_t>
-  struct intprops {
+  
+  
+  // Properties of fp8
+  template<>
+  struct floatprops<fp8> {
+    typedef fp8 real_t;
+    typedef int8_t int_t;
+    typedef uint8_t uint_t;
+    
+    // Definitions that might come from numeric_limits<> instead:
+    static int const digits = 4;
+    static int epsilon() { __builtin_unreachable(); }
+    static int const min_exponent = -6;
+    static int const max_exponent = 7;
+    
+    // Ensure the sizes match
+    static_assert(sizeof(real_t) == sizeof(int_t), "int_t has wrong size");
+    static_assert(sizeof(real_t) == sizeof(uint_t), "uint_t has wrong size");
+    
+    // Number of bits in internal representation
+    static int const bits = 8 * sizeof(real_t);
+    static int const mantissa_bits = digits - 1;
+    static int const signbit_bits = 1;
+    static int const exponent_bits = bits - mantissa_bits - signbit_bits;
+    static int const exponent_offset = 2 - min_exponent;
+    static_assert(mantissa_bits + exponent_bits + signbit_bits == bits,
+                  "error in bit counts");
+    static uint_t const mantissa_mask = (uint_t(1) << mantissa_bits) - 1;
+    static uint_t const exponent_mask =
+      ((uint_t(1) << exponent_bits) - 1) << mantissa_bits;
+    static uint_t const signbit_mask = uint_t(1) << (bits-1);
+    static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
+                  "error in masks");
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) ==
+                  uint_t(~uint_t(0)),
+                  "error in masks");
+    
+    // Re-interpret bit patterns
+    static real_t as_float(int_t x)
+    {
+      real_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
+    }
+    static int_t as_int(real_t x)
+    {
+      int_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
+    }
+    
+    // Convert values
+    static real_t convert_float(int_t x) { __builtin_unreachable(); }
+    static int_t convert_int(real_t x) { __builtin_unreachable(); }
+  };
+  
+  
+  
+  // Properties of fp16
+  template<>
+  struct floatprops<fp16> {
+    typedef fp16 real_t;
+    typedef int16_t int_t;
+    typedef uint16_t uint_t;
+    
+    // Definitions that might come from numeric_limits<> instead:
+    static int const digits = 11;
+    static int epsilon() { __builtin_unreachable(); }
+    static int const min_exponent = -14;
+    static int const max_exponent = 15;
+    
+    // Ensure the sizes match
+    static_assert(sizeof(real_t) == sizeof(int_t), "int_t has wrong size");
+    static_assert(sizeof(real_t) == sizeof(uint_t), "uint_t has wrong size");
+    
+    // Number of bits in internal representation
+    static int const bits = 8 * sizeof(real_t);
+    static int const mantissa_bits = digits - 1;
+    static int const signbit_bits = 1;
+    static int const exponent_bits = bits - mantissa_bits - signbit_bits;
+    static int const exponent_offset = 2 - min_exponent;
+    static_assert(mantissa_bits + exponent_bits + signbit_bits == bits,
+                  "error in bit counts");
+    static uint_t const mantissa_mask = (uint_t(1) << mantissa_bits) - 1;
+    static uint_t const exponent_mask =
+      ((uint_t(1) << exponent_bits) - 1) << mantissa_bits;
+    static uint_t const signbit_mask = uint_t(1) << (bits-1);
+    static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
+                  "error in masks");
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) ==
+                  uint_t(~uint_t(0)),
+                  "error in masks");
+    
+    // Re-interpret bit patterns
+    static real_t as_float(int_t x)
+    {
+      real_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
+    }
+    static int_t as_int(real_t x)
+    {
+      int_t res;
+      std::memcpy(&res, &x, sizeof res);
+      return res;
+    }
+    
+    // Convert values
+    static real_t convert_float(int_t x) { __builtin_unreachable(); }
+    static int_t convert_int(real_t x) { __builtin_unreachable(); }
   };
   
   
@@ -66,7 +176,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static inline real_t as_float(int_t x)
+    static real_t as_float(int_t x)
     {
       // return *(real_t*)&x;
       // union { int_t i; real_t r; } ir;
@@ -75,7 +185,7 @@ namespace vecmathlib {
       std::memcpy(&res, &x, sizeof res);
       return res;
     }
-    static inline int_t as_int(real_t x)
+    static int_t as_int(real_t x)
     {
       // return *(int_t*)&x;
       // union { real_t r; int_t i; } ri;
@@ -86,8 +196,8 @@ namespace vecmathlib {
     }
     
     // Convert values
-    static inline real_t convert_float(int_t x) { return real_t(x); }
-    static inline int_t convert_int(real_t x)
+    static real_t convert_float(int_t x) { return real_t(x); }
+    static int_t convert_int(real_t x)
     {
       static_assert(sizeof std::lrint(x) >= sizeof(int_t),
                     "lrint() has wrong return type");
@@ -101,11 +211,6 @@ namespace vecmathlib {
       }
       return res;
     }
-  };
-  
-  template<>
-  struct intprops<floatprops<float>::int_t> {
-    typedef float real_t;
   };
   
   
@@ -143,7 +248,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static inline real_t as_float(int_t x)
+    static real_t as_float(int_t x)
     {
       // return *(real_t*)&x;
       // union { int_t i; real_t r; } ir;
@@ -152,7 +257,7 @@ namespace vecmathlib {
       std::memcpy(&res, &x, sizeof res);
       return res;
     }
-    static inline int_t as_int(real_t x)
+    static int_t as_int(real_t x)
     {
       // return *(int_t*)&x;
       // union { real_t r; int_t i; } ri;
@@ -163,8 +268,8 @@ namespace vecmathlib {
     }
     
     // Convert values
-    static inline real_t convert_float(int_t x) { return real_t(x); }
-    static inline int_t convert_int(real_t x)
+    static real_t convert_float(int_t x) { return real_t(x); }
+    static int_t convert_int(real_t x)
     {
       static_assert(sizeof std::lrint(x) >= sizeof(int_t),
                     "lrint() has wrong return type");
@@ -178,11 +283,6 @@ namespace vecmathlib {
       }
       return res;
     }
-  };
-  
-  template<>
-  struct intprops<floatprops<double>::int_t> {
-    typedef double real_t;
   };
   
   
