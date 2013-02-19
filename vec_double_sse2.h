@@ -101,8 +101,20 @@ namespace vecmathlib {
     boolvec operator==(boolvec x) const { return !(*this==x); }
     boolvec operator!=(boolvec x) const { return _mm_xor_pd(v, x.v); }
     
-    bool all() const;
-    bool any() const;
+    bool all() const
+    {
+      // return (*this)[0] && (*this)[1];
+      boolvec x = *this;
+      x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      return x[0];
+    }
+    bool any() const
+    {
+      // return (*this)[0] || (*this)[1];
+      boolvec x = *this;
+      x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      return x[0];
+    }
     
     
     
@@ -565,24 +577,6 @@ namespace vecmathlib {
   {
     //return ifthen(v, U(1), U(0));
     return lsr(as_int(), bits-1);
-  }
-  
-  inline
-  bool boolvec<double,2>::all() const
-  {
-    // return (*this)[0] && (*this)[1];
-    boolvec x = *this;
-    x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
-    return x[0];
-  }
-  
-  inline
-  bool boolvec<double,2>::any() const
-  {
-    // return (*this)[0] || (*this)[1];
-    boolvec x = *this;
-    x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
-    return x[0];
   }
   
   inline

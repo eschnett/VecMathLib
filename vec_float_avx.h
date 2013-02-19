@@ -96,8 +96,30 @@ namespace vecmathlib {
     boolvec operator==(boolvec x) const { return !(*this==x); }
     boolvec operator!=(boolvec x) const { return _mm256_xor_ps(v, x.v); }
     
-    bool all() const;
-    bool any() const;
+    bool all() const
+    {
+      // return
+      //   (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3] &&
+      //   (*this)[4] && (*this)[5] && (*this)[6] && (*this)[7];
+      boolvec x = *this;
+      x = x && _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
+      x = x && _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
+      __m128 y = _mm_and_ps(_mm256_castps256_ps128(x.v),
+                            _mm256_extractf128_ps(x.v, 1));
+      return to_bool(_mm_cvtsi128_si32(_mm_castps_si128(y)));
+    }
+    bool any() const
+    {
+      // return
+      //   (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3] ||
+      //   (*this)[4] || (*this)[5] || (*this)[6] || (*this)[7];
+      boolvec x = *this;
+      x = x || _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
+      x = x || _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
+      __m128 y = _mm_or_ps(_mm256_castps256_ps128(x.v),
+                           _mm256_extractf128_ps(x.v, 1));
+      return to_bool(_mm_cvtsi128_si32(_mm_castps_si128(y)));
+    }
     
     
     
@@ -599,34 +621,6 @@ namespace vecmathlib {
   auto boolvec<float,8>::convert_int() const -> intvec_t
   {
     return lsr(as_int(), bits-1);
-  }
-  
-  inline
-  bool boolvec<float,8>::all() const
-  {
-    // return
-    //   (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3] &&
-    //   (*this)[4] && (*this)[5] && (*this)[6] && (*this)[7];
-    boolvec x = *this;
-    x = x && _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
-    x = x && _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
-    __m128 y = _mm_and_ps(_mm256_castps256_ps128(x.v),
-                          _mm256_extractf128_ps(x.v, 1));
-    return to_bool(_mm_cvtsi128_si32(_mm_castps_si128(y)));
-  }
-  
-  inline
-  bool boolvec<float,8>::any() const
-  {
-    // return
-    //   (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3] ||
-    //   (*this)[4] || (*this)[5] || (*this)[6] || (*this)[7];
-    boolvec x = *this;
-    x = x || _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
-    x = x || _mm256_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
-    __m128 y = _mm_or_ps(_mm256_castps256_ps128(x.v),
-                         _mm256_extractf128_ps(x.v, 1));
-    return to_bool(_mm_cvtsi128_si32(_mm_castps_si128(y)));
   }
   
   inline
