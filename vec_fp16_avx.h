@@ -349,7 +349,7 @@ namespace vecmathlib {
     typedef __m256i vector_t;
     
     static char const* name() { return "<AVX:16*fp16>"; }
-    inline void barrier() { asm("": "+x" (v)); }
+    void barrier() { asm("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");

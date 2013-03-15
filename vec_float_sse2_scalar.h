@@ -217,7 +217,7 @@ namespace vecmathlib {
     typedef float vector_t;
     
     static char const* name() { return "<SSE2:1*float>"; }
-    inline void barrier() { asm("": "+x" (v)); }
+    void barrier() { asm("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
