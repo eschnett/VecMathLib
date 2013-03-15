@@ -29,7 +29,7 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_fdim(realvec_t x, realvec_t y)
   {
     // return ifthen(x > y, x - y, RV(0.0));
-    return x - fmin(x, y);
+    return fmax(x - y, RV(0.0));
   }
   
   template<typename realvec_t>
