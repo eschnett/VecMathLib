@@ -27,11 +27,15 @@
 #  define VML_ASSERT(x) ((void)0)
 #endif
 
-// Scalarise all vector operations, and use libm's functions
+// Scalarise all vector operations, and use libm's functions (mostly
+// useful as fallback)
 #include "vec_pseudo.h"
 
-// Scalarise all vector operations; don't use libm,, use only VML's
-// functions
+// Use compiler-provided vector types
+// #include "vec_builtin.h"
+
+// Scalarise all vector operations; don't use libm, use only
+// Vecmathlib's functions (mostly useful for testing Vecmathlib)
 #include "vec_test.h"
 
 // Intel SSE 2

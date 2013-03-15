@@ -20,6 +20,17 @@ namespace vecmathlib {
     return x.set_elt(n, a);
   }
   
+  // template realbuiltinvec<float,1> fabs(realbuiltinvec<float,1> x);
+  // template realbuiltinvec<float,1> fmin(realbuiltinvec<float,1> x, realbuiltinvec<float,1> y);
+  // template intbuiltinvec<float,1> lsr(intbuiltinvec<float,1> x, intbuiltinvec<float,1>::int_t n);
+  // template intbuiltinvec<double,1> lsr(intbuiltinvec<double,1> x, intbuiltinvec<double,1>::int_t n);
+  // template intbuiltinvec<double,2> lsr(intbuiltinvec<double,2> x, intbuiltinvec<double,2>::int_t n);
+  // template intbuiltinvec<double,2> lsr(intbuiltinvec<double,2> x, intbuiltinvec<double,2> n);
+  // template realbuiltinvec<float,1> ifthen(realbuiltinvec<float,1>::boolvec_t c, realbuiltinvec<float,1> x, realbuiltinvec<float,1> y);
+  // template realbuiltinvec<double,1> ifthen(realbuiltinvec<double,1>::boolvec_t c, realbuiltinvec<double,1> x, realbuiltinvec<double,1> y);
+  // template realbuiltinvec<float,4> ifthen(realbuiltinvec<float,4>::boolvec_t c, realbuiltinvec<float,4> x, realbuiltinvec<float,4> y);
+  // template realbuiltinvec<double,2> ifthen(realbuiltinvec<double,2>::boolvec_t c, realbuiltinvec<double,2> x, realbuiltinvec<double,2> y);
+  
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   template realvec<float,1> round(realvec<float,1> x);
 #endif
@@ -34,7 +45,6 @@ namespace vecmathlib {
 #endif
   
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
-  template struct realvec<double,2>;
   template realvec<double,2> exp(realvec<double,2> x);
   template realvec<double,2> log(realvec<double,2> x);
   template realvec<double,2> sin(realvec<double,2> x);
@@ -46,7 +56,6 @@ namespace vecmathlib {
 #endif
   
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
-  template struct realvec<double,4>;
   template realvec<double,4> exp(realvec<double,4> x);
   template realvec<double,4> log(realvec<double,4> x);
   template realvec<double,4> sin(realvec<double,4> x);
