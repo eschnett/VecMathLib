@@ -75,10 +75,7 @@ vmlfuncs = [
     ("isnormal" , [VF        ], VJ, [VF        ], VB),
     ("signbit"  , [VF        ], VJ, [VF        ], VB),
     ]
-
-# This is prepended to the generated function names.
-func_prefix = ""
-
+    
 directfuncs = [
     # Section 6.12.2
     ("acospi"        , [VF         ], VF, "acos(x0)/(scalar_t)M_PI"),
@@ -184,6 +181,41 @@ directfuncs = [
 
 
 
+# This is always prepended to the generated function names.
+func_prefix = ""
+
+# Some of the functions need prefixes to avoid using the C standard
+# library ones.
+masked_functions = [
+    "acos",
+    "asin",
+    "atan",
+    "atan2",
+    "ceil",
+    "copysign"
+    "cos",
+    "exp",
+    "exp2",
+    "fabs",
+    "floor",
+    "fma",
+    "log",
+    "log2",
+    "pow",
+    "rint",
+    "round",
+    "sin",
+    "sqrt",
+    "tan",
+    "trunc",
+]
+
+def prefixed(name):
+    if name in masked_functions: name = "_cl_" + name
+    return func_prefix + name
+
+
+
 outfile = None
 outfile_did_truncate = set()
 def out(str): outfile.write("%s\n" % str)
@@ -273,8 +305,8 @@ def output_vmlfunc_vml(func, vectype):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
     funcretstr = mktype(ret, vectype)
-    decl("%s %s%s(%s)" % (funcretstr, func_prefix, name, funcargstr))
-    out("%s %s%s(%s)" % (funcretstr, func_prefix, name, funcargstr))
+    decl("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
+    out("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
     out("{")
     for (n, arg, vmlarg) in zip(range(0, 100), args, vmlargs):
         out("  %s y%d = bitcast<%s,%s>(x%d);" %
@@ -324,8 +356,8 @@ def output_vmlfunc_libm(func, vectype):
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
-    decl("%s %s%s(%s)" % (vectype, func_prefix, name, funcargstr))
-    out("%s %s%s(%s)" % (vectype, func_prefix, name, funcargstr))
+    decl("%s %s(%s)" % (vectype, prefixed(name), funcargstr))
+    out("%s %s(%s)" % (vectype, prefixed(name), funcargstr))
     out("{")
     for (n, arg) in zip(range(0, 100), args):
         out("  %s y%d = x%d;" % (othertype, n, n))
@@ -346,12 +378,12 @@ def output_vmlfunc_upcast(func, vectype):
     othertype = "%s%s" % (basetype, size2)
     declargstr = ", ".join(map(lambda (n, arg): "%s" % mktype(arg, othertype),
                                zip(range(0, 100), args)))
-    out("%s %s%s(%s);" % (mktype(ret, othertype), func_prefix, name, declargstr))
+    out("%s %s(%s);" % (mktype(ret, othertype), prefixed(name), declargstr))
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
-    decl("%s %s%s(%s)" % (mktype(ret, vectype), func_prefix, name, funcargstr))
-    out("%s %s%s(%s)" % (mktype(ret, vectype), func_prefix, name, funcargstr))
+    decl("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
+    out("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("{")
     for (n, arg) in zip(range(0, 100), args):
         out("  %s y%d = bitcast<%s,%s>(x%d);" %
@@ -359,7 +391,7 @@ def output_vmlfunc_upcast(func, vectype):
              mktype(arg, vectype), mktype(arg, othertype), n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
-    out("  %s r = %s%s(%s);" % (mktype(ret, othertype), func_prefix, name, callargstr))
+    out("  %s r = %s(%s);" % (mktype(ret, othertype), prefixed(name), callargstr))
     out("  return bitcast<%s,%s>(r);" %
         (mktype(ret, othertype), mktype(ret, vectype)))
     out("}")
@@ -374,12 +406,12 @@ def output_vmlfunc_split(func, vectype):
     othertype = "%s%s" % (basetype, size2)
     declargstr = ", ".join(map(lambda (n, arg): "%s" % mktype(arg, othertype),
                                zip(range(0, 100), args)))
-    out("%s %s%s(%s);" % (mktype(ret, othertype), func_prefix, name, declargstr))
+    out("%s %s(%s);" % (mktype(ret, othertype), prefixed(name), declargstr))
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
-    decl("%s %s%s(%s)" % (mktype(ret, vectype), func_prefix, name, funcargstr))
-    out("%s %s%s(%s)" % (mktype(ret, vectype), func_prefix, name, funcargstr))
+    decl("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
+    out("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("{")
     out("  struct pair { %s lo, hi; };" % othertype)
     for (n, arg) in zip(range(0, 100), args):
@@ -388,7 +420,7 @@ def output_vmlfunc_split(func, vectype):
              mktype(arg, vectype), mktype(arg, othertype), n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
-    out("  %s r = %s%s(%s);" % (mktype(ret, othertype), func_prefix, name, callargstr))
+    out("  %s r = %s(%s);" % (mktype(ret, othertype), prefixed(name), callargstr))
     out("  return bitcast<%s,%s>(r);" %
         (mktype(ret, othertype), mktype(ret, vectype)))
     out("}")
@@ -404,9 +436,9 @@ def output_directfunc_direct(func, vectype):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
     funcretstr = mktype(ret, vectype)
-    decl("%s %s%s(%s)" % (funcretstr, func_prefix, name, funcargstr))
+    decl("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
     out("__attribute__((__overloadable__))");
-    out("%s %s%s(%s)" % (funcretstr, func_prefix, name, funcargstr))
+    out("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
     out("{")
     out("  typedef %s kscalar_t;" % mktype(SK, vectype))
     out("  typedef %s scalar_t;" % mktype(SF, vectype))
@@ -442,7 +474,8 @@ def output_vmlfunc(func):
     decl("")
     decl("// %s: %s -> %s" % (name, args, ret))
     decl("#undef %s" % name)
-    decl("#define %s %s%s" % (name, func_prefix, name))
+    if prefixed(name) != name:
+        decl("#define %s %s" % (name, prefixed(name)))
     out("// %s: %s -> %s" % (name, args, ret))
     for basetype in ["float", "double"]:
         if basetype=="double":
@@ -495,7 +528,8 @@ def output_directfunc(func):
     decl("")
     decl("// %s: %s -> %s" % (name, args, ret))
     decl("#undef %s" % name)
-    decl("#define %s %s%s" % (name, func_prefix, name))
+    if prefixed(name) != name:
+        decl("#define %s %s" % (name, prefixed(name)))
     out("// %s: %s -> %s" % (name, args, ret))
     if any(map(lambda arg: arg in (PVK, PVF), args)):
         spaces = ["global", "local", "private"]
