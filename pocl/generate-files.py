@@ -141,8 +141,9 @@ directfuncs = [
     ("native_tan"    , [VF         ], VF, "tan(x0)"),
     
     # Section 6.12.4
-    ("clamp"         , [VF, VF, VF ], VF, "fmin(fmax(x0,x1),x2)"),
-    ("clamp"         , [VF, SF, SF ], VF, "fmin(fmax(x0,x1),x2)"),
+# clamp(signed, signed, signed) is missing so use the pocl default one for now.
+#    ("clamp"         , [VF, VF, VF ], VF, "fmin(fmax(x0,x1),x2)"),
+#    ("clamp"         , [VF, SF, SF ], VF, "fmin(fmax(x0,x1),x2)"),
     ("degrees"       , [VF         ], VF, "(scalar_t)(180.0/M_PI)*x0"),
     ("max"           , [VF, VF     ], VF, "fmax(x0,x1)"),
     ("max"           , [VF, SF     ], VF, "fmax(x0,x1)"),
