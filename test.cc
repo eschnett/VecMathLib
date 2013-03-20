@@ -622,6 +622,27 @@ int main(int argc, char** argv)
 
   cout << "Testing math functions:\n" << flush;
   
+  cout << "Vecmathlib configuration: [conf"
+#ifdef VML_DEBUG
+    "-DEBUG"
+#endif
+#ifdef __SSE2__
+    "-SSE2"
+#endif
+#ifdef __SSE3__
+    "-SSE3"
+#endif
+#ifdef __SSE4_1__
+    "-SSE4.1"
+#endif
+#ifdef __SSE4a__
+    "-SSE4a"
+#endif
+#ifdef __AVX__
+    "-AVX"
+#endif
+    "]\n";
+  
   vecmathlib_test<realpseudovec<float,1>>::test();
   // vecmathlib_test<realbuiltinvec<float,1>>::test();
   vecmathlib_test<realtestvec<float,1>>::test();
