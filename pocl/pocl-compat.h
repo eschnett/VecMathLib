@@ -1,17 +1,30 @@
 // -*-C++-*- Compatibility layer to help instantiante functions to
 // create a library that can be called from elsewhere
 
+/* This workaround is needed for older libstdc++
+   versions such as the one in Debian 6.0 when compiled with clang++ 
+   http://lists.cs.uiuc.edu/pipermail/cfe-dev/2011-February/013207.html
+   The version time stamp used below is the one in Debian 6.0.
+*/
 
+
+#include <cstring>
+
+#if defined(__GLIBCXX__) && __GLIBCXX__ <= 20101114 
+
+namespace std { class type_info; }
+
+#else
+
+#warning NOOOOOOOOOOO
+
+#endif
 
 // Make things go fast (and debugging difficult...)
 #define VML_NODEBUG
 #include "../vecmathlib.h"
 
-#include <algorithm>
 #include <cstdint>
-#include <cstring>
-
-
 
 // Define vector types
 
