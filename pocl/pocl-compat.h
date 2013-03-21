@@ -14,10 +14,6 @@
 
 namespace std { class type_info; }
 
-#else
-
-#warning NOOOOOOOOOOO
-
 #endif
 
 // Make things go fast (and debugging difficult...)
