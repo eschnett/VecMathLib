@@ -70,6 +70,7 @@ namespace vecmathlib {
     // be passed in registers
     // boolvec(boolvec const& x): v(x.v) {}
     // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
+    boolvec(int x): v(x) {}
     boolvec(bvector_t x): v(x) {}
     boolvec(bool a): v(a) {}
     boolvec(bool const* as): v(as[0]) {}

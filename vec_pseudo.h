@@ -11,7 +11,7 @@
 #include <cmath>
 #include <string>
 #include <typeinfo>
-
+#include <sstream>
 
 
 namespace vecmathlib {
@@ -383,7 +383,9 @@ namespace vecmathlib {
         if (typeid(T) == typeid(float)) base = "float";
         else if (typeid(T) == typeid(double)) base = "double";
         else base = typeid(T).name();
-        name_ = std::string("<libm:") + std::to_string(N) + "*" + base + ">";
+        stringstream ss;
+        ss << "<libm:" << N << "*" << base << ">";
+        name_ = ss.str();
       }
       return name_.c_str();
     }
