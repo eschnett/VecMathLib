@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
-#include <typeinfo>
 
 using namespace std;
 

@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <cmath>
 #include <string>
-#include <typeinfo>
 #include <sstream>
+
 
 
 namespace vecmathlib {
@@ -378,14 +378,10 @@ namespace vecmathlib {
     static char const* name()
     {
       static std::string name_;
-      if (name_.length()==0) {
-        std::string base;
-        if (typeid(T) == typeid(float)) base = "float";
-        else if (typeid(T) == typeid(double)) base = "double";
-        else base = typeid(T).name();
-        stringstream ss;
-        ss << "<libm:" << N << "*" << base << ">";
-        name_ = ss.str();
+      if (name_.empty()) {
+        stringstream buf;
+        buf << "<libm:" << N << "*" << FP::name() << ">";
+        name_ = buf.str();
       }
       return name_.c_str();
     }

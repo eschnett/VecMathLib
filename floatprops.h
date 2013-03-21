@@ -11,7 +11,6 @@
 #include <iostream>
 #include <limits>
 #include <sstream>
-#include <typeinfo>
 
 
 
@@ -38,7 +37,11 @@ namespace vecmathlib {
     typedef int8_t int_t;
     typedef uint8_t uint_t;
     
+    static char const* name() { return "fp8"; }
+    
     // Definitions that might come from numeric_limits<> instead:
+    static int min() { __builtin_unreachable(); }
+    static int max() { __builtin_unreachable(); }
     static int const digits = 4;
     static int epsilon() { __builtin_unreachable(); }
     static int const min_exponent = -6;
@@ -94,7 +97,11 @@ namespace vecmathlib {
     typedef int16_t int_t;
     typedef uint16_t uint_t;
     
+    static char const* name() { return "fp16"; }
+    
     // Definitions that might come from numeric_limits<> instead:
+    static int min() { __builtin_unreachable(); }
+    static int max() { __builtin_unreachable(); }
     static int const digits = 11;
     static int epsilon() { __builtin_unreachable(); }
     static int const min_exponent = -14;
@@ -149,6 +156,8 @@ namespace vecmathlib {
     typedef float real_t;
     typedef int32_t int_t;
     typedef uint32_t uint_t;
+    
+    static char const* name() { return "float"; }
     
     // Ensure the internal representation is what we expect
     static_assert(is_signed, "real_t is not signed");
@@ -221,6 +230,8 @@ namespace vecmathlib {
     typedef double real_t;
     typedef int64_t int_t;
     typedef uint64_t uint_t;
+    
+    static char const* name() { return "double"; }
     
     // Ensure the internal representation is what we expect
     static_assert(is_signed, "real_t is not signed");
