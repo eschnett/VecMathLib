@@ -82,7 +82,7 @@ directfuncs = [
     ("acospi"        , [VF         ], VF, "acos(x0)/(scalar_t)M_PI"),
     ("asinpi"        , [VF         ], VF, "asin(x0)/(scalar_t)M_PI"),
     ("atanpi"        , [VF         ], VF, "atan(x0)/(scalar_t)M_PI"),
-    ("atan2"         , [VF, VF     ], VF, "({ vector_t a=atan(x0/x1); x1>(scalar_t)0.0 ? a : x1<(scalar_t)0.0 ? a+copysign((scalar_t)M_PI,x0) : copysign((scalar_t)M_PI_2,x0); })"),
+    ("atan2"         , [VF, VF     ], VF, "({ vector_t a=atan(x0/x1); x1>(scalar_t)0.0f ? a : x1<(scalar_t)0.0f ? a+copysign((scalar_t)M_PI,x0) : copysign((scalar_t)M_PI_2,x0); })"),
     ("atan2pi"       , [VF, VF     ], VF, "atan2(x0,x1)/(scalar_t)M_PI"),
     ("cospi"         , [VF         ], VF, "cos((scalar_t)M_PI*x0)"),
     ("fmax"          , [VF, SF     ], VF, "fmax(x0,(vector_t)x1)"),
@@ -97,11 +97,11 @@ directfuncs = [
     ("maxmag"        , [VF, VF     ], VF, "fabs(x0)>fabs(x1) ? x0 : fabs(x1)>fabs(x0) ? x1 : fmax(x0,x1)"),
     ("minmag"        , [VF, VF     ], VF, "fabs(x0)<fabs(x1) ? x0 : fabs(x1)<fabs(x0) ? x1 : fmin(x0,x1)"),
     ("modf"          , [VF, PVF    ], VF, "*x1=trunc(x0), copysign(x0-trunc(x0),x0)"),
-    ("nan"           , [VU         ], VF, "(scalar_t)0.0/(scalar_t)0.0"),
+    ("nan"           , [VU         ], VF, "(scalar_t)0.0f/(scalar_t)0.0f"),
     ("pown"          , [VF, VK     ], VF, "pow(x0,convert_vector_t(x1))"),
     ("powr"          , [VF, VF     ], VF, "pow(x0,x1)"),
     ("remquo"        , [VF, VF, PVK], VF, "({ vector_t k=rint(x0/x1); *x2=(convert_kvector_t(k)&0x7f)*(1-2*convert_kvector_t(signbit(k))); x0-k*x1; })"),
-    ("rootn"         , [VF, VK     ], VF, "pow(x0,(scalar_t)1.0/convert_vector_t(x1))"),
+    ("rootn"         , [VF, VK     ], VF, "pow(x0,(scalar_t)1.0f/convert_vector_t(x1))"),
     ("sincos"        , [VF, PVF    ], VF, "*x1=cos(x0), sin(x0)"),
     ("sinpi"         , [VF         ], VF, "sin((scalar_t)M_PI*x0)"),
     ("tanpi"         , [VF         ], VF, "tan((scalar_t)M_PI*x0)"),
@@ -116,7 +116,7 @@ directfuncs = [
     ("half_log2"     , [VF         ], VF, "log2(x0)"),
     ("half_log10"    , [VF         ], VF, "log10(x0)"),
     ("half_powr"     , [VF, VF     ], VF, "powr(x0,x1)"),
-    ("half_recip"    , [VF         ], VF, "(scalar_t)1.0/x0"),
+    ("half_recip"    , [VF         ], VF, "(scalar_t)1.0f/x0"),
     ("half_rsqrt"    , [VF         ], VF, "rsqrt(x0)"),
     ("half_sin"      , [VF         ], VF, "sin(x0)"),
     ("half_sqrt"     , [VF         ], VF, "sqrt(x0)"),
@@ -131,7 +131,7 @@ directfuncs = [
     ("native_log2"   , [VF         ], VF, "log2(x0)"),
     ("native_log10"  , [VF         ], VF, "log10(x0)"),
     ("native_powr"   , [VF, VF     ], VF, "powr(x0,x1)"),
-    ("native_recip"  , [VF         ], VF, "(scalar_t)1.0/x0"),
+    ("native_recip"  , [VF         ], VF, "(scalar_t)1.0f/x0"),
     ("native_rsqrt"  , [VF         ], VF, "rsqrt(x0)"),
     ("native_sin"    , [VF         ], VF, "sin(x0)"),
     ("native_sqrt"   , [VF         ], VF, "sqrt(x0)"),
@@ -140,19 +140,19 @@ directfuncs = [
     # Section 6.12.4
     ("clamp"         , [VF, VF, VF ], VF, "fmin(fmax(x0,x1),x2)"),
     ("clamp"         , [VF, SF, SF ], VF, "fmin(fmax(x0,x1),x2)"),
-    ("degrees"       , [VF         ], VF, "(scalar_t)(180.0/M_PI)*x0"),
+    ("degrees"       , [VF         ], VF, "(scalar_t)(180/M_PI)*x0"),
     ("max"           , [VF, VF     ], VF, "fmax(x0,x1)"),
     ("max"           , [VF, SF     ], VF, "fmax(x0,x1)"),
     ("min"           , [VF, VF     ], VF, "fmin(x0,x1)"),
     ("min"           , [VF, SF     ], VF, "fmin(x0,x1)"),
     ("mix"           , [VF, VF, VF ], VF, "x0+(x1-x0)*x2"),
     ("mix"           , [VF, VF, SF ], VF, "x0+(x1-x0)*x2"),
-    ("radians"       , [VF         ], VF, "(scalar_t)(M_PI/180.0)*x0"),
-    ("step"          , [VF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"),
-    ("step"          , [SF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0 : (vector_t)(scalar_t)1.0"),
-    ("smoothstep"    , [VF, VF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
-    ("smoothstep"    , [SF, SF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0, (scalar_t)1.0); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
-    ("sign"          , [VF         ], VF, "copysign(x0!=(scalar_t)0.0 ? (vector_t)(scalar_t)1.0 : (vector_t)(scalar_t)0.0,x0)"),
+    ("radians"       , [VF         ], VF, "(scalar_t)(M_PI/180)*x0"),
+    ("step"          , [VF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0f : (vector_t)(scalar_t)1.0f"),
+    ("step"          , [SF, VF     ], VF, "x1<x0 ? (vector_t)(scalar_t)0.0f : (vector_t)(scalar_t)1.0f"),
+    ("smoothstep"    , [VF, VF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0f, (scalar_t)1.0f); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
+    ("smoothstep"    , [SF, SF, VF ], VF, "({ vector_t t = clamp((x2-x0)/(x1-x0), (scalar_t)0.0f, (scalar_t)1.0f); t*t*((scalar_t)3.0-(scalar_t)2.0*t); })"),
+    ("sign"          , [VF         ], VF, "copysign(x0!=(scalar_t)0.0f ? (vector_t)(scalar_t)1.0f : (vector_t)(scalar_t)0.0f,x0)"),
     
     # Section 6.12.6
     ("isequal"       , [VF, VF     ], VJ, "x0==x1"),
@@ -578,6 +578,10 @@ def output_directfunc(func):
     if is_first_open:
         out("// Note: This file has been automatically generated. Do not modify.")
         out("")
+        out("#ifndef cl_khr_fp64")
+        out("#define M_PI M_PI_F")
+        out("#define M_PI_2 M_PI_2_F")
+        out("#endif") 
     else:
         out("")
         out("")

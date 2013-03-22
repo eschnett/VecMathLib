@@ -16,7 +16,9 @@
 #include <cstdint>
 #include <cstring>
 
-
+#ifndef cl_khr_fp64
+#define M_PI M_PI_F
+#endif
 
 // Define vector types
 
