@@ -53,9 +53,10 @@ namespace vecmathlib {
   template<typename realvec_t>
   auto mathfuncs<realvec_t>::vml_ilogb(realvec_t x) -> intvec_t
   {
-    return
-      lsr(as_int(x) & IV(FP::exponent_mask), FP::mantissa_bits) -
-      IV(FP::exponent_offset);
+    intvec_t e = lsr(as_int(x) & IV(FP::exponent_mask), FP::mantissa_bits);
+    intvec_t r = e - IV(FP::exponent_offset);
+    r = ifthen(convert_bool(e), r, IV(numeric_limits<int_t>::min()));
+    return r;
   }
   
   template<typename realvec_t>
