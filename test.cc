@@ -406,10 +406,18 @@ struct vecmathlib_test {
       check("fmax", fmax, vecmathlib::fmax, x, y, 0.0);
       check("fmin", fmin, vecmathlib::fmin, x, y, 0.0);
       check("ilogb", ilogb, vecmathlib::ilogb, x);
+#if defined VML_HAVE_INF && defined VML_HAVE_NAN
       check("isfinite", isfinite, vecmathlib::isfinite, x);
+#endif
+#ifdef VML_HAVE_INF
       check("isinf", isinf, vecmathlib::isinf, x);
+#endif
+#ifdef VML_HAVE_NAN
       check("isnan", isnan, vecmathlib::isnan, x);
+#endif
+#ifdef VML_HAVE_DENORMALS
       check("isnormal", isnormal, vecmathlib::isnormal, x);
+#endif
       check("ldexp", ldexp, vecmathlib::ldexp, x, n, 0.0);
       check("signbit", signbit, vecmathlib::signbit, x);
     }
