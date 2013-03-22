@@ -15,7 +15,7 @@
 #undef VML_HAVE_DENORMALS
 #undef VML_HAVE_INF
 #undef VML_HAVE_NAN
-#undef VML_HAVE_SIGNED_ZERO
+#define VML_HAVE_SIGNED_ZERO
 
 
 
