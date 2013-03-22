@@ -12,9 +12,9 @@ set (SRCS
 
 add_custom_command (
   OUTPUT ${GENERATED_SRCS} kernel-vecmathlib.h
-  COMMAND ./generate-files.py
+  COMMAND ${CMAKE_SOURCE_DIR}/pocl/generate-files.py
   DEPENDS generate-files.py)
-
+include_directories(${CMAKE_SOURCE_DIR}/pocl)
 add_library (kernel-vecmathlib ${SRCS})
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcl_khr_fp64 -Dcles_khr_int64")
