@@ -106,8 +106,9 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ldexp(realvec_t x, intvec_t n)
   {
-    return as_float(as_int(x) + (n << I(FP::mantissa_bits)));
-    // return x * as_float((n + exponent_offset) << mantissa_bits);
+    realvec_t r = as_float(as_int(x) + (n << I(FP::mantissa_bits)));
+    r = ifthen((as_int(x) & IV(FP::exponent_mask)) == IV(I(0)), x, r);
+    return r;
   }
   
   template<typename realvec_t>
