@@ -192,7 +192,7 @@ masked_functions = [
     "atan",
     "atan2",
     "ceil",
-    "copysign"
+    "copysign",
     "cos",
     "exp",
     "exp2",
