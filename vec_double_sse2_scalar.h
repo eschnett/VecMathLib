@@ -396,7 +396,13 @@ namespace vecmathlib {
     }
     realvec fmod(realvec y) const { return std::fmod(v, y.v); }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
-    intvec_t ilogb() const { return std::ilogb(v); }
+    intvec_t ilogb() const
+    {
+      int_t r = std::ilogb(v);
+      if (r == FP_ILOGB0) r = numeric_limits<int_t>::min();
+      else if (r == FP_ILOGBNAN) r = numeric_limits<int_t>::max();
+      return r;
+    }
     boolvec_t isfinite() const { return std::isfinite(v); }
     boolvec_t isinf() const { return std::isinf(v); }
     boolvec_t isnan() const { return std::isnan(v); }

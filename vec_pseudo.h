@@ -680,7 +680,12 @@ namespace vecmathlib {
     intvec_t ilogb() const
     {
       intvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::ilogb(v[d]);
+      for (int d=0; d<size; ++d) {
+        int_t r = std::ilogb(v[d]);
+        if (r == FP_ILOGB0) r = numeric_limits<int_t>::min();
+        else if (r == FP_ILOGBNAN) r = numeric_limits<int_t>::max();
+        res.v[d] = r;
+      }
       return res;
     }
     boolvec_t isfinite() const { return mapb(std::isfinite); }

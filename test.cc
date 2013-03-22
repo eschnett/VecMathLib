@@ -371,7 +371,13 @@ struct vecmathlib_test {
   }
   
   // Change signature: "int" -> "int_t"
-  static int_t ilogb(real_t x) { return std::ilogb(x); }
+  static int_t ilogb(real_t x)
+  {
+    int r = std::ilogb(x);
+    if (r==FP_ILOGB0) return numeric_limits<int_t>::min();
+    if (r==FP_ILOGBNAN) return numeric_limits<int_t>::max();
+    return r;
+  }
   static real_t ldexp(real_t x, int_t n) { return std::ldexp(x, n); }
   static void test_fabs()
   {
