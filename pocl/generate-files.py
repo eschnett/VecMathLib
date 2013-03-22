@@ -335,7 +335,12 @@ def output_vmlfunc_vml(func, vectype):
             convfunc    = ""
             convtype    = callretstr
         elif vmlret==VB and ret in (VJ,VK):
-            convfunc = "vecmathlib::convert_int"
+            if size==1:
+                # for scalars, true==+1
+                convfunc = "vecmathlib::convert_int"
+            else:
+                # for vectors, true==-1
+                convfunc = "-vecmathlib::convert_int"
             convtype = vmlinttype
         else:
             raise "missing"
@@ -375,6 +380,7 @@ def output_vmlfunc_upcast(func, vectype):
     size = 1 if size=="" else int(size)
     size2 = 4 if size==3 else size*2 # next power of 2
     size2 = "" if size2==1 else str(size2)
+    if size==1: raise "can't upcast scalars"
     othertype = "%s%s" % (basetype, size2)
     declargstr = ", ".join(map(lambda (n, arg): "%s" % mktype(arg, othertype),
                                zip(range(0, 100), args)))
@@ -413,16 +419,26 @@ def output_vmlfunc_split(func, vectype):
     decl("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("{")
-    out("  struct pair { %s lo, hi; };" % othertype)
+    out("  struct pair { %s lo, hi; };" % mktype(ret, othertype))
     for (n, arg) in zip(range(0, 100), args):
-        out("  %s y%d = bitcast<%s,%s>(x%d);" %
-            (mktype(arg, othertype), n,
-             mktype(arg, vectype), mktype(arg, othertype), n))
-    callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
-                               zip(range(0, 100), args)))
-    out("  %s r = %s(%s);" % (mktype(ret, othertype), prefixed(name), callargstr))
-    out("  return bitcast<%s,%s>(r);" %
-        (mktype(ret, othertype), mktype(ret, vectype)))
+        out("  struct pair%d { %s lo, hi; };" % (n, mktype(arg, othertype)))
+    for (n, arg) in zip(range(0, 100), args):
+        out("  pair%d y%d = bitcast<%s,pair%d>(x%d);" %
+            (n, n, mktype(arg, vectype), n, n))
+    out("  pair r;")
+    # in OpenCL: for scalars, true==+1, but for vectors, true==-1
+    conv = ""
+    if vmlret==VB:
+        if ret in (VJ,VK):
+            if size2=="":
+                conv = "-"
+        else:
+            raise "missing"
+    for suffix in ("lo", "hi"):
+        callargstr = ", ".join(map(lambda (n, arg): "y%d.%s" % (n, suffix),
+                                   zip(range(0, 100), args)))
+        out("  r.%s = %s%s(%s);" % (suffix, conv, prefixed(name), callargstr))
+    out("  return bitcast<pair,%s>(r);" % mktype(ret, vectype))
     out("}")
 
 
