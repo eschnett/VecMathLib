@@ -394,15 +394,60 @@ struct vecmathlib_test {
   static void test_fabs()
   {
     cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
-    for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-10.0), R(+10.0));
-      realvec_t const y = random(R(-10.0), R(+10.0));
-      realvec_t const z = random(R(-10.0), R(+10.0));
+    
+    const real_t eps = FP::epsilon();
+    const real_t int_min = R(numeric_limits<int_t>::min());
+    const real_t int_max = R(numeric_limits<int_t>::max());
+    const real_t uint_min = R(numeric_limits<uint_t>::min());
+    const real_t uint_max = R(numeric_limits<uint_t>::max());
+    const real_t values[] = {
+      R(+0.0), R(+0.1), R(+0.9), R(+1.0), R(+1.1),
+      R(-0.0), R(-0.1), R(-0.9), R(-1.0), R(-1.1),
+      R(+0.0)+eps, R(+0.1)+eps, R(+0.9)+eps, R(+1.0)+eps, R(+1.1)+eps,
+      R(-0.0)+eps, R(-0.1)+eps, R(-0.9)+eps, R(-1.0)+eps, R(-1.1)+eps,
+      R(+0.0)-eps, R(+0.1)-eps, R(+0.9)-eps, R(+1.0)-eps, R(+1.1)-eps,
+      R(-0.0)-eps, R(-0.1)-eps, R(-0.9)-eps, R(-1.0)-eps, R(-1.1)-eps,
+#ifdef VML_HAVE_DENORMALS
+      +FP::min(), +FP::min()*(R(1.0)+eps), +FP::min()*R(2.0),
+      -FP::min(), -FP::min()*(R(1.0)+eps), -FP::min()*R(2.0),
+#endif
+      +FP::max(), +FP::max()*(R(1.0)-eps), +FP::max()*(R(1.0)-R(2.0)*eps),
+      -FP::max(), -FP::max()*(R(1.0)-eps), -FP::max()*(R(1.0)-R(2.0)*eps),
+      +R(0.5)*FP::max(), +R(0.5)*FP::max()*(R(1.0)+eps),
+      -R(0.5)*FP::max(), -R(0.5)*FP::max()*(R(1.0)+eps),
+#ifdef VML_HAVE_INF
+      +R(1.0/0.0),              // +FP::infinity()
+      -R(1.0/0.0),              // -FP::infinity()
+#endif
+#ifdef VML_HAVE_NAN
+      R(0.0/0.0),               // FP::quite_NaN()
+#endif
+      +int_min, +int_max, +uint_min, +uint_max,
+      -int_min, -int_max, -uint_min, -uint_max,
+      +int_min+R(0.1), +int_max+R(0.1), +uint_min+R(0.1), +uint_max+R(0.1),
+      -int_min+R(0.1), -int_max+R(0.1), -uint_min+R(0.1), -uint_max+R(0.1),
+      +int_min-R(0.1), +int_max-R(0.1), +uint_min-R(0.1), +uint_max-R(0.1),
+      -int_min-R(0.1), -int_max-R(0.1), -uint_min-R(0.1), -uint_max-R(0.1),
+      +int_min+R(1.0), +int_max+R(1.0), +uint_min+R(1.0), +uint_max+R(1.0),
+      -int_min+R(1.0), -int_max+R(1.0), -uint_min+R(1.0), -uint_max+R(1.0),
+      +int_min-R(1.0), +int_max-R(1.0), +uint_min-R(1.0), +uint_max-R(1.0),
+      -int_min-R(1.0), -int_max-R(1.0), -uint_min-R(1.0), -uint_max-R(1.0),
+      -R(443.9999425),
+    };
+    const int nvalues = sizeof values / sizeof *values;
+    
+    for (int i=0; i<8*nvalues+imax; ++i) {
+      realvec_t const x =
+        i<8*nvalues && i&1 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
+      realvec_t const y =
+        i<8*nvalues && i&2 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
+      realvec_t const z =
+        i<8*nvalues && i&4 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
       intvec_t const n = random(int_t(-10), int_t(+10));
       check("copysign", copysign, vecmathlib::copysign, x, y, 0.0);
       check("fabs", fabs, vecmathlib::fabs, x, 0.0);
       check("fdim", fdim, vecmathlib::fdim, x, y, accuracy());
-      check("fma", fma, vecmathlib::fma, x, y, z, accuracy());
+      check("fma", fma, vecmathlib::fma, x, y, z, R(2.0)*accuracy());
       check("fmax", fmax, vecmathlib::fmax, x, y, 0.0);
       check("fmin", fmin, vecmathlib::fmin, x, y, 0.0);
       check("ilogb", ilogb, vecmathlib::ilogb, x);
