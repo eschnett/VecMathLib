@@ -22,6 +22,8 @@ namespace vecmathlib {
   template<typename real_t>
   struct floatprops {
     // Some interesting properties are:
+    //    min
+    //    max
     //    digits
     //    epsilon
     //    min_exponent
