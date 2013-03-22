@@ -138,6 +138,7 @@ struct vecmathlib_test {
            << "   abs-error(x)=" << fabs(dr) << "\n"
            << "   rel-error(x)=" << fabs(dr) / scale << "\n"
            << "   isbad(x)=" << isbad << "\n"
+           << "   accuracy=" << accuracy << "\n"
            << flush;
     }
   }
@@ -166,6 +167,7 @@ struct vecmathlib_test {
            << "   abs-error(x,y)=" << fabs(dr) << "\n"
            << "   rel-error(x,y)=" << fabs(dr) / scale << "\n"
            << "   isbad(x,y)=" << isbad << "\n"
+           << "   accuracy=" << accuracy << "\n"
            << flush;
     }
   }
@@ -184,14 +186,18 @@ struct vecmathlib_test {
     }
     realvec_t const rvml = fvml(x, y, z);
     realvec_t const dr = rstd - rvml;
-    if (any(fabs(dr) >
-            realvec_t(accuracy) * (fabs(rstd) + fabs(rvml) + realvec_t(1.0))))
-    {
+    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y<< "," << z << "):\n"
            << "   fstd(x,y,z)=" << rstd << "\n"
            << "   fvml(x,y,z)=" << rvml << "\n"
+           << "   abs-error(x,y,z)=" << fabs(dr) << "\n"
+           << "   rel-error(x,y,z)=" << fabs(dr) / scale << "\n"
+           << "   isbad(x,y,z)=" << isbad << "\n"
+           << "   accuracy=" << accuracy << "\n"
            << flush;
     }
   }
@@ -207,12 +213,14 @@ struct vecmathlib_test {
     }
     intvec_t const rvml = fvml(x);
     intvec_t const dr = rstd - rvml;
-    if (any(convert_bool(dr))) {
+    boolvec_t const isbad = convert_bool(dr);
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
            << "   fvml(x)=" << rvml << "\n"
+           << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
   }
@@ -229,12 +237,14 @@ struct vecmathlib_test {
     }
     intvec_t const rvml = fvml(x, y);
     intvec_t const dr = rstd - rvml;
-    if (any(convert_bool(dr))) {
+    boolvec_t const isbad = convert_bool(dr);
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << "\n"
            << "   fvml(x,y)=" << rvml << "\n"
+           << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
   }
@@ -250,12 +260,14 @@ struct vecmathlib_test {
     }
     boolvec_t const rvml = fvml(x);
     boolvec_t const dr = rstd != rvml;
-    if (any(dr)) {
+    boolvec_t const isbad = dr;
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << "\n"
            << "   fvml(x)=" << rvml << "\n"
+           << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
   }
