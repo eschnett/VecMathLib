@@ -374,7 +374,14 @@ namespace vecmathlib {
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec cbrt() const { return MF::vml_cbrt(*this); }
-    realvec ceil() const { return std::ceil(v); }
+    realvec ceil() const
+    {
+#ifdef __SSE4_1__
+      return to_float(_mm_ceil_ss(from_float(v), from_float(v)));
+#else
+      return std::ceil(v);
+#endif
+    }
     realvec copysign(realvec y) const { return std::copysign(v, y.v); }
     realvec cos() const { return MF::vml_cos(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
@@ -384,7 +391,14 @@ namespace vecmathlib {
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return std::fabs(v); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return std::floor(v); }
+    realvec floor() const
+    {
+#ifdef __SSE4_1__
+      return to_float(_mm_floor_ss(from_float(v), from_float(v)));
+#else
+      return std::floor(v);
+#endif
+    }
     realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
     realvec fmax(realvec y) const
     {
@@ -430,7 +444,7 @@ namespace vecmathlib {
     boolvec_t signbit() const { return std::signbit(v); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
-    realvec sqrt1() const { return std::sqrt(v); }
+    // realvec sqrt1() const { return std::sqrt(v); }
     realvec sqrt() const { return to_float(_mm_sqrt_ss(from_float(v))); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }

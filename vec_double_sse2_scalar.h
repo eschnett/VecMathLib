@@ -374,7 +374,14 @@ namespace vecmathlib {
     realvec atan() const { return MF::vml_atan(*this); }
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec cbrt() const { return MF::vml_cbrt(*this); }
-    realvec ceil() const { return std::ceil(v); }
+    realvec ceil() const
+    {
+#ifdef __SSE4_1__
+      return to_double(_mm_ceil_sd(from_double(v), from_double(v)));
+#else
+      return std::ceil(v);
+#endif
+    }
     realvec copysign(realvec y) const { return std::copysign(v, y.v); }
     realvec cos() const { return MF::vml_cos(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
@@ -384,7 +391,14 @@ namespace vecmathlib {
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return std::fabs(v); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return std::floor(v); }
+    realvec floor() const
+    {
+#ifdef __SSE4_1__
+      return to_double(_mm_floor_sd(from_double(v), from_double(v)));
+#else
+      return std::floor(v);
+#endif
+    }
     realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
     realvec fmax(realvec y) const
     {
