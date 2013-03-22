@@ -408,7 +408,7 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return _mm_castps_si128(v); }
-    intvec_t convert_int() const { return _mm_cvtps_epi32(v); }
+    intvec_t convert_int() const { return _mm_cvttps_epi32(v); }
     
     
     

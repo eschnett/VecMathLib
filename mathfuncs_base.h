@@ -49,6 +49,7 @@ namespace vecmathlib {
     static realvec_t vml_atanh(realvec_t x);
     
     // convert
+    static realvec_t vml_antitrunc(realvec_t x);
     static realvec_t vml_ceil(realvec_t x);
     static realvec_t vml_convert_float(intvec_t x);
     static intvec_t vml_convert_int(realvec_t x);

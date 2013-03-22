@@ -83,7 +83,7 @@ namespace vecmathlib {
       return res;
     }
     
-    // Convert values
+    // Convert values (truncate)
     static real_t convert_float(int_t x) { __builtin_unreachable(); }
     static int_t convert_int(real_t x) { __builtin_unreachable(); }
   };
@@ -143,7 +143,7 @@ namespace vecmathlib {
       return res;
     }
     
-    // Convert values
+    // Convert values (truncate)
     static real_t convert_float(int_t x) { __builtin_unreachable(); }
     static int_t convert_int(real_t x) { __builtin_unreachable(); }
   };
@@ -204,22 +204,9 @@ namespace vecmathlib {
       return res;
     }
     
-    // Convert values
+    // Convert values (truncate)
     static real_t convert_float(int_t x) { return real_t(x); }
-    static int_t convert_int(real_t x)
-    {
-      static_assert(sizeof std::lrint(x) >= sizeof(int_t),
-                    "lrint() has wrong return type");
-      long res = std::lrint(x);
-      if (sizeof std::lrint(x) > sizeof(int_t)) {
-        if (res < std::numeric_limits<int_t>::min() ||
-            res > std::numeric_limits<int_t>::max())
-        {
-          return std::numeric_limits<int_t>::min();
-        }
-      }
-      return res;
-    }
+    static int_t convert_int(real_t x) { return int_t(x); }
   };
   
   
@@ -278,22 +265,9 @@ namespace vecmathlib {
       return res;
     }
     
-    // Convert values
+    // Convert values (truncate)
     static real_t convert_float(int_t x) { return real_t(x); }
-    static int_t convert_int(real_t x)
-    {
-      static_assert(sizeof std::lrint(x) >= sizeof(int_t),
-                    "lrint() has wrong return type");
-      long res = std::lrint(x);
-      if (sizeof std::lrint(x) > sizeof(int_t)) {
-        if (res < std::numeric_limits<int_t>::min() ||
-            res > std::numeric_limits<int_t>::max())
-        {
-          return std::numeric_limits<int_t>::min();
-        }
-      }
-      return res;
-    }
+    static int_t convert_int(real_t x) { return int_t(x); }
   };
   
   

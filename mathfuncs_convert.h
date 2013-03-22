@@ -55,40 +55,30 @@ namespace vecmathlib {
   template<typename realvec_t>
   auto mathfuncs<realvec_t>::vml_convert_int(realvec_t x) -> intvec_t
   {
-    // Handle zero
-    boolvec_t is_zero = x == RV(0.0);
     // Handle overflow
-    int_t min_int = FP::signbit_mask;
-    int_t max_int = ~FP::signbit_mask;
-    boolvec_t is_overflow = x < RV(R(min_int)) || x > RV(R(max_int));
+    // int_t min_int = FP::signbit_mask;
+    // int_t max_int = ~FP::signbit_mask;
+    // boolvec_t is_overflow = x < RV(R(min_int)) || x > RV(R(max_int));
     // Handle negative numbers
     boolvec_t is_negative = signbit(x);
     x = fabs(x);
+    // Handle small numbers
+    boolvec_t issmall = x < RV(1.0);
     
-    // Round, by adding a large number that removes the excess
-    // precision
-    int_t large = U(1) << FP::mantissa_bits;
-    x += R(large);
-    
-    intvec_t exponent = ilogb(x);
-    for (int i=0; i<intvec_t::size; ++i) {
-      VML_ASSERT(exponent[i] >= FP::mantissa_bits);
-    }
+    intvec_t shift = ilogb(x) - IV(FP::mantissa_bits);
+    boolvec_t shift_left = x > RV(std::ldexp(R(1.0), FP::mantissa_bits)); 
     intvec_t ix = as_int(x) & IV(FP::mantissa_mask);
     // add hidden mantissa bit
     ix |= U(1) << FP::mantissa_bits;
-    // shift according to exponent
-    ix <<= exponent - IV(FP::mantissa_bits);
+    // shift according to exponent (which may truncate)
+    ix = ifthen(shift_left, ix << shift, ix >> -shift);
     
-    // Undo the adding above
-    ix -= large;
-    
+    // Handle small numbers
+    ix = ifthen(issmall, IV(I(0)), ix);
     // Handle negative numbers
     ix = ifthen(is_negative, -ix, ix);
     // Handle overflow
-    ix = ifthen(is_overflow, IV(min_int), ix);
-    // Handle zero
-    ix = ifthen(is_zero, IV(I(0)), ix);
+    // ix = ifthen(is_overflow, IV(min_int), ix);
     
     return ix;
   }
@@ -114,18 +104,20 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ceil(realvec_t x)
   {
-    boolvec_t iszero = x == RV(0.0);
-    realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
-    return ifthen(iszero, x, rint(x + offset));
+    // boolvec_t iszero = x == RV(0.0);
+    // realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
+    // return ifthen(iszero, x, rint(x + offset));
+    return ifthen(x<RV(0.0), trunc(x), vml_antitrunc(x));
   }
   
   // Round to next integer below
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_floor(realvec_t x)
   {
-    boolvec_t iszero = x == RV(0.0);
-    realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
-    return ifthen(iszero, x, rint(x - offset));
+    // boolvec_t iszero = x == RV(0.0);
+    // realvec_t offset = RV(0.5) - ldexp(fabs(x), I(-FP::mantissa_bits));
+    // return ifthen(iszero, x, rint(x - offset));
+    return ifthen(x<RV(0.0), vml_antitrunc(x), trunc(x));
   }
   
   // Round to nearest integer, breaking ties away from zero
@@ -135,11 +127,49 @@ namespace vecmathlib {
     return copysign(floor(fabs(x)+RV(0.5)), x);
   }
   
-  // Round towards zero
+  // Round to next integer towards zero
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_trunc(realvec_t x)
   {
-    return copysign(floor(fabs(x)), x);
+    // return copysign(floor(fabs(x)), x);
+    realvec_t x0 = x;
+    x = fabs(x);
+    boolvec_t istoosmall = x < RV(1.0);
+    boolvec_t istoolarge = x >= RV(std::ldexp(R(1.0), FP::mantissa_bits));
+    // Number of mantissa bits to keep
+    intvec_t nbits = ilogb(x);
+    // This is probably faster than a shift operation
+    realvec_t mask = ldexp(RV(2.0), nbits) - RV(1.0);
+    intvec_t imask = IV(FP::signbit_mask | FP::exponent_mask) | as_int(mask);
+    realvec_t y = as_float(as_int(x) & imask);
+    realvec_t r =
+      copysign(ifthen(istoosmall, RV(0.0), ifthen(istoolarge, x, y)), x0);
+    return r;
+  }
+  
+  // Round to next integer away from zero
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_antitrunc(realvec_t x)
+  {
+    // return copysign(ceil(fabs(x)), x);
+    realvec_t x0 = x;
+    x = fabs(x);
+    boolvec_t iszero = x == RV(0.0);
+    boolvec_t issmall = x <= RV(1.0);
+    boolvec_t istoolarge =
+      x > RV(std::ldexp(R(1.0), FP::mantissa_bits) - R(1.0));
+    // Number of mantissa bits to keep
+    intvec_t nbits = ilogb(x);
+    // This is probably faster than a shift operation
+    realvec_t mask = ldexp(RV(2.0), nbits) - RV(1.0);
+    intvec_t imask = IV(FP::signbit_mask | FP::exponent_mask) | as_int(mask);
+    realvec_t offset = RV(1.0) - ldexp(RV(1.0), nbits - IV(FP::mantissa_bits));
+    realvec_t y = as_float(as_int(x + offset) & imask);
+    realvec_t r =
+      copysign(ifthen(iszero, RV(0.0),
+                      ifthen(issmall, RV(1.0),
+                             ifthen(istoolarge, x, y))), x0);
+    return r;
   }
   
 }; // namespace vecmathlib
