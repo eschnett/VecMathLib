@@ -325,6 +325,8 @@ def output_vmlfunc_vml(func, vectype):
     # convtype: result type of conversion, also input to bitcast
     # bitcasttype: output of bitcast; may differ from function result
     #              if a size change is needed
+    # TODO: Why is this here, and not e.g. near the signbit definition
+    #       in the table above?
     if vmlret==ret:
         convfunc    = ""
         convtype    = callretstr
@@ -367,10 +369,36 @@ def output_vmlfunc_libm(func, vectype):
         out("  %s y%d = x%d;" % (othertype, n, n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
-    callretstr = othertype if ret==VF else otherinttype
+    # callretstr = othertype if ret==VF else otherinttype
+    callretstr = mkvmltype(vmlret, othertype)
     name1 = name[:-1] if name.endswith("_") else name
     out("  %s r = vecmathlib::%s(%s);" % (callretstr, name1, callargstr))
-    out("  return r[0];")
+    # We may need to convert from the VML type to the OpenCL type
+    # before bitcasting. This may be a real conversion, e.g. bool to
+    # int. This may also involve a change in size (e.g. long to int),
+    # but only if the type is scalar. These conversions are applied
+    # before bitcasting.
+    # convfunc: conversion function to call
+    # convtype: result type of conversion, also input to bitcast
+    # bitcasttype: output of bitcast; may differ from function result
+    #              if a size change is needed
+    # TODO: Why is this here, and not e.g. near the signbit definition
+    #       in the table above?
+    if vmlret==ret:
+        convfunc = ""
+    else:
+        if vmlret==VI and ret in (VJ,VK):
+            convfunc = ""
+        elif vmlret==VB and ret in (VJ,VK):
+            if size==1:
+                # for scalars, true==+1
+                convfunc = "vecmathlib::convert_int"
+            else:
+                # for vectors, true==-1
+                convfunc = "-vecmathlib::convert_int"
+        else:
+            raise "missing"
+    out("  return %s(r)[0];" % convfunc)
     out("}")
 
 def output_vmlfunc_upcast(func, vectype):
