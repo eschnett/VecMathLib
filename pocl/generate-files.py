@@ -418,13 +418,19 @@ def output_vmlfunc_split(func, vectype):
     decl("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("{")
-    out("  struct pair { %s lo, hi; };" % mktype(ret, othertype))
+    # LLVM has a bug, which makes it combine pair types for different
+    # vector sizes. Therefore we need to ensure that pairs for
+    # difference types and sizes have different names.
+    out("  struct pair_%s_ret { %s lo, hi; };" %
+        (mktype(ret, othertype), mktype(ret, othertype)))
     for (n, arg) in zip(range(0, 100), args):
-        out("  struct pair%d { %s lo, hi; };" % (n, mktype(arg, othertype)))
+        out("  struct pair_%s_arg%d { %s lo, hi; };" %
+            (mktype(arg, othertype), n, mktype(arg, othertype)))
     for (n, arg) in zip(range(0, 100), args):
-        out("  pair%d y%d = bitcast<%s,pair%d>(x%d);" %
-            (n, n, mktype(arg, vectype), n, n))
-    out("  pair r;")
+        out("  pair_%s_arg%d y%d = bitcast<%s,pair_%s_arg%d>(x%d);" %
+            (mktype(arg, othertype), n, n,
+             mktype(arg, vectype), mktype(arg, othertype), n, n))
+    out("  pair_%s_ret r;" % mktype(ret, othertype))
     # in OpenCL: for scalars, true==+1, but for vectors, true==-1
     conv = ""
     if vmlret==VB:
@@ -437,7 +443,8 @@ def output_vmlfunc_split(func, vectype):
         callargstr = ", ".join(map(lambda (n, arg): "y%d.%s" % (n, suffix),
                                    zip(range(0, 100), args)))
         out("  r.%s = %s%s(%s);" % (suffix, conv, prefixed(name), callargstr))
-    out("  return bitcast<pair,%s>(r);" % mktype(ret, vectype))
+    out("  return bitcast<pair_%s_ret,%s>(r);" %
+        (mktype(ret, othertype), mktype(ret, vectype)))
     out("}")
 
 
