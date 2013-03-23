@@ -286,7 +286,7 @@ def mkvmltype(tp, vectype):
     if tp==SI: return vectype+"::int_t"
     if tp==SF: return vectype+"::real_t"
     if tp==VB: return vectype+"::boolvec_t"
-    if tp==VI: return vectype+"::intvec_t"
+    if tp in (VI,VJ): return vectype+"::intvec_t"
     if tp==VF: return vectype
     raise "unreachable"
 
@@ -362,11 +362,12 @@ def output_vmlfunc_libm(func, vectype):
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
                                zip(range(0, 100), args)))
-    decl("%s %s(%s)" % (vectype, prefixed(name), funcargstr))
-    out("%s %s(%s)" % (vectype, prefixed(name), funcargstr))
+    funcretstr = mktype(ret, vectype)
+    decl("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
+    out("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
     out("{")
     for (n, arg) in zip(range(0, 100), args):
-        out("  %s y%d = x%d;" % (othertype, n, n))
+        out("  %s y%d = x%d;" % (mkvmltype(arg, othertype), n, n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
     # callretstr = othertype if ret==VF else otherinttype
