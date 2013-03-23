@@ -7,6 +7,7 @@
 #define VML_NODEBUG
 #include "../vecmathlib.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 
