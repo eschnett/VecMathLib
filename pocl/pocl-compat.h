@@ -7,6 +7,11 @@
 #define VML_NODEBUG
 #include "../vecmathlib.h"
 
+// This must come after including vecmathlib.h
+#ifdef VML_AVOID_LIBM
+#  define realpseudovec realtestvec
+#endif
+
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
