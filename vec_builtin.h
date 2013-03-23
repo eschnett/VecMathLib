@@ -312,7 +312,7 @@ namespace vecmathlib {
     {
       static std::string name_;
       if (name_.empty()) {
-        stringstream buf;
+        std::stringstream buf;
         buf << "<builtin:" << N << "*" << FP::name() << ">";
         name_ = buf.str();
       }

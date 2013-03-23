@@ -379,7 +379,7 @@ namespace vecmathlib {
     {
       static std::string name_;
       if (name_.empty()) {
-        stringstream buf;
+        std::stringstream buf;
         buf << "<libm:" << N << "*" << FP::name() << ">";
         name_ = buf.str();
       }
@@ -682,8 +682,8 @@ namespace vecmathlib {
       intvec_t res;
       for (int d=0; d<size; ++d) {
         int_t r = std::ilogb(v[d]);
-        if (r == FP_ILOGB0) r = numeric_limits<int_t>::min();
-        else if (r == FP_ILOGBNAN) r = numeric_limits<int_t>::max();
+        if (r == FP_ILOGB0) r = std::numeric_limits<int_t>::min();
+        else if (r == FP_ILOGBNAN) r = std::numeric_limits<int_t>::max();
         res.v[d] = r;
       }
       return res;

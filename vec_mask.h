@@ -8,7 +8,6 @@
 
 
 namespace vecmathlib {
-  using namespace std;
   
   template<typename realvec_t>
   class mask_t {

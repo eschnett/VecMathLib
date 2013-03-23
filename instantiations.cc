@@ -5,7 +5,7 @@
 
 #include "vecmathlib.h"
 
-using namespace std;
+
 
 namespace vecmathlib {
   

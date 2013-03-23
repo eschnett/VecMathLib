@@ -383,23 +383,23 @@ struct vecmathlib_test {
   }
   
   // Change signature: "int" -> "int_t"
-  static int_t ilogb(real_t x)
+  static int_t local_ilogb(real_t x)
   {
-    int r = std::ilogb(x);
-    if (r==FP_ILOGB0) return numeric_limits<int_t>::min();
-    if (r==FP_ILOGBNAN) return numeric_limits<int_t>::max();
+    int r = ilogb(x);
+    if (r==FP_ILOGB0) return std::numeric_limits<int_t>::min();
+    if (r==FP_ILOGBNAN) return std::numeric_limits<int_t>::max();
     return r;
   }
-  static real_t ldexp(real_t x, int_t n) { return std::ldexp(x, n); }
+  static real_t local_ldexp(real_t x, int_t n) { return ldexp(x, n); }
   static void test_fabs()
   {
     cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
     
     const real_t eps = FP::epsilon();
-    const real_t int_min = R(numeric_limits<int_t>::min());
-    const real_t int_max = R(numeric_limits<int_t>::max());
-    const real_t uint_min = R(numeric_limits<uint_t>::min());
-    const real_t uint_max = R(numeric_limits<uint_t>::max());
+    const real_t int_min = R(std::numeric_limits<int_t>::min());
+    const real_t int_max = R(std::numeric_limits<int_t>::max());
+    const real_t uint_min = R(std::numeric_limits<uint_t>::min());
+    const real_t uint_max = R(std::numeric_limits<uint_t>::max());
     const real_t values[] = {
       R(+0.0), R(+0.1), R(+0.9), R(+1.0), R(+1.1),
       R(-0.0), R(-0.1), R(-0.9), R(-1.0), R(-1.1),
@@ -450,7 +450,7 @@ struct vecmathlib_test {
       check("fma", fma, vecmathlib::fma, x, y, z, R(2.0)*accuracy());
       check("fmax", fmax, vecmathlib::fmax, x, y, 0.0);
       check("fmin", fmin, vecmathlib::fmin, x, y, 0.0);
-      check("ilogb", ilogb, vecmathlib::ilogb, x);
+      check("ilogb", local_ilogb, vecmathlib::ilogb, x);
 #if defined VML_HAVE_INF && defined VML_HAVE_NAN
       check("isfinite", isfinite, vecmathlib::isfinite, x);
 #endif
@@ -463,7 +463,7 @@ struct vecmathlib_test {
 #ifdef VML_HAVE_DENORMALS
       check("isnormal", isnormal, vecmathlib::isnormal, x);
 #endif
-      check("ldexp", ldexp, vecmathlib::ldexp, x, n, 0.0);
+      check("ldexp", local_ldexp, vecmathlib::ldexp, x, n, 0.0);
       check("signbit", signbit, vecmathlib::signbit, x);
     }
   }
@@ -474,10 +474,10 @@ struct vecmathlib_test {
          << flush;
     
     const real_t eps = FP::epsilon();
-    const real_t int_min = R(numeric_limits<int_t>::min());
-    const real_t int_max = R(numeric_limits<int_t>::max());
-    const real_t uint_min = R(numeric_limits<uint_t>::min());
-    const real_t uint_max = R(numeric_limits<uint_t>::max());
+    const real_t int_min = R(std::numeric_limits<int_t>::min());
+    const real_t int_max = R(std::numeric_limits<int_t>::max());
+    const real_t uint_min = R(std::numeric_limits<uint_t>::min());
+    const real_t uint_max = R(std::numeric_limits<uint_t>::max());
     const real_t values[] = {
       R(+0.0), R(+0.1), R(+0.9), R(+1.0), R(+1.1),
       R(-0.0), R(-0.1), R(-0.9), R(-1.0), R(-1.1),
@@ -520,8 +520,8 @@ struct vecmathlib_test {
       intvec_t const n1 = random(int_t(-100), int_t(+100));
       //intvec_t const n2 = random(int_t(-1000000000), int_t(+1000000000));
       intvec_t const n2 =
-        random(numeric_limits<int_t>::min() / 2, // avoid overflow
-               numeric_limits<int_t>::max() / 2);
+        random(std::numeric_limits<int_t>::min() / 2, // avoid overflow
+               std::numeric_limits<int_t>::max() / 2);
       realvec_t const fn1 = vecmathlib::convert_float(n1);
       realvec_t const fn2 = vecmathlib::convert_float(n2);
       realvec_t const fn1h = vecmathlib::convert_float(n1) * RV(0.25);
