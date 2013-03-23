@@ -368,7 +368,8 @@ def output_vmlfunc_libm(func, vectype):
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
     callretstr = othertype if ret==VF else otherinttype
-    out("  %s r = vecmathlib::%s(%s);" % (callretstr, name, callargstr))
+    name1 = name[:-1] if name.endswith("_") else name
+    out("  %s r = vecmathlib::%s(%s);" % (callretstr, name1, callargstr))
     out("  return r[0];")
     out("}")
 
