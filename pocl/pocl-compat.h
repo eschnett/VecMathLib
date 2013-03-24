@@ -70,6 +70,12 @@ typedef double double16 __attribute__((__ext_vector_type__(16)));
 
 
 
+#define _cl_fma _cl_std_fma
+#define _cl_fmax _cl_std_fmax
+#define _cl_fmin _cl_std_fmin
+
+
+
 // Generic conversion function
 template<typename A, typename B>
 static B bitcast(A a)

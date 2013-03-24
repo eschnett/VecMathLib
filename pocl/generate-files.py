@@ -198,6 +198,8 @@ masked_functions = [
     "fabs",
     "floor",
     "fma",
+    "fmax",
+    "fmin",
     "log",
     "log2",
     "pow",
