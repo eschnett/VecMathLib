@@ -581,6 +581,7 @@ def output_directfunc(func):
         out("#ifndef cl_khr_fp64")
         out("#define M_PI M_PI_F")
         out("#define M_PI_2 M_PI_2_F")
+        out("#define LONG_MIN INT_MIN")
         out("#endif") 
     else:
         out("")
