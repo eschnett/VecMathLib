@@ -18,14 +18,14 @@ namespace vecmathlib {
     typedef typename realvec_t::intvec_t intvec_t;
     static int const size = realvec_t::size;
     
-    ptrdiff_t imin, imax;
-    ptrdiff_t i;
+    std::ptrdiff_t imin, imax;
+    std::ptrdiff_t i;
     boolvec_t m;
     bool all_m;
     
   public:
     mask_t(boolvec_t m_): m(m_), all_m(all(m)) {}
-    mask_t(ptrdiff_t imin_, ptrdiff_t imax_, ptrdiff_t ioff):
+    mask_t(std::ptrdiff_t imin_, std::ptrdiff_t imax_, std::ptrdiff_t ioff):
       imin(imin_), imax(imax_),
       i(imin - (ioff + imin) % size)
     {
@@ -37,7 +37,7 @@ namespace vecmathlib {
              intvec_t(i) <= intvec_t(imax-size) - intvec_t::iota());
       }
     }
-    ptrdiff_t index() const { return i; }
+    std::ptrdiff_t index() const { return i; }
     operator bool() const { return i<imax; }
     void operator++()
     {
