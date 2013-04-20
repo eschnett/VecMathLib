@@ -360,6 +360,30 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) res.v[d] = v[d] != x.v[d];
       return res;
     }
+    boolvec_t operator<(intpseudovec const& x) const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = v[d] < x.v[d];
+      return res;
+    }
+    boolvec_t operator<=(intpseudovec const& x) const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = v[d] <= x.v[d];
+      return res;
+    }
+    boolvec_t operator>(intpseudovec const& x) const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = v[d] > x.v[d];
+      return res;
+    }
+    boolvec_t operator>=(intpseudovec const& x) const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.v[d] = v[d] >= x.v[d];
+      return res;
+    }
   };
   
   
