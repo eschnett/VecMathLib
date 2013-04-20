@@ -133,8 +133,8 @@ struct vecmathlib_test {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "):\n"
-           << "   fstd(x)=" << rstd << "\n"
-           << "   fvml(x)=" << rvml << "\n"
+           << "   fstd(x)=" << rstd << " [" << as_int(rstd) << "]\n"
+           << "   fvml(x)=" << rvml << " [" << as_int(rvml) << "]\n"
            << "   abs-error(x)=" << fabs(dr) << "\n"
            << "   rel-error(x)=" << fabs(dr) / scale << "\n"
            << "   isbad(x)=" << isbad << "\n"
@@ -162,8 +162,8 @@ struct vecmathlib_test {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y << "):\n"
-           << "   fstd(x,y)=" << rstd << "\n"
-           << "   fvml(x,y)=" << rvml << "\n"
+           << "   fstd(x,y)=" << rstd << " [" << as_int(rstd) << "]\n"
+           << "   fvml(x,y)=" << rvml << " [" << as_int(rvml) << "]\n"
            << "   abs-error(x,y)=" << fabs(dr) << "\n"
            << "   rel-error(x,y)=" << fabs(dr) / scale << "\n"
            << "   isbad(x,y)=" << isbad << "\n"
@@ -192,8 +192,8 @@ struct vecmathlib_test {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << "(" << x << "," << y<< "," << z << "):\n"
-           << "   fstd(x,y,z)=" << rstd << "\n"
-           << "   fvml(x,y,z)=" << rvml << "\n"
+           << "   fstd(x,y,z)=" << rstd << " [" << as_int(rstd) << "]\n"
+           << "   fvml(x,y,z)=" << rvml << " [" << as_int(rvml) << "]\n"
            << "   abs-error(x,y,z)=" << fabs(dr) << "\n"
            << "   rel-error(x,y,z)=" << fabs(dr) / scale << "\n"
            << "   isbad(x,y,z)=" << isbad << "\n"
