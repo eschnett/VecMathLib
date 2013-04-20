@@ -386,7 +386,12 @@ namespace vecmathlib {
     }
     inline void barrier()
     {
+#if defined __GNUC__ && !defined __clang__
+      // GCC crashes when +X is used as constraint
+      for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
+#else
       for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
+#endif
     }
     
     typedef booltestvec<real_t, size> boolvec_t;
