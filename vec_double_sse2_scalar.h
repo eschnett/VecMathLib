@@ -219,7 +219,7 @@ namespace vecmathlib {
     typedef double vector_t;
     
     static char const* name() { return "<SSE2:1*double>"; }
-    void barrier() { asm("": "+x" (v)); }
+    void barrier() { __asm__("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");

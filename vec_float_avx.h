@@ -323,7 +323,7 @@ namespace vecmathlib {
     typedef __m256 vector_t;
     
     static char const* name() { return "<AVX:8*float>"; }
-    void barrier() { asm("": "+x" (v)); }
+    void barrier() { __asm__("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
