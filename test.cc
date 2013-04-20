@@ -499,6 +499,10 @@ struct vecmathlib_test {
     const real_t int_max = R(std::numeric_limits<int_t>::max());
     const real_t uint_min = R(std::numeric_limits<uint_t>::min());
     const real_t uint_max = R(std::numeric_limits<uint_t>::max());
+    const real_t mantissa_max = (U(1) << (FP::mantissa_bits+1)) - U(1);
+    const real_t real_max =
+      (((U(1) << (FP::mantissa_bits+1)) - U(1)) << (FP::exponent_bits-1)) +
+      (U(1) << (FP::exponent_bits-1)) - U(1);
     const real_t values[] = {
       R(+0.0), R(+0.1), R(+0.9), R(+1.0), R(+1.1),
       R(-0.0), R(-0.1), R(-0.9), R(-1.0), R(-1.1),
@@ -531,6 +535,10 @@ struct vecmathlib_test {
       -int_min+R(1.0), -int_max+R(1.0), -uint_min+R(1.0), -uint_max+R(1.0),
       +int_min-R(1.0), +int_max-R(1.0), +uint_min-R(1.0), +uint_max-R(1.0),
       -int_min-R(1.0), -int_max-R(1.0), -uint_min-R(1.0), -uint_max-R(1.0),
+      +mantissa_max, +mantissa_max-R(1.0), +mantissa_max+R(1.0),
+      -mantissa_max, -mantissa_max-R(1.0), -mantissa_max+R(1.0),
+      +real_max, +real_max-R(1.0), +real_max+R(1.0),
+      -real_max, -real_max-R(1.0), -real_max+R(1.0),
       -R(443.9999425),
     };
     const int nvalues = sizeof values / sizeof *values;
