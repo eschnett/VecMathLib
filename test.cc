@@ -559,7 +559,8 @@ struct vecmathlib_test {
             FP::convert_float, vecmathlib::convert_float, n1, accuracy());
       check("convert_float",
             FP::convert_float, vecmathlib::convert_float, n2, accuracy());
-      if (all(x >= RV(int_min) && x <= RV(int_max))) {
+      // Note: RV(int_max) > int_max due to rounding
+      if (all(x >= RV(int_min) && x < RV(int_max))) {
         check("convert_int", FP::convert_int, vecmathlib::convert_int, x);
       }
       check("ceil", ceil, vecmathlib::ceil, x, accuracy());
