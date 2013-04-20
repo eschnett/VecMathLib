@@ -16,12 +16,22 @@ using namespace vecmathlib;
 
 
 
+#ifndef __has_builtin
+#  define __has_builtin(x) 0 // Compatibility with non-clang compilers
+#endif
+
+
+
 typedef unsigned long long ticks;
 inline ticks getticks()
 {
+#if __has_builtin(__builtin_readcyclecounter)
+  return __builtin_readcyclecounter();
+#else
   ticks a, d;
-  asm volatile("rdtsc" : "=a" (a), "=d" (d)); 
-  return a | (d << 32); 
+  asm volatile("rdtsc" : "=a" (a), "=d" (d));
+  return a | (d << 32);
+#endif
 }
 inline double elapsed(ticks t1, ticks t0)
 {
