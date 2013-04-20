@@ -386,7 +386,7 @@ namespace vecmathlib {
     }
     inline void barrier()
     {
-      for (int d=0; d<size; ++d) asm("": "+x" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
     }
     
     typedef booltestvec<real_t, size> boolvec_t;
