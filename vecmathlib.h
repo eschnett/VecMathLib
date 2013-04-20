@@ -67,4 +67,9 @@ namespace std { class type_info; }
 #  include "vec_double_avx.h"
 #endif
 
+// IBM Altivec
+#if defined __ALTIVEC__
+#  include "vec_float_altivec.h"
+#endif
+
 #endif // #ifndef VECMATHLIB_H
