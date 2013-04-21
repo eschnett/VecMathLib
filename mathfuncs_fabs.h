@@ -55,7 +55,13 @@ namespace vecmathlib {
   {
     intvec_t e = lsr(as_int(x) & IV(FP::exponent_mask), FP::mantissa_bits);
     intvec_t r = e - IV(FP::exponent_offset);
-    r = ifthen(convert_bool(e), r, IV(std::numeric_limits<int_t>::min()));
+    r = ifthen(x == RV(0.0), IV(std::numeric_limits<int_t>::min()), r);
+#if defined VML_HAVE_INF
+    r = ifthen(isinf(x), IV(std::numeric_limits<int_t>::max()), r);
+#endif
+#if defined VML_HAVE_NAN
+    r = ifthen(isnan(x), IV(std::numeric_limits<int_t>::min()), r);
+#endif
     return r;
   }
   
