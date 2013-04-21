@@ -11,6 +11,9 @@
 
 // Altivec intrinsics
 #include <altivec.h>
+#undef vector
+#undef pixel
+#undef bool
 
 
 
@@ -28,7 +31,7 @@ namespace vecmathlib {
   {
     static int const size = 4;
     typedef bool scalar_t;
-    typedef __vector bool int bvector_t;
+    typedef __vector __bool int bvector_t;
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
                   "vector size is wrong");
@@ -66,7 +69,7 @@ namespace vecmathlib {
     boolvec(bool a): v(vec_splats(from_bool(a))) {}
     boolvec(bool const* as)
     {
-      for (int d=0; d<size; ++d) v[d] = from_bool(as[d]);
+      for (int d=0; d<size; ++d) set_elt(d, from_bool(as[d]));
     }
     
     operator bvector_t() const { return v; }
@@ -90,8 +93,8 @@ namespace vecmathlib {
     boolvec operator==(boolvec x) const { return !(*this!=x); }
     boolvec operator!=(boolvec x) const { return vec_xor(v, x.v); }
     
-    bool all() const { return vec_all_ne(v, BV(false)); }
-    bool any() const { return vec_any_ne(v, BV(false)); }
+    bool all() const { return vec_all_ne(v, BV(false).v); }
+    bool any() const { return vec_any_ne(v, BV(false).v); }
     
     
     
@@ -139,9 +142,9 @@ namespace vecmathlib {
     intvec(int_t a): v(vec_splats(a)) {}
     intvec(int_t const* as)
     {
-      for (int d=0; d<size; ++d) v[d] = as[d];
+      for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
-    static intvec iota() { return (__vector int)(0, 1, 2, 3); }
+    static intvec iota() { return (__vector int){0, 1, 2, 3}; }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
@@ -150,8 +153,8 @@ namespace vecmathlib {
     
     
     // Vector casts do not change the bit battern
-    boolvec_t as_bool() const { return (__vector bool int)v; }
-    boolvec_t convert_bool() const { return v != IV(0); }
+    boolvec_t as_bool() const { return (__vector __bool int)v; }
+    boolvec_t convert_bool() const { return *this != IV(0); }
     realvec_t as_float() const;      // defined after realvec
     realvec_t convert_float() const; // defined after realvec
     
@@ -180,15 +183,24 @@ namespace vecmathlib {
     
     
     
-    intvec lsr(int_t n) const { return vec_sr(v, IV(n)); }
-    intvec operator>>(int_t n) const { return vec_sra(v, IV(n)); }
-    intvec operator<<(int_t n) const { return vec_sl(v, IV(n)); }
+    intvec lsr(int_t n) const { return lsr(IV(n)); }
+    intvec operator>>(int_t n) const { return *this >> IV(n); }
+    intvec operator<<(int_t n) const { return *this << IV(n); }
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
     intvec& operator<<=(int_t n) { return *this=*this<<n; }
     
-    intvec lsr(intvec n) const { return vec_sr(v, n); }
-    intvec operator>>(intvec n) const { return vec_sra(v, n); }
-    intvec operator<<(intvec n) const { return vec_sl(v, n); }
+    intvec lsr(intvec n) const
+    {
+      return vec_sr(v, (__vector unsigned int)n.v);
+    }
+    intvec operator>>(intvec n) const
+    {
+      return vec_sra(v, (__vector unsigned int)n.v);
+    }
+    intvec operator<<(intvec n) const
+    {
+      return vec_sl(v, (__vector unsigned int)n.v);
+    }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
     
@@ -240,7 +252,7 @@ namespace vecmathlib {
     realvec(real_t a): v(vec_splats(a)) {}
     realvec(real_t const* as)
     {
-      for (int n=0; n<size; ++n) v[n] = as[n];
+      for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
     
     operator vector_t() const { return v; }
@@ -260,7 +272,7 @@ namespace vecmathlib {
     {
       realvec_t v0 = vec_ld(0, p);
       realvec_t v1 = vec_ld(16, p);
-      return vec_perm(v0, v1, vec_lvsl(0, p));
+      return vec_perm(v0.v, v1.v, vec_lvsl(0, p));
     }
     static realvec_t loadu(real_t const* p, size_t ioff)
     {
@@ -356,7 +368,7 @@ namespace vecmathlib {
     
     realvec operator+(realvec x) const { return vec_add(v, x.v); }
     realvec operator-(realvec x) const { return vec_sub(v, x.v); }
-    realvec operator*(realvec x) const { return vec_madd(v, x.v, RV(0.0)); }
+    realvec operator*(realvec x) const { return vec_madd(v, x.v, RV(0.0).v); }
     realvec operator/(realvec x) const { return *this * x.rcp(); }
     
     realvec& operator+=(realvec const& x) { return *this=*this+x; }
@@ -433,7 +445,7 @@ namespace vecmathlib {
     realvec rsqrt() const
     {
       realvec x = *this;
-      realvec r = vec_rsqrte(x); // this is only an approximation
+      realvec r = vec_rsqrte(x.v); // this is only an approximation
       // TODO: use fma
       r *= RV(1.5) - RV(0.5)*x * r*r; // one Newton iteration (see vml_rsqrt)
       return r;
