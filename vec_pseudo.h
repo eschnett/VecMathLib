@@ -31,7 +31,7 @@ namespace vecmathlib {
     
     static int const size = N;
     typedef bool scalar_t;
-    typedef bool bvector_t[size];
+    typedef uint_t bvector_t[size];
     
     typedef boolpseudovec boolvec_t;
     typedef intpseudovec<real_t, size> intvec_t;
@@ -49,18 +49,18 @@ namespace vecmathlib {
     
     
     
-    bvector_t v;
+    alignas(sizeof(bvector_t)) bvector_t v;
     
     boolpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't
     // be passed in registers
     // boolpseudovec(boolpseudovec const& x): v(x.v) {}
     // boolpseudovec& operator=(boolpseudovec const& x) { return v=x.v, *this; }
-    boolpseudovec(bool a) { for (int d=0; d<size; ++d) v[d]=a; }
-    boolpseudovec(bool const* as) { for (int d=0; d<size; ++d) v[d]=as[d]; }
+    boolpseudovec(bool a) { for (int d=0; d<size; ++d) v[d]=-a; }
+    boolpseudovec(bool const* as) { for (int d=0; d<size; ++d) v[d]=-as[d]; }
     
     bool operator[](int n) const { return v[n]; }
-    boolpseudovec& set_elt(int n, bool a) { return v[n]=a, *this; }
+    boolpseudovec& set_elt(int n, bool a) { return v[n]=-a, *this; }
     
     
     
@@ -150,7 +150,7 @@ namespace vecmathlib {
     
     
     
-    ivector_t v;
+    alignas(sizeof(ivector_t)) ivector_t v;
     
     intpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't
@@ -171,12 +171,17 @@ namespace vecmathlib {
     
     
     
-    boolvec_t as_bool() const { return convert_bool(); }
+    boolvec_t as_bool() const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.v[d]=v[d];
+      return res;
+    }
     boolvec_t convert_bool() const
     {
       // Result: convert_bool(0)=false, convert_bool(else)=true
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d]=v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d]);
       return res;
     }
     realvec_t as_float() const;      // defined after realpseudovec
@@ -351,37 +356,37 @@ namespace vecmathlib {
     boolvec_t operator==(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] == x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] == x.v[d]);
       return res;
     }
     boolvec_t operator!=(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] != x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] != x.v[d]);
       return res;
     }
     boolvec_t operator<(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] < x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] < x.v[d]);
       return res;
     }
     boolvec_t operator<=(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] <= x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] <= x.v[d]);
       return res;
     }
     boolvec_t operator>(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] > x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] > x.v[d]);
       return res;
     }
     boolvec_t operator>=(intpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] >= x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] >= x.v[d]);
       return res;
     }
   };
@@ -418,38 +423,38 @@ namespace vecmathlib {
     boolvec_t mapb(bool f(real_t)) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d]));
       return res;
     }
     intvec_t map(int_t f(real_t)) const
     {
       intvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d]));
       return res;
     }
     realvec_t map(real_t f(real_t)) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d]));
       return res;
     }
     realvec_t map(real_t f(real_t, int_t), intvec_t x) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d], x.v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d], x.v[d]));
       return res;
     }
     realvec_t map(real_t f(real_t, real_t), realvec_t x) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d], x.v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d], x.v[d]));
       return res;
     }
     realvec_t map(real_t f(real_t, real_t, real_t),
                   realvec_t x, realvec_t y) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = f(v[d], x.v[d], y.v[d]);
+      for (int d=0; d<size; ++d) res.set_elt(d, f(v[d], x.v[d], y.v[d]));
       return res;
     }
   public:
@@ -466,7 +471,7 @@ namespace vecmathlib {
     
     
     
-    vector_t v;
+    alignas(sizeof(vector_t)) vector_t v;
     
     realpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't
@@ -631,37 +636,37 @@ namespace vecmathlib {
     boolvec_t operator==(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] == x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] == x.v[d]);
       return res;
     }
     boolvec_t operator!=(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] != x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] != x.v[d]);
       return res;
     }
     boolvec_t operator<(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] < x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] < x.v[d]);
       return res;
     }
     boolvec_t operator<=(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] <= x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] <= x.v[d]);
       return res;
     }
     boolvec_t operator>(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] > x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] > x.v[d]);
       return res;
     }
     boolvec_t operator>=(realpseudovec const& x) const
     {
       boolvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = v[d] >= x.v[d];
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] >= x.v[d]);
       return res;
     }
     
