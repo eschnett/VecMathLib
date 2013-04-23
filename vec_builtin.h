@@ -38,6 +38,7 @@ namespace vecmathlib {
 #else
     typedef int_t bvector_t __attribute__((__vector_size__(N*sizeof(int_t))));
 #endif
+    static int const alignment = sizeof(bvector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
                   "vector size is wrong");
@@ -150,6 +151,7 @@ namespace vecmathlib {
     typedef int_t ivector_t __attribute__((__vector_size__(N*sizeof(int_t))));
     typedef uint_t uvector_t __attribute__((__vector_size__(N*sizeof(uint_t))));
 #endif
+    static int const alignment = sizeof(ivector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(ivector_t),
                   "vector size is wrong");
@@ -304,6 +306,7 @@ namespace vecmathlib {
 #else
     typedef real_t vector_t __attribute__((__vector_size__(N*sizeof(real_t))));
 #endif
+    static int const alignment = sizeof(vector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
@@ -367,7 +370,7 @@ namespace vecmathlib {
     
     static realvec_t loada(real_t const* p)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
 #ifdef __clang__
 #else
       p = (real_t const*)__builtin_assume_aligned(p, sizeof(realvec_t));
@@ -383,7 +386,7 @@ namespace vecmathlib {
     }
     static realvec_t loadu(real_t const* p, size_t ioff)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return loadu(p+ioff);
     }
     realvec_t loada(real_t const* p, mask_t const& m) const
@@ -401,7 +404,7 @@ namespace vecmathlib {
     
     void storea(real_t* p) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
 #ifdef __clang__
 #else
       p = __builtin_assume_aligned(p, sizeof(realvec_t));
@@ -415,12 +418,12 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, size_t ioff) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p+ioff);
     }
     void storea(real_t* p, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p, m);
     }
     void storeu(real_t* p, mask_t const& m) const
@@ -429,7 +432,7 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, size_t ioff, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p+ioff, m);
     }
     
