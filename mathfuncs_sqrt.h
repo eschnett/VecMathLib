@@ -73,6 +73,11 @@ namespace vecmathlib {
     //    r <- r - f(r) / f'(r)
     //    r <- (3 r - r^3 x) / 2
     return r * (1.5 - r*r * x_2);
+
+    // Use:
+    // Note: don't rewrite this expression, this may introduce
+    // cancellation errors
+    r += RV(0.5)*r * (RV(1.0) - x * r*r);
 #endif
     return rcp(sqrt(x));
   }
