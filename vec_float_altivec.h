@@ -457,7 +457,7 @@ namespace vecmathlib {
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
-    realvec sqrt() const { return *this * rsqrt(*this); }
+    realvec sqrt() const { return *this * rsqrt(); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
     realvec trunc() const { return vec_trunc(v); }
