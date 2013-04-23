@@ -271,12 +271,13 @@ namespace vecmathlib {
     static realvec_t loadu(real_t const* p)
     {
       realvec_t v0 = vec_ld(0, p);
-      realvec_t v1 = vec_ld(16, p);
+      realvec_t v1 = vec_ld(15, p);
       return vec_perm(v0.v, v1.v, vec_lvsl(0, p));
     }
     static realvec_t loadu(real_t const* p, size_t ioff)
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
       if (ioff==0) return loada(p);
       return loadu(p+ioff);
     }
@@ -300,6 +301,7 @@ namespace vecmathlib {
     realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
       if (ioff==0) return loada(p, m);
       return loadu(p+ioff, m);
     }
@@ -313,6 +315,7 @@ namespace vecmathlib {
     {
       // Vector stores would require vector loads, which would need to
       // be atomic
+      // TODO: see <https://developer.apple.com/hardwaredrivers/ve/alignment.html> for good ideas
       p[0] = (*this)[0];
       p[1] = (*this)[1];
       p[2] = (*this)[2];
@@ -321,6 +324,7 @@ namespace vecmathlib {
     void storeu(real_t* p, size_t ioff) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
       if (ioff==0) return storea(p);
       storeu(p+ioff);
     }
@@ -352,6 +356,7 @@ namespace vecmathlib {
     void storeu(real_t* p, size_t ioff, mask_t const& m) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
       if (ioff==0) return storea(p, m);
       storeu(p+ioff, m);
     }
