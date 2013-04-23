@@ -66,10 +66,38 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
+  auto mathfuncs<realvec_t>::vml_ieee_isfinite(realvec_t x) -> boolvec_t
+  {
+    return (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask);
+  }
+  
+  template<typename realvec_t>
+  auto mathfuncs<realvec_t>::vml_ieee_isinf(realvec_t x) -> boolvec_t
+  {
+    return (as_int(x) & IV(~FP::signbit_mask)) == IV(FP::exponent_mask);
+  }
+  
+  template<typename realvec_t>
+  auto mathfuncs<realvec_t>::vml_ieee_isnan(realvec_t x) -> boolvec_t
+  {
+    return
+      (as_int(x) & IV(FP::exponent_mask)) == IV(FP::exponent_mask) &&
+      (as_int(x) & IV(FP::mantissa_mask)) != IV(I(0));
+  }
+  
+  template<typename realvec_t>
+  auto mathfuncs<realvec_t>::vml_ieee_isnormal(realvec_t x) -> boolvec_t
+  {
+    return
+      (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask) &&
+      (as_int(x) & IV(FP::exponent_mask)) != IV(I(0));
+  }
+  
+  template<typename realvec_t>
   auto mathfuncs<realvec_t>::vml_isfinite(realvec_t x) -> boolvec_t
   {
 #if defined VML_HAVE_INF || defined VML_HAVE_NAN
-    return (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask);
+    return vml_ieee_isfinite(x);
 #else
     return BV(true);
 #endif
@@ -79,7 +107,7 @@ namespace vecmathlib {
   auto mathfuncs<realvec_t>::vml_isinf(realvec_t x) -> boolvec_t
   {
 #if defined VML_HAVE_INF
-    return (as_int(x) & IV(~FP::signbit_mask)) == IV(FP::exponent_mask);
+    return vml_ieee_isinf(x);
 #else
     return BV(false);
 #endif
@@ -89,9 +117,7 @@ namespace vecmathlib {
   auto mathfuncs<realvec_t>::vml_isnan(realvec_t x) -> boolvec_t
   {
 #if defined VML_HAVE_NAN
-    return
-      (as_int(x) & IV(FP::exponent_mask)) == IV(FP::exponent_mask) &&
-      (as_int(x) & IV(FP::mantissa_mask)) != IV(I(0));
+    return vml_ieee_isnan(x);
 #else
     return BV(false);
 #endif
@@ -101,9 +127,7 @@ namespace vecmathlib {
   auto mathfuncs<realvec_t>::vml_isnormal(realvec_t x) -> boolvec_t
   {
 #if defined VML_HAVE_DENORMALS || defined VML_HAVE_INF || defined VML_HAVE_NAN
-    return
-      (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask) &&
-      (as_int(x) & IV(FP::exponent_mask)) != IV(I(0));
+    return vml_ieee_isnormal(x);
 #else
     return BV(true);
 #endif
