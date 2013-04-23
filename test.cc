@@ -722,15 +722,15 @@ struct vecmathlib_test {
       realvec_t const fm = vecmathlib::convert_float
         (m + vecmathlib::convert_int(m == intvec_t(I(0))));
       check("rcp", rcp, vecmathlib::rcp, x, accuracy());
-      check("fmod(x,y)", fmod, vecmathlib::fmod, x, y, accuracy());
-      check("fmod(x,m)", fmod, vecmathlib::fmod, x, fm, accuracy());
-      check("fmod(n,y)", fmod, vecmathlib::fmod, fn, y, accuracy());
+      check("fmod(x,y)", fmod, vecmathlib::fmod, x, y, 2.0*accuracy());
+      check("fmod(x,m)", fmod, vecmathlib::fmod, x, fm, 2.0*accuracy());
+      check("fmod(n,y)", fmod, vecmathlib::fmod, fn, y, 2.0*accuracy());
       check("remainder(x,y)",
-            remainder, vecmathlib::remainder, x, y, accuracy());
+            remainder, vecmathlib::remainder, x, y, 2.0*accuracy());
       check("remainder(x,m)",
-            remainder, vecmathlib::remainder, x, fm, accuracy());
+            remainder, vecmathlib::remainder, x, fm, 2.0*accuracy());
       check("remainder(n,y)",
-            remainder, vecmathlib::remainder, fn, y, accuracy());
+            remainder, vecmathlib::remainder, fn, y, 2.0*accuracy());
     }
   }
   
