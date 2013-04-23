@@ -335,34 +335,31 @@ struct vecmathlib_test {
   {
     cout << "   testing loada loadu storea storeu (errors may lead to segfaults)...\n" << flush;
     int const n = 6;
-    union sv {
-      real_t s[n * realvec_t::size];
-      realvec_t v[n];
-      sv(){}
-    };
-    sv x, xnew;
+    int const sz = realvec_t::size;
+    real_t x[n*sz], xnew[n*sz];
     for (int i=0; i<n; ++i) {
-      x.v[i] = random(R(-10.0), R(+10.0));
+      realvec_t xv = random(R(-10.0), R(+10.0));
+      memcpy(&x[i*sz], &xv, sizeof xv);
     }
     realvec_t const z = random(R(-10.0), R(+10.0));
     
     // loada
     {
-      real_t const *p = &x.s[realvec_t::size];
+      real_t const *p = &x[sz];
       realvec_t y = realvec_t::loada(p);
       check_mem("loada", p, y, z, ~0);
     }
     
     // loadu
     for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
-      real_t const *p = &x.s[realvec_t::size];
+      real_t const *p = &x[sz];
       realvec_t y = realvec_t::loadu(p+i);
       check_mem("loadu", p+i, y, z, ~0);
     }
     
     // loadu(ioff)
     for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
-      real_t const *p = &x.s[realvec_t::size];
+      real_t const *p = &x[sz];
       realvec_t y = realvec_t::loadu(p, ioff);
       check_mem("loadu(ioff)", p+ioff, y, z, ~0);
     }
@@ -370,25 +367,25 @@ struct vecmathlib_test {
     // storea
     {
       memcpy(&xnew, &x, sizeof xnew);
-      real_t *p = &xnew.s[realvec_t::size];
+      real_t *p = &xnew[sz];
       storea(z, p);
-      check_mem("storea", p, z, &x.s[realvec_t::size], ~0);
+      check_mem("storea", p, z, &x[sz], ~0);
     }
     
     // storeu
     for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
       memcpy(&xnew, &x, sizeof xnew);
-      real_t *p = &xnew.s[realvec_t::size];
+      real_t *p = &xnew[sz];
       storeu(z, p+i);
-      check_mem("storeu", p+i, z, &x.s[realvec_t::size]+i, ~0);
+      check_mem("storeu", p+i, z, &x[sz+i], ~0);
     }
     
     // storeu
     for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
       memcpy(&xnew, &x, sizeof xnew);
-      real_t *p = &xnew.s[realvec_t::size];
+      real_t *p = &xnew[sz];
       storeu(z, p, ioff);
-      check_mem("storeu(ioff)", p+ioff, z, &x.s[realvec_t::size]+ioff, ~0);
+      check_mem("storeu(ioff)", p+ioff, z, &x[sz+ioff], ~0);
     }
     
     for (int mval=0; mval<(1<<realvec_t::size); ++mval) {
@@ -398,21 +395,21 @@ struct vecmathlib_test {
       
       // loada(mask)
       {
-        real_t const *p = &x.s[realvec_t::size];
+        real_t const *p = &x[sz];
         realvec_t y = loada(p, z, mask);
         check_mem("loada(mask)", p, y, z, mval);
       }
       
       // loadu(mask)
       for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
-        real_t const *p = &x.s[realvec_t::size];
+        real_t const *p = &x[sz];
         realvec_t y = loadu(p+i, z, mask);
         check_mem("loadu(mask)", p+i, y, z, mval);
       }
       
       // loadu(ioff, mask)
       for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
-        real_t const *p = &x.s[realvec_t::size];
+        real_t const *p = &x[sz];
         realvec_t y = loadu(p, ioff, z, mask);
         check_mem("loadu(ioff,mask)", p+ioff, y, z, mval);
       }
@@ -420,26 +417,25 @@ struct vecmathlib_test {
       // storea
       {
         memcpy(&xnew, &x, sizeof xnew);
-        real_t *p = &xnew.s[realvec_t::size];
+        real_t *p = &xnew[sz];
         storea(z, p, mask);
-        check_mem("storea(mask)", p, z, &x.s[realvec_t::size], mval);
+        check_mem("storea(mask)", p, z, &x[sz], mval);
       }
       
       // storeu
       for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
         memcpy(&xnew, &x, sizeof xnew);
-        real_t *p = &xnew.s[realvec_t::size];
+        real_t *p = &xnew[sz];
         storeu(z, p+i, mask);
-        check_mem("storeu(mask)", p+i, z, &x.s[realvec_t::size]+i, mval);
+        check_mem("storeu(mask)", p+i, z, &x[sz+i], mval);
       }
       
       // storeu
       for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
         memcpy(&xnew, &x, sizeof xnew);
-        real_t *p = &xnew.s[realvec_t::size];
+        real_t *p = &xnew[sz];
         storeu(z, p, ioff, mask);
-        check_mem("storeu(ioff,mask)",
-                  p+ioff, z, &x.s[realvec_t::size]+ioff, mval);
+        check_mem("storeu(ioff,mask)", p+ioff, z, &x[sz+ioff], mval);
       }
       
     } // for mval
