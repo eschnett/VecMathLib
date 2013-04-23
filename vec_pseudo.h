@@ -31,8 +31,8 @@ namespace vecmathlib {
     
     static int const size = N;
     typedef bool scalar_t;
-    typedef uint_t bvector_t[size];
-    static int const alignment = sizeof(uint_t);
+    typedef bool bvector_t[size];
+    static int const alignment = sizeof(bool);
     
     typedef boolpseudovec boolvec_t;
     typedef intpseudovec<real_t, size> intvec_t;
@@ -57,11 +57,11 @@ namespace vecmathlib {
     // be passed in registers
     // boolpseudovec(boolpseudovec const& x): v(x.v) {}
     // boolpseudovec& operator=(boolpseudovec const& x) { return v=x.v, *this; }
-    boolpseudovec(bool a) { for (int d=0; d<size; ++d) v[d]=-a; }
-    boolpseudovec(bool const* as) { for (int d=0; d<size; ++d) v[d]=-as[d]; }
+    boolpseudovec(bool a) { for (int d=0; d<size; ++d) v[d]=a; }
+    boolpseudovec(bool const* as) { for (int d=0; d<size; ++d) v[d]=as[d]; }
     
     bool operator[](int n) const { return v[n]; }
-    boolpseudovec& set_elt(int n, bool a) { return v[n]=-a, *this; }
+    boolpseudovec& set_elt(int n, bool a) { return v[n]=a, *this; }
     
     
     
