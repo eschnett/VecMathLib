@@ -49,7 +49,7 @@ namespace vecmathlib {
     
     
     
-    alignas(sizeof(bvector_t)) bvector_t v;
+    bvector_t v __attribute__((__aligned__(sizeof(bvector_t))));
     
     boolpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't
@@ -150,7 +150,7 @@ namespace vecmathlib {
     
     
     
-    alignas(sizeof(ivector_t)) ivector_t v;
+    ivector_t v __attribute__((__aligned__(sizeof(ivector_t))));
     
     intpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't
@@ -471,7 +471,7 @@ namespace vecmathlib {
     
     
     
-    alignas(sizeof(vector_t)) vector_t v;
+    vector_t v __attribute__((__aligned__(sizeof(vector_t))));
     
     realpseudovec() {}
     // Can't have a non-trivial copy constructor; if so, objects won't

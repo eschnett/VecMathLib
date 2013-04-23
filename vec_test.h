@@ -46,7 +46,7 @@ namespace vecmathlib {
     
     
     
-    bvector_t v;
+    bvector_t v __attribute__((__aligned__(sizeof(bvector_t))));
     
     booltestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't
@@ -148,7 +148,7 @@ namespace vecmathlib {
     
     
     
-    ivector_t v;
+    ivector_t v __attribute__((__aligned__(sizeof(ivector_t))));
     
     inttestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't
@@ -388,7 +388,11 @@ namespace vecmathlib {
     {
 #if defined __GNUC__ && !defined __clang__
       // GCC crashes when +X is used as constraint
+#  if defined __SSE2__
       for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
+#  elif defined __ALTIVEC__
+      for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
+#  endif
 #else
       for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
 #endif
@@ -410,7 +414,7 @@ namespace vecmathlib {
     
     
     
-    vector_t v;
+    vector_t v __attribute__((__aligned__(sizeof(vector_t))));
     
     realtestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't
