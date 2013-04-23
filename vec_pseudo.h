@@ -493,7 +493,7 @@ namespace vecmathlib {
     
     static realvec_t loada(real_t const* p)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return loadu(p);
     }
     static realvec_t loadu(real_t const* p)
@@ -504,7 +504,7 @@ namespace vecmathlib {
     }
     static realvec_t loadu(real_t const* p, size_t ioff)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return loadu(p+ioff);
     }
     realvec_t loada(real_t const* p, mask_t const& m) const
@@ -522,7 +522,7 @@ namespace vecmathlib {
     
     void storea(real_t* p) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p);
     }
     void storeu(real_t* p) const
@@ -531,12 +531,12 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, size_t ioff) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p+ioff);
     }
     void storea(real_t* p, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p, m);
     }
     void storeu(real_t* p, mask_t const& m) const
@@ -545,7 +545,7 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, size_t ioff, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storeu(p+ioff, m);
     }
     
