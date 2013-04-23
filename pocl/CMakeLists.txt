@@ -16,18 +16,3 @@ add_custom_command(
   DEPENDS generate-files.py)
 
 add_library (kernel-vecmathlib ${SRCS})
-
-
-
-# # GCC:
-# set (CMAKE_CXX_COMPILER "g++")
-# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -std=c++11 -march=native -Ofast")
-
-# Clang:
-# Note: This fails to link with -O4
-set (CMAKE_CXX_COMPILER "clang++-mp-3.3")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -Dcl_khr_fp64 -Dcles_khr_int64 -std=c++11 -stdlib=libc++ -march=native -O3")
-
-# # Intel:
-# set (CMAKE_CXX_COMPILER "icpc")
-# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -std=c++11 -fast")
