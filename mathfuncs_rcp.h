@@ -33,8 +33,12 @@ namespace vecmathlib {
       // Solve   f(r) = 0   for   f(r) = x - 1/r
       //    r <- r - f(r) / f'(r)
       //    r <- 2 r - r^2 x
-      r *= RV(2.0) - r * x;
-    }
+      //    r <- r + r (1 - r x)
+      
+      // Note: don't rewrite this expression, this may introduce
+      // cancellation errors
+      r += r * (RV(1.0) - x*r);
+   }
     
     // Handle negative values
     r = copysign(r, x0);
