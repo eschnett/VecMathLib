@@ -10,9 +10,11 @@ set (SRCS
   ${GENERATED_SRCS}
 )
 
-add_custom_command(
+add_custom_command (
   OUTPUT ${GENERATED_SRCS} kernel-vecmathlib.h
   COMMAND ./generate-files.py
   DEPENDS generate-files.py)
 
 add_library (kernel-vecmathlib ${SRCS})
+
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcl_khr_fp64 -Dcles_khr_int64")
