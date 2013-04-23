@@ -400,11 +400,10 @@ namespace vecmathlib {
     {
       return _mm256_loadu_pd(p);
     }
-    static realvec_t loadu(real_t const* p, size_t ioff)
+    static realvec_t loadu(real_t const* p, ptrdiff_t ioff)
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
-      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
-      if (ioff==0) return loada(p);
+      if (ioff % realvec::size == 0) return loada(p+ioff);
       return loadu(p+ioff);
     }
     realvec_t loada(real_t const* p, mask_t const& m) const
@@ -424,11 +423,10 @@ namespace vecmathlib {
         return m.m.ifthen(loadu(p), *this);
       }
     }
-    realvec_t loadu(real_t const* p, size_t ioff, mask_t const& m) const
+    realvec_t loadu(real_t const* p, ptrdiff_t ioff, mask_t const& m) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
-      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
-      if (ioff==0) return loada(p, m);
+      if (ioff % realvec::size == 0) return loada(p+ioff, m);
       return loadu(p+ioff, m);
     }
     
@@ -441,11 +439,10 @@ namespace vecmathlib {
     {
       return _mm256_storeu_pd(p, v);
     }
-    void storeu(real_t* p, size_t ioff) const
+    void storeu(real_t* p, ptrdiff_t ioff) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
-      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
-      if (ioff==0) return storea(p);
+      if (ioff % realvec::size == 0) return storea(p+ioff);
       storeu(p+ioff);
     }
     void storea(real_t* p, mask_t const& m) const
@@ -468,11 +465,10 @@ namespace vecmathlib {
         if (m.m[3]) p[3] = (*this)[3];
       }
     }
-    void storeu(real_t* p, size_t ioff, mask_t const& m) const
+    void storeu(real_t* p, ptrdiff_t ioff, mask_t const& m) const
     {
       VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
-      VML_ASSERT(ioff>=0 && ioff<sizeof(realvec_t));
-      if (ioff==0) return storea(p, m);
+      if (ioff % realvec::size == 0) return storea(p+ioff, m);
       storeu(p+ioff, m);
     }
     

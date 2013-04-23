@@ -139,40 +139,40 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline void storea(realvec<real_t, size> x, real_t* p)
   {
-    return x.storea(p);
+    x.storea(p);
   }
   
   template<typename real_t, int size>
   inline void storeu(realvec<real_t, size> x, real_t* p)
   {
-    return x.storeu(p);
+    x.storeu(p);
   }
   
   template<typename real_t, int size>
   inline void storeu(realvec<real_t, size> x, real_t* p, size_t ioff)
   {
-    return x.storeu(p, ioff);
+    x.storeu(p, ioff);
   }
   
   template<typename real_t, int size>
   inline void storea(realvec<real_t, size> x, real_t* p,
                      typename realvec<real_t, size>::mask_t const& m)
   {
-    return x.storea(p, m);
+    x.storea(p, m);
   }
   
   template<typename real_t, int size>
   inline void storeu(realvec<real_t, size> x, real_t* p,
                      typename realvec<real_t, size>::mask_t const& m)
   {
-    return x.storeu(p, m);
+    x.storeu(p, m);
   }
   
   template<typename real_t, int size>
   inline void storeu(realvec<real_t, size> x, real_t* p, size_t ioff,
                      typename realvec<real_t, size>::mask_t const &m)
   {
-    return x.storeu(p, ioff, m);
+    x.storeu(p, ioff, m);
   }
   
   
