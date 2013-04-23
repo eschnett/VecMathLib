@@ -29,6 +29,7 @@ namespace vecmathlib {
     static int const size = N;
     typedef bool scalar_t;
     typedef bool bvector_t[size];
+    static int const alignment = sizeof(bvector_t);
     
     typedef booltestvec boolvec_t;
     typedef inttestvec<real_t, size> intvec_t;
@@ -46,7 +47,7 @@ namespace vecmathlib {
     
     
     
-    bvector_t v __attribute__((__aligned__(sizeof(bvector_t))));
+    bvector_t v __attribute__((__aligned__(alignment)));
     
     booltestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't
@@ -131,6 +132,7 @@ namespace vecmathlib {
     static int const size = N;
     typedef int_t scalar_t;
     typedef int_t ivector_t[size];
+    static int const alignment = sizeof(ivector_t);
     
     typedef booltestvec<real_t, size> boolvec_t;
     typedef inttestvec intvec_t;
@@ -148,7 +150,7 @@ namespace vecmathlib {
     
     
     
-    ivector_t v __attribute__((__aligned__(sizeof(ivector_t))));
+    ivector_t v __attribute__((__aligned__(alignment)));
     
     inttestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't
@@ -373,6 +375,7 @@ namespace vecmathlib {
     static int const size = N;
     typedef real_t scalar_t;
     typedef real_t vector_t[size];
+    static int const alignment = sizeof(vector_t);
     
     static char const* name()
     {
@@ -414,7 +417,7 @@ namespace vecmathlib {
     
     
     
-    vector_t v __attribute__((__aligned__(sizeof(vector_t))));
+    vector_t v __attribute__((__aligned__(alignment)));
     
     realtestvec() {}
     // can't have a non-trivial copy constructor; if so, objects won't

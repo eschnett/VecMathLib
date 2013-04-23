@@ -29,6 +29,7 @@ namespace vecmathlib {
     static int const size = 16;
     typedef bool scalar_t;
     typedef __m256i bvector_t;
+    static int const alignment = sizeof(bvector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
                   "vector size is wrong");
@@ -143,6 +144,7 @@ namespace vecmathlib {
     static int const size = 16;
     typedef int_t scalar_t;
     typedef __m256i ivector_t;
+    static int const alignment = sizeof(ivector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(ivector_t),
                   "vector size is wrong");
@@ -347,6 +349,7 @@ namespace vecmathlib {
     static int const size = 16;
     typedef real_t scalar_t;
     typedef __m256i vector_t;
+    static int const alignment = sizeof(vector_t);
     
     static char const* name() { return "<AVX:16*fp16>"; }
     void barrier() { __asm__("": "+x" (v)); }
