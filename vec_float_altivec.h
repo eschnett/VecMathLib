@@ -437,7 +437,9 @@ namespace vecmathlib {
       realvec x = *this;
       realvec r = vec_re(v);    // this is only an approximation
       // TODO: use fma
-      r *= RV(2.0) - r*x;       // one Newton iteration (see vml_rcp)
+      // Note: don't rewrite this expression, this may introduce
+      // cancellation errors
+      r += r * (RV(1.0) - x*r); // one Newton iteration (see vml_rcp)
       return r;
     }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
@@ -448,7 +450,8 @@ namespace vecmathlib {
       realvec x = *this;
       realvec r = vec_rsqrte(x.v); // this is only an approximation
       // TODO: use fma
-      r *= RV(1.5) - RV(0.5)*x * r*r; // one Newton iteration (see vml_rsqrt)
+      // one Newton iteration (see vml_rsqrt)
+      r += RV(0.5)*r * (RV(1.0) - x * r*r);
       return r;
     }
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
