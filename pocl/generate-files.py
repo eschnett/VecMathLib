@@ -211,8 +211,11 @@ masked_functions = [
     "trunc",
 ]
 
+# This is prepended to masked function names.
+mask_prefix = "_cl_"
+
 def prefixed(name):
-    if name in masked_functions: name = "_cl_" + name
+    if name in masked_functions: name = mask_prefix + name
     return func_prefix + name
 
 
