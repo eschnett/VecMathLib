@@ -788,6 +788,9 @@ int main(int argc, char** argv)
 #ifdef __AVX__
     "-AVX"
 #endif
+#ifdef __ALTIVEC__
+    "-Altivec"
+#endif
     "]\n";
   
   vecmathlib_test<realpseudovec<float,1>>::test();
