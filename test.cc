@@ -37,6 +37,7 @@ struct vecmathlib_test {
   typedef boolvec_t BV;
   
   typedef vecmathlib::floatprops<real_t> FP;
+  typedef vecmathlib::mathfuncs<realvec_t> MF;
   
   
   
@@ -84,6 +85,33 @@ struct vecmathlib_test {
       buf << hexdigits[cs[n]>>4] << hexdigits[cs[n]&15];
     }
     return buf.str();
+  }
+  
+  
+  
+  static boolvec_t supported(realvec_t x)
+  {
+    return x==RV(0.0) || MF::vml_ieee_isnormal(x)
+#ifdef VML_HAVE_DENORMALS
+      || MF::vml_ieee_isfinite(x)
+#endif
+#ifdef VML_HAVE_INF
+      || MF::vml_ieee_isinf(x)
+#endif
+#ifdef VML_HAVE_NAN
+      || MF::vml_ieee_isnan(x)
+#endif
+      ;
+  }
+  
+  static boolvec_t supported(intvec_t x)
+  {
+    return true;
+  }
+  
+  static boolvec_t supported(boolvec_t x)
+  {
+    return true;
   }
   
   
@@ -146,7 +174,9 @@ struct vecmathlib_test {
     realvec_t const rvml = fvml(x);
     realvec_t const dr = rstd - rvml;
     realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    boolvec_t const isbad =
+      supported(x) && supported(rstd) &&
+      fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -176,7 +206,9 @@ struct vecmathlib_test {
     realvec_t const rvml = fvml(x, y);
     realvec_t const dr = rstd - rvml;
     realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    boolvec_t const isbad =
+      supported(x) && supported(y) && supported(rstd) &&
+      fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -207,7 +239,9 @@ struct vecmathlib_test {
     realvec_t const rvml = fvml(x, y, z);
     realvec_t const dr = rstd - rvml;
     realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad = fabs(dr) > realvec_t(accuracy) * scale;
+    boolvec_t const isbad =
+      supported(x) && supported(y) && supported(z) && supported(rstd) &&
+      fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -234,7 +268,8 @@ struct vecmathlib_test {
     }
     intvec_t const rvml = fvml(x);
     intvec_t const dr = rstd - rvml;
-    boolvec_t const isbad = convert_bool(dr);
+    boolvec_t const isbad =
+      supported(x) && supported(rstd) && convert_bool(dr);
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -258,7 +293,8 @@ struct vecmathlib_test {
     }
     intvec_t const rvml = fvml(x, y);
     intvec_t const dr = rstd - rvml;
-    boolvec_t const isbad = convert_bool(dr);
+    boolvec_t const isbad =
+      supported(x) && supported(y) && supported(rstd) && convert_bool(dr);
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -281,7 +317,7 @@ struct vecmathlib_test {
     }
     boolvec_t const rvml = fvml(x);
     boolvec_t const dr = rstd != rvml;
-    boolvec_t const isbad = dr;
+    boolvec_t const isbad = supported(x) && supported(rstd) && dr;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
