@@ -12,12 +12,13 @@ namespace vecmathlib {
   template<typename realvec_t>
   class mask_t {
     
-    friend realvec_t;
+    // friend realvec_t;
     
     typedef typename realvec_t::boolvec_t boolvec_t;
     typedef typename realvec_t::intvec_t intvec_t;
     static int const size = realvec_t::size;
     
+  public:
     std::ptrdiff_t imin, imax;
     std::ptrdiff_t i;
     boolvec_t m;
