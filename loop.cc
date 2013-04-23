@@ -74,7 +74,6 @@ template<typename realvec_t>
 void init(typename realvec_t::real_t *restrict xptr,
           ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
-  typedef typename realvec_t::real_t real_t;
   for (ptrdiff_t j=0; j<n; ++j) {
     for (ptrdiff_t i=0; i<m; ++i) {
       const ptrdiff_t ij = ldm*j + i;
@@ -87,9 +86,9 @@ void init(typename realvec_t::real_t *restrict xptr,
 
 // Original version, unvectorized
 template<typename realvec_t>
-void smootho(typename realvec_t::real_t const *restrict xptr,
-             typename realvec_t::real_t *restrict yptr,
-             ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+void smooth_scalar(typename realvec_t::real_t const *restrict xptr,
+                   typename realvec_t::real_t *restrict yptr,
+                   ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
   typedef typename realvec_t::real_t real_t;
   for (ptrdiff_t j=1; j<n-1; ++j) {
@@ -111,9 +110,9 @@ void smootho(typename realvec_t::real_t const *restrict xptr,
 
 // Assuming that xptr and yptr are aligned, but ldm can be arbitrary
 template<typename realvec_t>
-void smoothu(typename realvec_t::real_t const *restrict xptr,
-             typename realvec_t::real_t *restrict yptr,
-             ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+void smooth_unaligned(typename realvec_t::real_t const *restrict xptr,
+                      typename realvec_t::real_t *restrict yptr,
+                      ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
   typedef typename realvec_t::real_t real_t;
   typedef typename realvec_t::mask_t mask_t;
@@ -144,9 +143,9 @@ void smoothu(typename realvec_t::real_t const *restrict xptr,
 // Assuming that xptr and yptr are aligned, and ldm is a multiple of
 // the vector size
 template<typename realvec_t>
-void smootha(typename realvec_t::real_t const *restrict xptr,
-             typename realvec_t::real_t *restrict yptr,
-             ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+void smooth_aligned(typename realvec_t::real_t const *restrict xptr,
+                    typename realvec_t::real_t *restrict yptr,
+                    ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
   typedef typename realvec_t::real_t real_t;
   typedef typename realvec_t::mask_t mask_t;
@@ -207,27 +206,27 @@ int main(int argc, char** argv)
   
   t0 = getticks();
   for (int iter=0; iter<niters; ++iter) {
-    smootho<realvec_t>(&x[0], &y[0], m, ldm, n);
+    smooth_scalar<realvec_t>(&x[0], &y[0], m, ldm, n);
   }
   t1 = getticks();
   cycles = cycles_per_tick * elapsed(t1,t0) / (1.0 * (n-1) * (m-1) * niters);
-  cout << "smootho: " << cycles << " cycles/point\n";
+  cout << "smooth_scalar:    " << cycles << " cycles/point\n";
   
   t0 = getticks();
   for (int iter=0; iter<niters; ++iter) {
-    smoothu<realvec_t>(&x[0], &y[0], m, ldm, n);
+    smooth_unaligned<realvec_t>(&x[0], &y[0], m, ldm, n);
   }
   t1 = getticks();
   cycles = cycles_per_tick * elapsed(t1,t0) / (1.0 * (n-1) * (m-1) * niters);
-  cout << "smoothu: " << cycles << " cycles/point\n";
+  cout << "smooth_unaligned: " << cycles << " cycles/point\n";
   
   t0 = getticks();
   for (int iter=0; iter<niters; ++iter) {
-    smootha<realvec_t>(&x[0], &y[0], m, ldm, n);
+    smooth_aligned<realvec_t>(&x[0], &y[0], m, ldm, n);
   }
   t1 = getticks();
   cycles = cycles_per_tick * elapsed(t1,t0) / (1.0 * (n-1) * (m-1) * niters);
-  cout << "smootha: " << cycles << " cycles/point\n";
+  cout << "smooth_aligned:   " << cycles << " cycles/point\n";
   
   return 0;
 }
