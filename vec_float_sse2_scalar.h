@@ -268,7 +268,7 @@ namespace vecmathlib {
     
     static realvec_t loada(real_t const* p)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return *p;
     }
     static realvec_t loadu(real_t const* p)
@@ -277,12 +277,12 @@ namespace vecmathlib {
     }
     static realvec_t loadu(real_t const* p, std::ptrdiff_t ioff)
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return loada(p+ioff);
     }
     realvec_t loada(real_t const* p, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       if (__builtin_expect(all(m.m), true)) {
         return loada(p);
       } else {
@@ -299,13 +299,13 @@ namespace vecmathlib {
     }
     realvec_t loadu(real_t const* p, std::ptrdiff_t ioff, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       return loada(p+ioff, m);
     }
     
     void storea(real_t* p) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       *p = v;
     }
     void storeu(real_t* p) const
@@ -314,12 +314,12 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, std::ptrdiff_t ioff) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storea(p+ioff);
     }
     void storea(real_t* p, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       if (__builtin_expect(m.all_m, true)) {
         storea(p);
       }
@@ -332,7 +332,7 @@ namespace vecmathlib {
     }
     void storeu(real_t* p, std::ptrdiff_t ioff, mask_t const& m) const
     {
-      VML_ASSERT(intptr_t(p) % sizeof(realvec_t) == 0);
+      VML_ASSERT(intptr_t(p) % alignment == 0);
       storea(p+ioff, m);
     }
     
