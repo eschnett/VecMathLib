@@ -28,9 +28,19 @@ inline ticks getticks()
 #if __has_builtin(__builtin_readcyclecounter)
   return __builtin_readcyclecounter();
 #else
+#  if defined __x86_64__
   ticks a, d;
   asm volatile("rdtsc" : "=a" (a), "=d" (d));
   return a | (d << 32);
+#  elif defined __powerpc__
+  unsigned int tbl, tbu, tbu1;
+  do {
+    asm volatile("mftbu %0": "=r"(tbu));
+    asm volatile("mftb %0": "=r"(tbl));
+    asm volatile("mftbu %0": "=r"(tbu1));
+  } while (tbu != tbu1);
+  return ((unsigned long long)tbu << 32) | tbl;
+#  endif
 #endif
 }
 inline double elapsed(ticks t1, ticks t0)
