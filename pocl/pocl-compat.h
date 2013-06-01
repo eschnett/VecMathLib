@@ -17,7 +17,8 @@
 #include <cstring>
 
 #ifndef cl_khr_fp64
-#define M_PI M_PI_F
+#  undef M_PI
+#  define M_PI M_PI_F
 #endif
 
 // Define vector types
