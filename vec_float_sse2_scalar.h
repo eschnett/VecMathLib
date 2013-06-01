@@ -339,7 +339,10 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return floatprops::as_int(v); }
-    intvec_t convert_int() const { return floatprops::convert_int(v); }
+    intvec_t convert_int() const {
+      // return floatprops::convert_int(v);
+      return _mm_cvttss_si32(_mm_set_ss(v));
+    }
     
     
     
@@ -504,6 +507,7 @@ namespace vecmathlib {
   
   inline auto intvec<float,1>::convert_float() const -> realvec_t
   {
+    // return FP::convert_float(v);
     return _mm_cvtss_f32(_mm_cvtsi32_ss(_mm_setzero_ps(), v));
   }
   
