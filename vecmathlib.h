@@ -21,7 +21,7 @@
 
 // This workaround is needed for older libstdc++ versions such as the
 // one in Debian 6.0 when compiled with clang++
-// http://lists.cs.uiuc.edu/pipermail/cfe-dev/2011-February/013207.html
+// <http://lists.cs.uiuc.edu/pipermail/cfe-dev/2011-February/013207.html>.
 // The version time stamp used below is the one in Debian 6.0.
 #include <cstring>              // pull in __GLIBCXX__
 #if defined __GLIBCXX__ && __GLIBCXX__ <= 20101114
