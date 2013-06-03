@@ -131,7 +131,6 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_trunc(realvec_t x)
   {
-    // return copysign(floor(fabs(x)), x);
     realvec_t x0 = x;
     x = fabs(x);
     boolvec_t istoosmall = x < RV(1.0);
@@ -151,7 +150,6 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_antitrunc(realvec_t x)
   {
-    // return copysign(ceil(fabs(x)), x);
     realvec_t x0 = x;
     x = fabs(x);
     boolvec_t iszero = x == RV(0.0);
