@@ -393,7 +393,7 @@ namespace vecmathlib {
       // GCC crashes when +X is used as constraint
 #  if defined __SSE2__
       for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
-#  elif defined __ALTIVEC__
+#  elif defined _ARCH_PPC64 // __ALTIVEC__
       for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
 #  endif
 #else
