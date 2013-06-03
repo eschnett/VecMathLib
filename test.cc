@@ -73,15 +73,26 @@ struct vecmathlib_test {
   
   
   
+  static bool is_big_endian()
+  {
+    const int i = 1;
+    unsigned char cs[sizeof i];
+    memcpy(cs, &i, sizeof i);
+    return cs[0]==0;
+  }
+  
   template<typename T>
-  static string hex(T x)
+  static string hex(const T x)
   {
     unsigned char cs[sizeof x];
     memcpy(cs, &x, sizeof x);
     ostringstream buf;
     buf << "0x";
     const char *const hexdigits = "0123456789abcdef";
-    for (size_t n=0; n<sizeof x; ++n) {
+    const int n0 = is_big_endian() ? 0 : sizeof x - 1;
+    const int dn = is_big_endian() ? +1 : -1;
+    const int n1 = n0 + sizeof x * dn;
+    for (int n=n0; n!=n1; n+=dn) {
       buf << hexdigits[cs[n]>>4] << hexdigits[cs[n]&15];
     }
     return buf.str();
