@@ -51,25 +51,25 @@ namespace std { class type_info; }
 // Vecmathlib's functions (mostly useful for testing Vecmathlib)
 #include "vec_test.h"
 
-// Intel SSE 2
-#if defined __SSE2__
+#if defined __SSE2__            // Intel SSE 2
 #  include "vec_float_sse2_scalar.h"
 #  include "vec_double_sse2_scalar.h"
 #  include "vec_float_sse2.h"
 #  include "vec_double_sse2.h"
 #endif
 
-// Intel AVX
-#if defined __AVX__
+#if defined __AVX__             // Intel AVX
 #  include "vec_fp8_avx.h"
 #  include "vec_fp16_avx.h"
 #  include "vec_float_avx.h"
 #  include "vec_double_avx.h"
 #endif
 
-// IBM Altivec
-#if defined __ALTIVEC__
+#if defined __ALTIVEC__         // IBM Altivec
 #  include "vec_float_altivec.h"
+#endif
+#if defined __VSX__             // IBM VSX
+#  include "vec_double_vsx.h"
 #endif
 
 #endif // #ifndef VECMATHLIB_H
