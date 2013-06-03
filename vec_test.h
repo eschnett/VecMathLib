@@ -395,6 +395,8 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
 #  elif defined _ARCH_PPC64 // __ALTIVEC__
       for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
+#  else
+#    error "Floating point barrier undefined on this architecture"
 #  endif
 #else
       for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
