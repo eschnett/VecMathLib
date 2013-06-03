@@ -16,8 +16,10 @@ int main(int argc, char** argv)
   typedef realvec<double,2> realvec_t;
 #elif defined VECMATHLIB_HAVE_VEC_FLOAT_4
   typedef realvec<float,4> realvec_t;
-#else
+#elif defined VECMATHLIB_HAVE_VEC_FLOAT_1
   typedef realvec<float,1> realvec_t;
+#else
+  typedef realpseudovec<float,1> realvec_t;
 #endif
 
   typedef realvec_t::boolvec_t boolvec_t;
