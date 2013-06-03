@@ -93,7 +93,7 @@ namespace vecmathlib {
     boolvec operator&&(boolvec x) const { return vec_and(v, x.v); }
     boolvec operator||(boolvec x) const { return vec_or(v, x.v); }
     // boolvec operator==(boolvec x) const { return !(*this!=x); }
-    boolvec operator==(boolvec x) const { return as_int() == x.as_int(); }
+    boolvec operator==(boolvec x) const; // defined after intvec
     boolvec operator!=(boolvec x) const { return vec_xor(v, x.v); }
     
     bool all() const { return vec_all_ne(v, BV(false).v); }
@@ -478,6 +478,12 @@ namespace vecmathlib {
   auto boolvec<double,2>::convert_int() const -> intvec_t
   {
     return -(__vector long long)v;
+  }
+  
+  inline
+  auto boolvec<double,2>::operator==(boolvec x) const -> boolvec_t
+  {
+    return as_int() == x.as_int();
   }
   
   inline
