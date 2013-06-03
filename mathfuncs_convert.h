@@ -164,6 +164,7 @@ namespace vecmathlib {
     realvec_t mask = ldexp(RV(2.0), nbits) - RV(1.0);
     intvec_t imask = IV(FP::signbit_mask | FP::exponent_mask) | as_int(mask);
     realvec_t offset = RV(1.0) - ldexp(RV(1.0), nbits - IV(FP::mantissa_bits));
+    offset.barrier();
     realvec_t y = as_float(as_int(x + offset) & imask);
     realvec_t r =
       copysign(ifthen(iszero, RV(0.0),
