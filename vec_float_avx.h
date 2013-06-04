@@ -313,6 +313,22 @@ namespace vecmathlib {
     {
       return (*this ^ x).convert_bool();
     }
+    boolvec_t operator<(intvec const& x) const
+    {
+      return (*this - x).as_bool();
+    }
+    boolvec_t operator<=(intvec const& x) const
+    {
+      return ! (*this > x);
+    }
+    boolvec_t operator>(intvec const& x) const
+    {
+      return x < *this;
+    }
+    boolvec_t operator>=(intvec const& x) const
+    {
+      return ! (*this < x);
+    }
   };
   
   
