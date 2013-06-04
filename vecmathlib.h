@@ -72,4 +72,8 @@ namespace std { class type_info; }
 #  include "vec_double_vsx.h"
 #endif
 
+#if defined __bgq__ && defined __VECTOR4DOUBLE__  // Blue Gene/Q QPX
+#  include "vec_double_qpx.h"
+#endif
+
 #endif // #ifndef VECMATHLIB_H
