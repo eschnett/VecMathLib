@@ -225,7 +225,7 @@ namespace vecmathlib {
       __vector unsigned int b = (__vector unsigned int)x.v;
       __vector unsigned int s = vec_add(a, b);
       __vector unsigned int c = vec_addc(a, b);
-      __vector unsigned int z = vec_xor(a, a);
+      __vector unsigned int z = vec_xor(z, z);
       c = vec_perm(c, z, perm_int_swap());
       s = vec_add(s, c);
       return (__vector long long)s;
@@ -238,7 +238,7 @@ namespace vecmathlib {
       __vector unsigned int d = vec_sub(a, b);
       __vector unsigned int c = vec_subc(a, b);
       c = vec_sub(vec_splats(1U), c);
-      __vector unsigned int z = vec_xor(a, a);
+      __vector unsigned int z = vec_xor(z, z);
       c = vec_perm(c, z, perm_int_swap());
       d = vec_sub(d, c);
       return (__vector long long)d;
