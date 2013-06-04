@@ -211,6 +211,10 @@ namespace vecmathlib {
     
     boolvec_t operator==(intvec const& x) const { return vec_cmpeq(v, x.v); }
     boolvec_t operator!=(intvec const& x) const { return !(*this == x); }
+    boolvec_t operator<(intvec const& x) const { return vec_cmplt(v, x.v); }
+    boolvec_t operator<=(intvec const& x) const { return !(*this > x); }
+    boolvec_t operator>(intvec const& x) const { return vec_cmpgt(v, x.v); }
+    boolvec_t operator>=(intvec const& x) const { return !(*this < x); }
   };
   
   

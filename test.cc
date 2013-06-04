@@ -287,6 +287,7 @@ struct vecmathlib_test {
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
@@ -312,6 +313,7 @@ struct vecmathlib_test {
            << "Error in " << func << "(" << x << "," << y << "):\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
@@ -335,6 +337,7 @@ struct vecmathlib_test {
            << "Error in " << func << "(" << x << "):\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
