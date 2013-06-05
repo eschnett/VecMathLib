@@ -141,11 +141,13 @@ struct vecmathlib_test {
     }
 #warning "undo this"
     const boolvec_t isbad = x != xwant;
+    const boolvec_t isgood = x == xwant;
     boolvec_t isbad2;
     for (int i=0; i<realvec_t::size; ++i) {
       isbad2.set_elt(i, x[i] != xwant[i]);
     }
-    cout << "isbad=" << isbad << " [" << hex(isbad) << "]\n"
+    cout << "isgood=" << isgood << " [" << hex(isgood) << "]\n"
+         << "isbad=" << isbad << " [" << hex(isbad) << "]\n"
          << "isbad2=" << isbad2 << " [" << hex(isbad2) << "]\n";
     if (any(isbad2)) {
       ++ num_errors;
