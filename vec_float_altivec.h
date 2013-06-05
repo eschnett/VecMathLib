@@ -70,7 +70,7 @@ namespace vecmathlib {
     boolvec(bool a): v(vec_splats(from_bool(a))) {}
     boolvec(bool const* as)
     {
-      for (int d=0; d<size; ++d) set_elt(d, from_bool(as[d]));
+      for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
     
     operator bvector_t() const { return v; }
