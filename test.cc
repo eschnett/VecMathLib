@@ -128,46 +128,51 @@ struct vecmathlib_test {
   
   
   
-  static void check_mem(char const* const func,
-                        real_t const* p,
-                        realvec_t x,
-                        realvec_t xorig,
-                        int mval)
+  // Check load memory access
+  static void check_mem(const char* const func,
+                        const realvec_t x,
+                        const real_t* const p,
+                        const realvec_t const xold,
+                        const int mval)
   {
-    realvec_t y;
+    realvec_t xwant;
     for (int i=0; i<realvec_t::size; ++i) {
-      y.set_elt(i, mval & (1<<i) ? p[i] : xorig[i]);
+      xwant.set_elt(i, mval & (1<<i) ? p[i] : xold[i]);
     }
-    boolvec_t isbad = x != y;
+    const boolvec_t isbad = x != xwant;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
            << "   found=" << x << " [" << hex(x) << "]\n"
-           << "   expected=" << y << " [" << hex(y) << "]\n"
+           << "   expected=" << xwant << " [" << hex(xwant) << "]\n"
            << "   isbad=" << isbad << "\n"
            << flush;
     }
   }
   
-  static void check_mem(char const* const func,
-                        real_t const* p,
-                        realvec_t x,
-                        real_t const* porig,
-                        int mval)
+  // Check store memory access
+  static void check_mem(const char* const func,
+                        const real_t* const p,
+                        const realvec_t x,
+                        const real_t* const pold,
+                        const int mval)
   {
-    realvec_t pvec, y;
+    realvec_t pv, pvwant;
     for (int i=0; i<realvec_t::size; ++i) {
-      pvec.set_elt(i, p[i]);
-      y.set_elt(i, mval & (1<<i) ? x[i] : porig[i]);
+      pv.set_elt(i, p[i]);
+#warning "undo this"
+      // pvwant.set_elt(i, mval & (1<<i) ? x[i] : pold[i]);
+      // pvwant.set_elt(i, x[i]);
     }
-    boolvec_t isbad = pvec != y;
+    pvwant = x;
+    const boolvec_t isbad = pv != pvwant;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
-           << "   found=" << pvec << " [" << hex(pvec) << "]\n"
-           << "   expected=" << y << " [" << hex(y) << "]\n"
+           << "   found=" << pv << " [" << hex(pv) << "]\n"
+           << "   expected=" << pvwant << " [" << hex(pvwant) << "]\n"
            << "   isbad=" << isbad << "\n"
            << flush;
     }
@@ -379,21 +384,21 @@ struct vecmathlib_test {
     {
       real_t const *p = &x[sz];
       realvec_t y = realvec_t::loada(p);
-      check_mem("loada", p, y, z, ~0);
+      check_mem("loada", y, p, z, ~0);
     }
     
     // loadu
     for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
       real_t const *p = &x[sz];
       realvec_t y = realvec_t::loadu(p+i);
-      check_mem(add_suffix("loadu", i).c_str(), p+i, y, z, ~0);
+      check_mem(add_suffix("loadu", i).c_str(), y, p+i, z, ~0);
     }
     
     // loadu(ioff)
     for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
       real_t const *p = &x[sz];
       realvec_t y = realvec_t::loadu(p, ioff);
-      check_mem(add_suffix("loadu(ioff)", ioff).c_str(), p+ioff, y, z, ~0);
+      check_mem(add_suffix("loadu(ioff)", ioff).c_str(), y, p+ioff, z, ~0);
     }
     
     // storea
@@ -440,21 +445,21 @@ struct vecmathlib_test {
       {
         real_t const *p = &x[sz];
         realvec_t y = loada(p, z, mask);
-        check_mem("loada(mask)", p, y, z, mval);
+        check_mem("loada(mask)", y, p, z, mval);
       }
       
       // loadu(mask)
       for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
         real_t const *p = &x[sz];
         realvec_t y = loadu(p+i, z, mask);
-        check_mem("loadu(mask)", p+i, y, z, mval);
+        check_mem("loadu(mask)", y, p+i, z, mval);
       }
       
       // loadu(ioff, mask)
       for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
         real_t const *p = &x[sz];
         realvec_t y = loadu(p, ioff, z, mask);
-        check_mem("loadu(ioff,mask)", p+ioff, y, z, mval);
+        check_mem("loadu(ioff,mask)", y, p+ioff, z, mval);
       }
       
       // storea
