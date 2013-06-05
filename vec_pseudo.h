@@ -261,7 +261,7 @@ namespace vecmathlib {
     intpseudovec operator~() const
     {
       intpseudovec res;
-      for (int d=0; d<size; ++d) res.v[d] = ! v[d];
+      for (int d=0; d<size; ++d) res.v[d] = ~ v[d];
       return res;
     }
     
