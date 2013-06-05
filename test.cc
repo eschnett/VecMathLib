@@ -132,14 +132,19 @@ struct vecmathlib_test {
   static void check_mem(const char* const func,
                         const realvec_t x,
                         const real_t* const p,
-                        const realvec_t const xold,
+                        const realvec_t xold,
                         const int mval)
   {
     realvec_t xwant;
     for (int i=0; i<realvec_t::size; ++i) {
       xwant.set_elt(i, mval & (1<<i) ? p[i] : xold[i]);
     }
-    const boolvec_t isbad = x != xwant;
+#warning "undo this"
+    // const boolvec_t isbad = x != xwant;
+    boolvec_t isbad;
+    for (int i=0; i<realvec_t::size; ++i) {
+      isbad.set_elt(i, x[i] != xwant[i]);
+    }
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
