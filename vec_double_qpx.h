@@ -406,6 +406,7 @@ namespace vecmathlib {
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
       if (ioff % realvec::size == 0) return loada(p+ioff);
+      // TODO: use load instruction with fixed offset
       return loadu(p+ioff);
     }
     realvec_t loada(real_t const* p, mask_t const& m) const
@@ -429,6 +430,7 @@ namespace vecmathlib {
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
       if (ioff % realvec::size == 0) return loada(p+ioff, m);
+      // TODO: use load instruction with fixed offset
       return loadu(p+ioff, m);
     }
     
