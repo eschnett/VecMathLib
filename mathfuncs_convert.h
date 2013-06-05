@@ -53,7 +53,8 @@ namespace vecmathlib {
   
   
   template<typename realvec_t>
-  auto mathfuncs<realvec_t>::vml_convert_int(realvec_t x) -> intvec_t
+  // auto mathfuncs<realvec_t>::vml_convert_int(realvec_t x) -> intvec_t
+  typename realvec_t::intvec_t mathfuncs<realvec_t>::vml_convert_int(realvec_t x)
   {
     // Handle overflow
     // int_t min_int = FP::signbit_mask;

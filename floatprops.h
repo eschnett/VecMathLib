@@ -6,11 +6,13 @@
 #include "floattypes.h"
 
 #include <cmath>
-#include <cstdint>
+//#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <limits>
 #include <sstream>
+
+#include <stdint.h>
 
 
 
@@ -36,8 +38,8 @@ namespace vecmathlib {
   template<>
   struct floatprops<fp8> {
     typedef fp8 real_t;
-    typedef int8_t int_t;
-    typedef uint8_t uint_t;
+    typedef std::int8_t int_t;
+    typedef std::uint8_t uint_t;
     
     static char const* name() { return "fp8"; }
     
@@ -96,8 +98,8 @@ namespace vecmathlib {
   template<>
   struct floatprops<fp16> {
     typedef fp16 real_t;
-    typedef int16_t int_t;
-    typedef uint16_t uint_t;
+    typedef std::int16_t int_t;
+    typedef std::uint16_t uint_t;
     
     static char const* name() { return "fp16"; }
     
@@ -156,8 +158,8 @@ namespace vecmathlib {
   template<>
   struct floatprops<float>: std::numeric_limits<float> {
     typedef float real_t;
-    typedef int32_t int_t;
-    typedef uint32_t uint_t;
+    typedef std::int32_t int_t;
+    typedef std::uint32_t uint_t;
     
     static char const* name() { return "float"; }
     
@@ -211,8 +213,8 @@ namespace vecmathlib {
   template<>
   struct floatprops<double>: std::numeric_limits<double> {
     typedef double real_t;
-    typedef int64_t int_t;
-    typedef uint64_t uint_t;
+    typedef std::int64_t int_t;
+    typedef std::uint64_t uint_t;
     
     static char const* name() { return "double"; }
     
