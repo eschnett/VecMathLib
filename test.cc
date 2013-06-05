@@ -1014,15 +1014,16 @@ struct vecmathlib_test {
     // Test "basic" functions first
     test_fabs();
     test_convert();
-    test_rcp();
-    test_sqrt();
-    test_exp();
-    test_log();
-    test_pow();
-    test_sin();
-    test_sinh();
-    test_asin();
-    test_asinh();
+#warning "TODO"
+    // test_rcp();
+    // test_sqrt();
+    // test_exp();
+    // test_log();
+    // test_pow();
+    // test_sin();
+    // test_sinh();
+    // test_asin();
+    // test_asinh();
   }
 };
 
