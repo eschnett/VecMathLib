@@ -190,6 +190,77 @@ struct vecmathlib_test {
     }
   }
   
+  static void check(char const* const func,
+                    bool rstd, bool rvml)
+  {
+    const bool dr = rstd ^ rvml;
+    const bool isbad = dr;
+    if (isbad) {
+      ++ num_errors;
+      cout << "Error in " << func << "():\n"
+           << "   fstd()=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml()=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   isbad()=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  static void check(char const* const func,
+                    bool rstd, bool rvml, bool x)
+  {
+    const bool dr = rstd ^ rvml;
+    const bool isbad = dr;
+    if (isbad) {
+      ++ num_errors;
+      cout << "Error in " << func << "(" << x << " " << "[" << hex(x) << "]):\n"
+           << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   isbad(x)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  static void check(char const* const func,
+                    boolvec_t rstd, boolvec_t rvml, boolvec_t x)
+  {
+    boolvec_t dr;
+    bool isbad = false;
+    for (int i=0; i<realvec_t::size; ++i) {
+      dr.set_elt(i, rstd[i] ^ rvml[i]);
+      isbad |= dr[i];
+    }
+    if (isbad) {
+      ++ num_errors;
+      cout << "Error in " << func << "(" << x << " " << "[" << hex(x) << "]):\n"
+           << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   error(x)=" << dr << " [" << hex(rvml) << "]\n"
+           << "   isbad(x)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  static void check(char const* const func,
+                    boolvec_t rstd, boolvec_t rvml, boolvec_t x, boolvec_t y)
+  {
+    boolvec_t dr;
+    bool isbad = false;
+    for (int i=0; i<realvec_t::size; ++i) {
+      dr.set_elt(i, rstd[i] ^ rvml[i]);
+      isbad |= dr[i];
+    }
+    if (isbad) {
+      ++ num_errors;
+      cout << "Error in " << func << "(" << x << "," << y << " "
+           << "[" << hex(x) << "," << hex(y) << "]):\n"
+           << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   error(x,y)=" << dr << " [" << hex(rvml) << "]\n"
+           << "   isbad(x,y)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
   template<typename A>
   static void check(char const* const func,
                     real_t fstd(typename A::scalar_t), realvec_t fvml(A),
@@ -370,14 +441,12 @@ struct vecmathlib_test {
     assert(intptr_t(p) % alignment == 0);
     return p;
   }
-  
   static string add_suffix(const char* str, int i)
   {
     ostringstream buf;
     buf << str << "." << i;
     return buf.str();
   }
-  
   static void test_mem()
   {
     cout << "   testing loada loadu storea storeu (errors may lead to segfaults)...\n" << flush;
@@ -499,6 +568,122 @@ struct vecmathlib_test {
       }
       
     } // for mval
+  }
+  
+  static void test_bool()
+  {
+    cout << "   testing boolean operations...\n" << flush;
+    
+    const boolvec_t bf = boolvec_t(false);
+    const boolvec_t bt = boolvec_t(true);
+    for (int i=0; i<realvec_t::size; ++i) {
+      check("false", false, bf[i]);
+      check("true", true, bt[i]);
+    }
+    check("all", false, all(bf), false);
+    check("all", true, all(bt), true);
+    check("any", false, any(bf), false);
+    check("any", true, any(bt), true);
+    
+    boolvec_t b0 = bt;
+    boolvec_t b1 = bf;
+    for (int n=0; n<realvec_t::size; ++n) {
+      b0.set_elt(n, false);
+      b1.set_elt(n, true);
+      for (int i=0; i<realvec_t::size; ++i) {
+        check("set_elt", i<=n ? false : true, b0[i], false);
+        check("set_elt", i<=n ? true : false, b1[i], true);
+      }
+    }
+    
+    for (int n=0; n<(1<<realvec_t::size); ++n) {
+      boolvec_t x;
+      for (int i=0; i<realvec_t::size; ++i) {
+        x.set_elt(i, n & (1<<i));
+      }
+      
+      {
+        boolvec_t rstd;
+        for (int i=0; i<realvec_t::size; ++i) {
+          rstd.set_elt(i, !x[i]);
+        }
+        boolvec_t rvml = !x;
+        check("!", rstd, rvml, x);
+      }
+      {
+        bool rstd = true;
+        for (int i=0; i<realvec_t::size; ++i) {
+          rstd &= x[i];
+        }
+        bool rvml = all(x);
+        check("all", rstd, rvml, x);
+      }
+      {
+        bool rstd = false;
+        for (int i=0; i<realvec_t::size; ++i) {
+          rstd |= x[i];
+        }
+        bool rvml = any(x);
+        check("any", rstd, rvml, x);
+      }
+    }
+    
+    for (int n=0; n<(1<<realvec_t::size); ++n) {
+      for (int m=0; m<(1<<realvec_t::size); ++m) {
+        boolvec_t x, y;
+        for (int i=0; i<realvec_t::size; ++i) {
+          x.set_elt(i, n & (1<<i));
+          y.set_elt(i, m & (1<<i));
+        }
+        
+        {
+          boolvec_t rstd;
+          for (int i=0; i<realvec_t::size; ++i) {
+            rstd.set_elt(i, x[i] && y[i]);
+          }
+          boolvec_t rvml = x && y;
+          check("&&", rstd, rvml, x, y);
+        }
+        {
+          boolvec_t rstd;
+          for (int i=0; i<realvec_t::size; ++i) {
+            rstd.set_elt(i, x[i] || y[i]);
+          }
+          boolvec_t rvml = x || y;
+          check("||", rstd, rvml, x, y);
+        }
+        {
+          boolvec_t rstd;
+          for (int i=0; i<realvec_t::size; ++i) {
+            rstd.set_elt(i, x[i] == y[i]);
+          }
+          boolvec_t rvml = x == y;
+          check("==", rstd, rvml, x, y);
+        }
+        {
+          boolvec_t rstd;
+          for (int i=0; i<realvec_t::size; ++i) {
+            rstd.set_elt(i, x[i] != y[i]);
+          }
+          boolvec_t rvml = x != y;
+          check("!=", rstd, rvml, x, y);
+        }
+      }
+    }
+    
+    // assert(all(boolvec_t(0) == bf));
+    // assert(all(boolvec_t(1) == bt));
+    // assert(all(boolvec_t(2) == bt));
+    // assert(all(boolvec_t(3) == bt));
+    // assert(all(boolvec_t(-1) == bt));
+    // assert(all(boolvec_t(-2) == bt));
+    // assert(all(boolvec_t(-3) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::min()) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::min()+1) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::min()+2) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::max()) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::max()-1) == bt));
+    // assert(all(boolvec_t(std::numeric_limits<int_t>::max()-2) == bt));
   }
   
   // Change signature: "int" -> "int_t"
@@ -841,12 +1026,15 @@ struct vecmathlib_test {
     cout << "\n"
          << "Testing math functions for type " << realvec_t::name() << ":\n";
     
+    test_bool();
+    // test_int();
+    // test_float();
+    
     test_mem();
     
+    // Test "basic" functions first
     test_fabs();
     test_convert();
-    
-    // Test "basic" functions first
     test_rcp();
     test_sqrt();
     test_exp();
