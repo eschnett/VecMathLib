@@ -140,12 +140,14 @@ struct vecmathlib_test {
       xwant.set_elt(i, mval & (1<<i) ? p[i] : xold[i]);
     }
 #warning "undo this"
-    // const boolvec_t isbad = x != xwant;
-    boolvec_t isbad;
+    const boolvec_t isbad = x != xwant;
+    boolvec_t isbad2;
     for (int i=0; i<realvec_t::size; ++i) {
-      isbad.set_elt(i, x[i] != xwant[i]);
+      isbad2.set_elt(i, x[i] != xwant[i]);
     }
-    if (any(isbad)) {
+    cout << "isbad=" << isbad << " [" << hex(isbad) << "]\n"
+         << "isbad2=" << isbad2 << " [" << hex(isbad2) << "]\n";
+    if (any(isbad2)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
