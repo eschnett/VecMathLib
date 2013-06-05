@@ -139,23 +139,8 @@ struct vecmathlib_test {
     for (int i=0; i<realvec_t::size; ++i) {
       xwant.set_elt(i, mval & (1<<i) ? p[i] : xold[i]);
     }
-#warning "undo this"
     const boolvec_t isbad = x != xwant;
-    const boolvec_t isgood = x == xwant;
-    boolvec_t isbad2;
-    for (int i=0; i<realvec_t::size; ++i) {
-      isbad2.set_elt(i, x[i] != xwant[i]);
-    }
-    const boolvec_t isfalse(false);
-    const boolvec_t istrue(true);
-    cout << "isfalse=" << isfalse << " [" << hex(isfalse) << "]\n"
-         << "istrue=" << istrue << " [" << hex(istrue) << "]\n"
-         << "x=" << x << " [" << hex(x) << "]\n"
-         << "xwant=" << xwant << " [" << hex(xwant) << "]\n"
-         << "isgood=" << isgood << " [" << hex(isgood) << "]\n"
-         << "isbad=" << isbad << " [" << hex(isbad) << "]\n"
-         << "isbad2=" << isbad2 << " [" << hex(isbad2) << "]\n";
-    if (any(isbad2)) {
+    if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
@@ -487,18 +472,12 @@ struct vecmathlib_test {
       memcpy(xnew, x, nbytes);
       real_t *p = &xnew[sz];
       storea(z, p);
-#warning "TODO"
-      cout << "comparing x";
-      for (int i=0; i<n*sz; ++i) {
-        cout << " " << hex(x[i]);
-      }
-      cout << "\n";
-      cout << "       xnew";
-      for (int i=0; i<n*sz; ++i) {
-        cout << " " << hex(xnew[i]);
-      }
-      cout << "\n";
       check_mem("storea", p, z, &x[sz], ~0);
+#warning "TODO"
+      cout << "comparing: i x xnew:\n";
+      for (int i=0; i<n*sz; ++i) {
+        cout << "  " << i << " " << hex(x[i]) << " " << hex(xnew[i]) << "\n";
+      }
     }
     
     // storeu

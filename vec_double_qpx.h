@@ -8,6 +8,8 @@
 #include "vec_base.h"
 
 #include <cmath>
+#warning "TODO"
+#include <iostream>
 
 // QPX intrinsics
 #ifdef __clang__
@@ -436,6 +438,8 @@ namespace vecmathlib {
     void storea(real_t* p) const
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
+#warning "TODO"
+      std::cout << "yes this is storea\n";
       vec_sta(v, 0, p);
     }
     void storeu(real_t* p) const
