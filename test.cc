@@ -146,7 +146,11 @@ struct vecmathlib_test {
     for (int i=0; i<realvec_t::size; ++i) {
       isbad2.set_elt(i, x[i] != xwant[i]);
     }
-    cout << "x=" << x << " [" << hex(x) << "]\n"
+    const boolvec_t isfalse(false);
+    const boolvec_t istrue(true);
+    cout << "isfalse=" << isfalse << " [" << hex(isfalse) << "]\n"
+         << "istrue=" << istrue << " [" << hex(istrue) << "]\n"
+         << "x=" << x << " [" << hex(x) << "]\n"
          << "xwant=" << xwant << " [" << hex(xwant) << "]\n"
          << "isgood=" << isgood << " [" << hex(isgood) << "]\n"
          << "isbad=" << isbad << " [" << hex(isbad) << "]\n"
