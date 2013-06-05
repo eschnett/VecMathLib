@@ -401,6 +401,17 @@ struct vecmathlib_test {
       memcpy(xnew, x, nbytes);
       real_t *p = &xnew[sz];
       storea(z, p);
+#warning "TODO"
+      cout << "comparing x";
+      for (int i=0; i<n*sz; ++i) {
+        cout << " " << hex(x[i]);
+      }
+      cout << "\n";
+      cout << "       xnew";
+      for (int i=0; i<n*sz; ++i) {
+        cout << " " << hex(xnew[i]);
+      }
+      cout << "\n";
       check_mem("storea", p, z, &x[sz], ~0);
     }
     
