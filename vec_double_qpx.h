@@ -398,8 +398,7 @@ namespace vecmathlib {
     static realvec_t loadu(real_t const* p)
     {
       realvec_t v0 = vec_ld(0, (real_t*)p);
-      // TODO: use 31 instead of 32
-      realvec_t v1 = vec_ld(32, (real_t*)p);
+      realvec_t v1 = vec_ld(31, (real_t*)p);
       return vec_perm(v0.v, v1.v, vec_lvsl(0, (real_t*)p));
     }
     static realvec_t loadu(real_t const* p, std::ptrdiff_t ioff)
