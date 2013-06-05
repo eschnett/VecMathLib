@@ -97,7 +97,7 @@ namespace vecmathlib {
     {
       // return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
       boolvec x = *this;
-      x = x && _mm256_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      x = x && _mm256_shuffle_pd(x.v, x.v, 0x5);
       __m128d y = _mm_and_pd(_mm256_castpd256_pd128(x.v),
                              _mm256_extractf128_pd(x.v, 1));
       return to_bool(_mm_cvtsi128_si64(_mm_castpd_si128(y)));
@@ -106,7 +106,7 @@ namespace vecmathlib {
     {
       // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
       boolvec x = *this;
-      x = x || _mm256_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      x = x || _mm256_shuffle_pd(x.v, x.v, 0x5);
       __m128d y = _mm_or_pd(_mm256_castpd256_pd128(x.v),
                             _mm256_extractf128_pd(x.v, 1));
       return to_bool(_mm_cvtsi128_si64(_mm_castpd_si128(y)));
