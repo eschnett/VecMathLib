@@ -143,8 +143,8 @@ struct vecmathlib_test {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
-           << "   found=" << x << "\n"
-           << "   expected=" << y << "\n"
+           << "   found=" << x << " [" << hex(x) << "]\n"
+           << "   expected=" << y << " [" << hex(y) << "]\n"
            << "   isbad=" << isbad << "\n"
            << flush;
     }
@@ -166,8 +166,8 @@ struct vecmathlib_test {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
            << "Error in " << func << ":\n"
-           << "   found=" << pvec << "\n"
-           << "   expected=" << y << "\n"
+           << "   found=" << pvec << " [" << hex(pvec) << "]\n"
+           << "   expected=" << y << " [" << hex(y) << "]\n"
            << "   isbad=" << isbad << "\n"
            << flush;
     }
