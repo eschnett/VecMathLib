@@ -94,7 +94,7 @@ namespace vecmathlib {
     
     boolvec operator&&(boolvec x) const { return _mm256_and_ps(v, x.v); }
     boolvec operator||(boolvec x) const { return _mm256_or_ps(v, x.v); }
-    boolvec operator==(boolvec x) const { return !(*this==x); }
+    boolvec operator==(boolvec x) const { return !(*this!=x); }
     boolvec operator!=(boolvec x) const { return _mm256_xor_ps(v, x.v); }
     
     bool all() const

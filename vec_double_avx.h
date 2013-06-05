@@ -327,7 +327,12 @@ namespace vecmathlib {
     }
     boolvec_t operator<(intvec const& x) const
     {
-      return (*this - x).as_bool();
+      // return (*this - x).as_bool();
+      boolvec_t r;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, (*this)[i] < x[i]);
+      }
+      return r;
     }
     boolvec_t operator<=(intvec const& x) const
     {

@@ -125,7 +125,7 @@ namespace vecmathlib {
       return _mm256_castps_si256(_mm256_or_ps(_mm256_castsi256_ps(v),
                                               _mm256_castsi256_ps(x.v)));
     }
-    boolvec operator==(boolvec x) const { return !(*this==x); }
+    boolvec operator==(boolvec x) const { return !(*this!=x); }
     boolvec operator!=(boolvec x) const
     {
       return _mm256_castps_si256(_mm256_xor_ps(_mm256_castsi256_ps(v),

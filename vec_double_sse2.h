@@ -99,21 +99,21 @@ namespace vecmathlib {
     
     boolvec operator&&(boolvec x) const { return _mm_and_pd(v, x.v); }
     boolvec operator||(boolvec x) const { return _mm_or_pd(v, x.v); }
-    boolvec operator==(boolvec x) const { return !(*this==x); }
+    boolvec operator==(boolvec x) const { return !(*this!=x); }
     boolvec operator!=(boolvec x) const { return _mm_xor_pd(v, x.v); }
     
     bool all() const
     {
       // return (*this)[0] && (*this)[1];
       boolvec x = *this;
-      x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
       return x[0];
     }
     bool any() const
     {
       // return (*this)[0] || (*this)[1];
       boolvec x = *this;
-      x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
+      x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
       return x[0];
     }
     
@@ -283,7 +283,12 @@ namespace vecmathlib {
     }
     boolvec_t operator<(intvec const& x) const
     {
-      return (*this - x).as_bool();
+      // return (*this - x).as_bool();
+      boolvec_t r;
+      for (int i=0; i<size; ++i) {
+        r.set_elt(i, (*this)[i] < x[i]);
+      }
+      return r;
     }
     boolvec_t operator<=(intvec const& x) const
     {
