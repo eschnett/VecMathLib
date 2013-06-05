@@ -176,11 +176,8 @@ struct vecmathlib_test {
     realvec_t pv, pvwant;
     for (int i=0; i<realvec_t::size; ++i) {
       pv.set_elt(i, p[i]);
-#warning "undo this"
-      // pvwant.set_elt(i, mval & (1<<i) ? x[i] : pold[i]);
-      // pvwant.set_elt(i, x[i]);
+      pvwant.set_elt(i, mval & (1<<i) ? x[i] : pold[i]);
     }
-    pvwant = x;
     const boolvec_t isbad = pv != pvwant;
     if (any(isbad)) {
       ++ num_errors;
