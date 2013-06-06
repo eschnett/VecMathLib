@@ -182,7 +182,7 @@ struct vecmathlib_test {
     const bool isbad = dr;
     if (isbad) {
       ++ num_errors;
-      cout << "Error in " << func << "():\n"
+      cout << "Error in " << func << ":\n"
            << "   fstd()=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml()=" << rvml << " [" << hex(rvml) << "]\n"
            << "   isbad()=" << isbad << "\n"
@@ -198,7 +198,8 @@ struct vecmathlib_test {
     const bool isbad = dr;
     if (isbad) {
       ++ num_errors;
-      cout << "Error in " << func << "(" << x << " " << "[" << hex(x) << "]):\n"
+      cout << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   isbad(x)=" << isbad << "\n"
@@ -219,7 +220,8 @@ struct vecmathlib_test {
     }
     if (isbad) {
       ++ num_errors;
-      cout << "Error in " << func << "(" << x << " " << "[" << hex(x) << "]):\n"
+      cout << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   error(x)=" << dr << " [" << hex(rvml) << "]\n"
@@ -241,8 +243,9 @@ struct vecmathlib_test {
     }
     if (isbad) {
       ++ num_errors;
-      cout << "Error in " << func << "(" << x << "," << y << " "
-           << "[" << hex(x) << "," << hex(y) << "]):\n"
+      cout << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   error(x,y)=" << dr << " [" << hex(rvml) << "]\n"
@@ -267,7 +270,8 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
 	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
@@ -293,7 +297,9 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "," << y << "):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
 	   << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
@@ -318,7 +324,8 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
 	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
@@ -345,7 +352,9 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "," << y << "):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
 	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
