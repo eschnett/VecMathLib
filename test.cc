@@ -43,28 +43,28 @@ struct vecmathlib_test {
   
   
   // Test each function with this many random values
-  static int const imax = 10000;
+  static const int imax = 10000;
   // Require (arbitrarily) that 3/4 of the digits are correct
   static real_t accuracy() { return pow(realvec_t::epsilon(), R(0.75)); }
   
   
   
-  static realvec_t random(real_t const xmin, real_t const xmax)
+  static realvec_t random(const real_t xmin, const real_t xmax)
   {
     realvec_t x;
     for (int i=0; i<realvec_t::size; ++i) {
-      real_t r =
+      const real_t r =
         (xmax - xmin) *FP::convert_float(rand()) / FP::convert_float(RAND_MAX);
       x.set_elt(i, xmin + r);
     }
     return x;
   }
   
-  static intvec_t random(int_t const nmin, int_t const nmax)
+  static intvec_t random(const int_t nmin, const int_t nmax)
   {
     intvec_t n;
     for (int i=0; i<intvec_t::size; ++i) {
-      real_t r =
+      const real_t r =
         R(nmax - nmin + 1) *
         R(rand()) / (R(RAND_MAX) + R(1.0));
       n.set_elt(i, nmin + FP::convert_int(floor(r)));
@@ -89,7 +89,7 @@ struct vecmathlib_test {
     memcpy(cs, &x, sizeof x);
     ostringstream buf;
     buf << "0x";
-    const char *const hexdigits = "0123456789abcdef";
+    const char* const hexdigits = "0123456789abcdef";
     const int n0 = is_big_endian() ? 0 : sizeof x - 1;
     const int dn = is_big_endian() ? +1 : -1;
     const int n1 = n0 + sizeof x * dn;
@@ -175,8 +175,8 @@ struct vecmathlib_test {
     }
   }
   
-  static void check_bool(char const* const func,
-                         bool rstd, bool rvml)
+  static void check_bool(const char* const func,
+                         const bool rstd, const bool rvml)
   {
     const bool dr = rstd ^ rvml;
     const bool isbad = dr;
@@ -191,8 +191,8 @@ struct vecmathlib_test {
   }
   
   template<typename A>
-  static void check_bool(char const* const func,
-                         bool rstd, bool rvml, A x)
+  static void check_bool(const char* const func,
+                         const bool rstd, const bool rvml, const A x)
   {
     const bool dr = rstd ^ rvml;
     const bool isbad = dr;
@@ -207,8 +207,9 @@ struct vecmathlib_test {
   }
   
   template<typename A>
-  static void check_bool(char const* const func,
-                         boolvec_t rstd, boolvec_t rvml, A x)
+  static void check_bool(const char* const func,
+                         const boolvec_t rstd, const boolvec_t rvml,
+                         const A x)
   {
     boolvec_t dr;
     bool isbad = false;
@@ -228,8 +229,9 @@ struct vecmathlib_test {
   }
   
   template<typename A, typename B>
-  static void check_bool(char const* const func,
-                         boolvec_t rstd, boolvec_t rvml, A x, B y)
+  static void check_bool(const char* const func,
+                         const boolvec_t rstd, const boolvec_t rvml,
+                         const A x, const B y)
   {
     boolvec_t dr;
     bool isbad = false;
@@ -250,17 +252,18 @@ struct vecmathlib_test {
   }
   
   template<typename A>
-  static void check_bool(char const* const func,
-                         bool fstd(typename A::scalar_t), boolvec_t fvml(A),
-                         A const x)
+  static void check_bool(const char* const func,
+                         bool fstd(typename A::scalar_t x),
+                         boolvec_t fvml(A x),
+                         const A x)
   {
     boolvec_t rstd;
     for (int i=0; i<boolvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i]));
     }
-    boolvec_t const rvml = fvml(x);
-    boolvec_t const dr = rstd != rvml;
-    boolvec_t const isbad = supported(x) && supported(rstd) && dr;
+    const boolvec_t rvml = fvml(x);
+    const boolvec_t dr = rstd != rvml;
+    const boolvec_t isbad = supported(x) && supported(rstd) && dr;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -274,18 +277,19 @@ struct vecmathlib_test {
   }
   
   template<typename A, typename B>
-  static void check_bool(char const* const func,
-                         bool fstd(typename A::scalar_t, typename A::scalar_t),
-                         boolvec_t fvml(A, B),
-                         A const x, B const y)
+  static void check_bool(const char* const func,
+                         bool fstd(typename A::scalar_t x,
+                                   typename B::scalar_t y),
+                         boolvec_t fvml(A x, B y),
+                         const A x, const B y)
   {
     boolvec_t rstd;
     for (int i=0; i<boolvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i], y[i]));
     }
-    boolvec_t const rvml = fvml(x, y);
-    boolvec_t const dr = rstd != rvml;
-    boolvec_t const isbad = supported(x) && supported(rstd) && dr;
+    const boolvec_t rvml = fvml(x, y);
+    const boolvec_t dr = rstd != rvml;
+    const boolvec_t isbad = supported(x) && supported(rstd) && dr;
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -299,18 +303,18 @@ struct vecmathlib_test {
   }
   
   template<typename A>
-  static void check_int(char const* const func,
-                        int_t fstd(typename A::scalar_t), intvec_t fvml(A),
-                        A const x)
+  static void check_int(const char* const func,
+                        int_t fstd(typename A::scalar_t x),
+                        intvec_t fvml(A x),
+                        const A x)
   {
     intvec_t rstd;
     for (int i=0; i<intvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i]));
     }
-    intvec_t const rvml = fvml(x);
-    intvec_t const dr = rstd - rvml;
-    boolvec_t const isbad =
-      supported(x) && supported(rstd) && convert_bool(dr);
+    const intvec_t rvml = fvml(x);
+    const intvec_t dr = rstd - rvml;
+    const boolvec_t isbad = supported(x) && supported(rstd) && convert_bool(dr);
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
@@ -324,18 +328,19 @@ struct vecmathlib_test {
   }
   
   template<typename A, typename B>
-  static void check_int(char const* const func,
-                        int_t fstd(typename A::scalar_t, typename B::scalar_t),
-                        intvec_t fvml(A, B),
-                        A const x, B const y)
+  static void check_int(const char* const func,
+                        int_t fstd(typename A::scalar_t x,
+                                   typename B::scalar_t y),
+                        intvec_t fvml(A x, B y),
+                        const A x, const B y)
   {
     intvec_t rstd;
     for (int i=0; i<intvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i], y[i]));
     }
-    intvec_t const rvml = fvml(x, y);
-    intvec_t const dr = rstd - rvml;
-    boolvec_t const isbad =
+    const intvec_t rvml = fvml(x, y);
+    const intvec_t dr = rstd - rvml;
+    const boolvec_t isbad =
       supported(x) && supported(y) && supported(rstd) && convert_bool(dr);
     if (any(isbad)) {
       ++ num_errors;
@@ -350,19 +355,20 @@ struct vecmathlib_test {
   }
   
   template<typename A>
-  static void check_real(char const* const func,
-                         real_t fstd(typename A::scalar_t), realvec_t fvml(A),
-                         A const x,
-                         real_t const accuracy)
+  static void check_real(const char* const func,
+                         real_t fstd(typename A::scalar_t x),
+                         realvec_t fvml(A x),
+                         const A x,
+                         const real_t accuracy)
   {
     realvec_t rstd;
     for (int i=0; i<realvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i]));
     }
-    realvec_t const rvml = fvml(x);
-    realvec_t const dr = rstd - rvml;
-    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad =
+    const realvec_t rvml = fvml(x);
+    const realvec_t dr = rstd - rvml;
+    const realvec_t scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    const boolvec_t isbad =
       supported(x) && supported(rstd) &&
       fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
@@ -381,21 +387,21 @@ struct vecmathlib_test {
   }
   
   template<typename A, typename B>
-  static void check_real(char const* const func,
-                         real_t fstd(typename A::scalar_t,
-                                     typename B::scalar_t),
-                         realvec_t fvml(A, B),
-                         A const x, B const y,
-                         real_t const accuracy)
+  static void check_real(const char* const func,
+                         real_t fstd(typename A::scalar_t x,
+                                     typename B::scalar_t y),
+                         realvec_t fvml(A x, B y),
+                         const A x, const B y,
+                         const real_t accuracy)
   {
     realvec_t rstd;
     for (int i=0; i<realvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i], y[i]));
     }
-    realvec_t const rvml = fvml(x, y);
-    realvec_t const dr = rstd - rvml;
-    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad =
+    const realvec_t rvml = fvml(x, y);
+    const realvec_t dr = rstd - rvml;
+    const realvec_t scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    const boolvec_t isbad =
       supported(x) && supported(y) && supported(rstd) &&
       fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
@@ -414,21 +420,22 @@ struct vecmathlib_test {
   }
   
   template<typename A, typename B, typename C>
-  static void check_real(char const* const func,
-                         real_t fstd(typename A::scalar_t, typename B::scalar_t,
-                                     typename C::scalar_t),
-                         realvec_t fvml(A, B, C),
-                         A const x, B const y, C const z,
-                         real_t const accuracy)
+  static void check_real(const char* const func,
+                         real_t fstd(typename A::scalar_t x,
+                                     typename B::scalar_t y,
+                                     typename C::scalar_t z),
+                         realvec_t fvml(A x, B y, C z),
+                         const A x, const B y, C const z,
+                         const real_t accuracy)
   {
     realvec_t rstd;
     for (int i=0; i<realvec_t::size; ++i) {
       rstd.set_elt(i, fstd(x[i], y[i], z[i]));
     }
-    realvec_t const rvml = fvml(x, y, z);
-    realvec_t const dr = rstd - rvml;
-    realvec_t const scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
-    boolvec_t const isbad =
+    const realvec_t rvml = fvml(x, y, z);
+    const realvec_t dr = rstd - rvml;
+    const realvec_t scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    const boolvec_t isbad =
       supported(x) && supported(y) && supported(z) && supported(rstd) &&
       fabs(dr) > realvec_t(accuracy) * scale;
     if (any(isbad)) {
@@ -464,34 +471,34 @@ struct vecmathlib_test {
   static void test_mem()
   {
     cout << "   testing loada loadu storea storeu (errors may lead to segfaults)...\n" << flush;
-    int const n = 4;
-    int const sz = realvec_t::size;
-    int const nbytes = n*sz*sizeof(real_t);
-    real_t *const x = align_mem(new real_t[(n+1)*sz]);
-    real_t *const xnew = align_mem(new real_t[(n+1)*sz]);
+    const int n = 4;
+    const int sz = realvec_t::size;
+    const int nbytes = n*sz*sizeof(real_t);
+    real_t* const x = align_mem(new real_t[(n+1)*sz]);
+    real_t* const xnew = align_mem(new real_t[(n+1)*sz]);
     for (int i=0; i<n; ++i) {
       realvec_t xv = random(R(-10.0), R(+10.0));
       memcpy(&x[i*sz], &xv, sizeof xv);
     }
-    realvec_t const z = random(R(-10.0), R(+10.0));
+    const realvec_t z = random(R(-10.0), R(+10.0));
     
     // loada
     {
-      real_t const *p = &x[sz];
+      const real_t *p = &x[sz];
       realvec_t y = realvec_t::loada(p);
       check_mem("loada", y, p, z, ~0);
     }
     
     // loadu
     for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
-      real_t const *p = &x[sz];
+      const real_t *p = &x[sz];
       realvec_t y = realvec_t::loadu(p+i);
       check_mem(add_suffix("loadu", i).c_str(), y, p+i, z, ~0);
     }
     
     // loadu(ioff)
     for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
-      real_t const *p = &x[sz];
+      const real_t *p = &x[sz];
       realvec_t y = realvec_t::loadu(p, ioff);
       check_mem(add_suffix("loadu(ioff)", ioff).c_str(), y, p+ioff, z, ~0);
     }
@@ -502,11 +509,6 @@ struct vecmathlib_test {
       real_t *p = &xnew[sz];
       storea(z, p);
       check_mem("storea", p, z, &x[sz], ~0);
-#warning "TODO"
-      cout << "comparing: i x xnew:\n";
-      for (int i=0; i<n*sz; ++i) {
-        cout << "  " << i << " " << hex(x[i]) << " " << hex(xnew[i]) << "\n";
-      }
     }
     
     // storeu
@@ -522,7 +524,8 @@ struct vecmathlib_test {
       memcpy(xnew, x, nbytes);
       real_t *p = &xnew[sz];
       storeu(z, p, ioff);
-      check_mem(add_suffix("storeu(ioff)", ioff).c_str(), p+ioff, z, &x[sz+ioff], ~0);
+      check_mem(add_suffix("storeu(ioff)", ioff).c_str(),
+                p+ioff, z, &x[sz+ioff], ~0);
     }
     
     for (int mval=0; mval<(1<<realvec_t::size); ++mval) {
@@ -532,21 +535,21 @@ struct vecmathlib_test {
       
       // loada(mask)
       {
-        real_t const *p = &x[sz];
+        const real_t *p = &x[sz];
         realvec_t y = loada(p, z, mask);
         check_mem("loada(mask)", y, p, z, mval);
       }
       
       // loadu(mask)
       for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
-        real_t const *p = &x[sz];
+        const real_t *p = &x[sz];
         realvec_t y = loadu(p+i, z, mask);
         check_mem("loadu(mask)", y, p+i, z, mval);
       }
       
       // loadu(ioff, mask)
       for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
-        real_t const *p = &x[sz];
+        const real_t *p = &x[sz];
         realvec_t y = loadu(p, ioff, z, mask);
         check_mem("loadu(ioff,mask)", y, p+ioff, z, mval);
       }
@@ -816,20 +819,26 @@ struct vecmathlib_test {
     const int nvalues = sizeof values / sizeof *values;
     
     for (int i=0; i<8*nvalues+imax; ++i) {
-      realvec_t const x =
+      const realvec_t x =
         i<8*nvalues && i&1 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
-      realvec_t const y =
+      const realvec_t y =
         i<8*nvalues && i&2 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
-      realvec_t const z =
+      const realvec_t z =
         i<8*nvalues && i&4 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
-      intvec_t const n = random(int_t(-10), int_t(+10));
-      check_real<realvec_t,realvec_t>("copysign", std::copysign, vecmathlib::copysign, x, y, R(0.0));
-      check_real<realvec_t>("fabs", std::fabs, vecmathlib::fabs, x, 0.0);
+      const intvec_t n = random(int_t(-10), int_t(+10));
+      check_real("copysign",
+                 (real_t(*)(real_t,real_t))std::copysign,
+                 (realvec_t(*)(realvec_t,realvec_t))vecmathlib::copysign,
+                 x, y, R(0.0));
+      check_real("fabs",
+                 (real_t(*)(real_t))std::fabs,
+                 (realvec_t(*)(realvec_t))vecmathlib::fabs,
+                 x, 0.0);
       check_real<realvec_t,realvec_t>("fdim", std::fdim, vecmathlib::fdim, x, y, accuracy());
       check_real<realvec_t,realvec_t,realvec_t>("fma", std::fma, vecmathlib::fma, x, y, z, R(2.0)*accuracy());
       check_real<realvec_t,realvec_t>("fmax", std::fmax, vecmathlib::fmax, x, y, 0.0);
       check_real<realvec_t,realvec_t>("fmin", std::fmin, vecmathlib::fmin, x, y, 0.0);
-      check_int<realvec_t>("ilogb", local_ilogb, vecmathlib::ilogb, x);
+      check_int("ilogb", local_ilogb, (intvec_t(*)(realvec_t))vecmathlib::ilogb, x);
 #if defined VML_HAVE_INF && defined VML_HAVE_NAN
       check_bool("isfinite", std::isfinite, vecmathlib::isfinite, x);
 #endif
@@ -843,7 +852,10 @@ struct vecmathlib_test {
       check_bool("isnormal", std::isnormal, vecmathlib::isnormal, x);
 #endif
       check_real<realvec_t,intvec_t>("ldexp", local_ldexp, vecmathlib::ldexp, x, n, 0.0);
-      check_bool<realvec_t>("signbit", std::signbit, vecmathlib::signbit, x);
+      check_bool("signbit",
+                 (bool(*)(real_t))std::signbit,
+                 (boolvec_t(*)(realvec_t))vecmathlib::signbit,
+                 x);
     }
   }
   
@@ -902,24 +914,26 @@ struct vecmathlib_test {
     const int nvalues = sizeof values / sizeof *values;
     
     for (int i=0; i<nvalues+imax; ++i) {
-      realvec_t const x =
+      const realvec_t x =
         i<nvalues ? RV(values[i]) : random(R(-1.0e+10), R(+1.0e+10));
-      intvec_t const n1 = random(int_t(-100), int_t(+100));
-      //intvec_t const n2 = random(int_t(-1000000000), int_t(+1000000000));
-      intvec_t const n2 =
+      const intvec_t n1 = random(int_t(-100), int_t(+100));
+      //const intvec_t n2 = random(int_t(-1000000000), int_t(+1000000000));
+      const intvec_t n2 =
         random(std::numeric_limits<int_t>::min() / 2, // avoid overflow
                std::numeric_limits<int_t>::max() / 2);
-      realvec_t const fn1 = vecmathlib::convert_float(n1);
-      realvec_t const fn2 = vecmathlib::convert_float(n2);
-      realvec_t const fn1h = vecmathlib::convert_float(n1) * RV(0.25);
-      realvec_t const fn2h = vecmathlib::convert_float(n2) * RV(0.25);
+      const realvec_t fn1 = vecmathlib::convert_float(n1);
+      const realvec_t fn2 = vecmathlib::convert_float(n2);
+      const realvec_t fn1h = vecmathlib::convert_float(n1) * RV(0.25);
+      const realvec_t fn2h = vecmathlib::convert_float(n2) * RV(0.25);
       check_real<intvec_t>("convert_float",
             FP::convert_float, vecmathlib::convert_float, n1, accuracy());
       check_real<intvec_t>("convert_float",
             FP::convert_float, vecmathlib::convert_float, n2, accuracy());
       // Note: RV(int_max) > int_max due to rounding
       if (all(x >= RV(int_min) && x < RV(int_max))) {
-        check_int<realvec_t>("convert_int", FP::convert_int, vecmathlib::convert_int, x);
+        check_int("convert_int",
+                  (int_t(*)(real_t))FP::convert_int,
+                  (intvec_t(*)(realvec_t))vecmathlib::convert_int, x);
       }
       check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, x, accuracy());
       check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, fn1, accuracy());
@@ -955,12 +969,12 @@ struct vecmathlib_test {
   {
     cout << "   testing asin acos atan...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-1.0), R(+1.0));
+      const realvec_t x = random(R(-1.0), R(+1.0));
       check_real<realvec_t>("asin", std::asin, vecmathlib::asin, x, accuracy());
       check_real<realvec_t>("acos", std::acos, vecmathlib::acos, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-100.0), R(+100.0));
+      const realvec_t x = random(R(-100.0), R(+100.0));
       check_real<realvec_t>("atan", std::atan, vecmathlib::atan, x, accuracy());
     }
   }
@@ -969,15 +983,15 @@ struct vecmathlib_test {
   {
     cout << "   testing asinh acosh atanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-1000.0), R(+1000.0));
+      const realvec_t x = random(R(-1000.0), R(+1000.0));
       check_real<realvec_t>("asinh", std::asinh, vecmathlib::asinh, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(1.0), R(1000.0));
+      const realvec_t x = random(R(1.0), R(1000.0));
       check_real<realvec_t>("acosh", std::acosh, vecmathlib::acosh, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-1.0), R(+1.0));
+      const realvec_t x = random(R(-1.0), R(+1.0));
       check_real<realvec_t>("atanh", std::atanh, vecmathlib::atanh, x, accuracy());
     }
   }
@@ -987,7 +1001,7 @@ struct vecmathlib_test {
   {
     cout << "   testing exp exp10 exp2 expm1...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-100.0), R(+100.0));
+      const realvec_t x = random(R(-100.0), R(+100.0));
       check_real<realvec_t>("exp", std::exp, vecmathlib::exp, x, accuracy());
       check_real<realvec_t>("exp10", local_exp10, vecmathlib::exp10, x, accuracy());
       check_real<realvec_t>("exp2", std::exp2, vecmathlib::exp2, x, accuracy());
@@ -999,7 +1013,7 @@ struct vecmathlib_test {
   {
     cout << "   testing log log10 log1p log2...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(1.0e-10), R(1.0e+10));
+      const realvec_t x = random(R(1.0e-10), R(1.0e+10));
       check_real<realvec_t>("log", std::log, vecmathlib::log, x, accuracy());
       check_real<realvec_t>("log10", std::log10, vecmathlib::log10, x, accuracy());
       check_real<realvec_t>("log1p", std::log1p, vecmathlib::log1p, x, accuracy());
@@ -1011,11 +1025,11 @@ struct vecmathlib_test {
   {
     cout << "   testing pow...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(0.001), R(1000.0));
-      realvec_t const y = random(R(-10.0), R(+10.0));
-      realvec_t const ya = fabs(y);
-      intvec_t const n = random(I(-10), I(+10));
-      realvec_t const fn = vecmathlib::convert_float(n);
+      const realvec_t x = random(R(0.001), R(1000.0));
+      const realvec_t y = random(R(-10.0), R(+10.0));
+      const realvec_t ya = fabs(y);
+      const intvec_t n = random(I(-10), I(+10));
+      const realvec_t fn = vecmathlib::convert_float(n);
       check_real<realvec_t,realvec_t>("pow(0,y)", std::pow, vecmathlib::pow, RV(0.0), ya, accuracy());
       check_real<realvec_t,realvec_t>("pow(x,0)", std::pow, vecmathlib::pow, x, RV(0.0), accuracy());
       // just to check
@@ -1030,12 +1044,12 @@ struct vecmathlib_test {
   {
     cout << "   testing fmod rcp remainder...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-100.0), R(+100.0));
-      realvec_t const y = random(R(-100.0), R(+100.0));
-      intvec_t const n = random(I(-100), I(+100));
-      intvec_t const m = random(I(-100), I(+100));
-      realvec_t const fn = vecmathlib::convert_float(n);
-      realvec_t const fm = vecmathlib::convert_float
+      const realvec_t x = random(R(-100.0), R(+100.0));
+      const realvec_t y = random(R(-100.0), R(+100.0));
+      const intvec_t n = random(I(-100), I(+100));
+      const intvec_t m = random(I(-100), I(+100));
+      const realvec_t fn = vecmathlib::convert_float(n);
+      const realvec_t fm = vecmathlib::convert_float
         (m + vecmathlib::convert_int(m == intvec_t(I(0))));
       check_real<realvec_t>("rcp", local_rcp, vecmathlib::rcp, x, accuracy());
       check_real<realvec_t,realvec_t>("fmod(x,y)", std::fmod, vecmathlib::fmod, x, y, 2.0*accuracy());
@@ -1054,14 +1068,14 @@ struct vecmathlib_test {
   {
     cout << "   testing cos sin tan...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-10.0), R(+10.0));
+      const realvec_t x = random(R(-10.0), R(+10.0));
       check_real<realvec_t>("sin", std::sin, vecmathlib::sin, x, accuracy());
       check_real<realvec_t>("cos", std::cos, vecmathlib::cos, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
-      realvec_t const x0 = random(R(-1.55), R(+1.55));
-      intvec_t const n = random(I(-10), I(+10));
-      realvec_t const x = x0 + vecmathlib::convert_float(n) * RV(M_PI);
+      const realvec_t x0 = random(R(-1.55), R(+1.55));
+      const intvec_t n = random(I(-10), I(+10));
+      const realvec_t x = x0 + vecmathlib::convert_float(n) * RV(M_PI);
       // tan loses accuracy near pi/2
       // (by definition, not by implementation?)
       check_real<realvec_t>("tan", std::tan, vecmathlib::tan, x, R(100.0)*accuracy());
@@ -1072,7 +1086,7 @@ struct vecmathlib_test {
   {
     cout << "   testing cosh sinh tanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(-10.0), R(+10.0));
+      const realvec_t x = random(R(-10.0), R(+10.0));
       check_real<realvec_t>("sinh", std::sinh, vecmathlib::sinh, x, accuracy());
       check_real<realvec_t>("cosh", std::cosh, vecmathlib::cosh, x, accuracy());
       check_real<realvec_t>("tanh", std::tanh, vecmathlib::tanh, x, accuracy());
@@ -1084,9 +1098,9 @@ struct vecmathlib_test {
   {
     cout << "   testing cbrt hypot rsqrt sqrt...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      realvec_t const x = random(R(0.0), R(1.0e+3));
-      realvec_t const y = random(-R(1.0e+3), R(1.0e+3));
-      realvec_t const z = random(-R(1.0e+3), R(1.0e+3));
+      const realvec_t x = random(R(0.0), R(1.0e+3));
+      const realvec_t y = random(-R(1.0e+3), R(1.0e+3));
+      const realvec_t z = random(-R(1.0e+3), R(1.0e+3));
       check_real<realvec_t>("cbrt", std::cbrt, vecmathlib::cbrt, x, accuracy());
       check_real<realvec_t,realvec_t>("hypot", std::hypot, vecmathlib::hypot, y, z, accuracy());
       check_real<realvec_t>("rsqrt", local_rsqrt, vecmathlib::rsqrt, x, accuracy());
