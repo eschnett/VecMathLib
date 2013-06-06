@@ -954,11 +954,12 @@ struct vecmathlib_test {
                  (real_t(*)(real_t))std::fabs,
                  (realvec_t(*)(realvec_t))vecmathlib::fabs,
                  x, 0.0);
-      check_real<realvec_t,realvec_t>("fdim", std::fdim, vecmathlib::fdim, x, y, accuracy());
-      check_real<realvec_t,realvec_t,realvec_t>("fma", std::fma, vecmathlib::fma, x, y, z, R(2.0)*accuracy());
-      check_real<realvec_t,realvec_t>("fmax", std::fmax, vecmathlib::fmax, x, y, 0.0);
-      check_real<realvec_t,realvec_t>("fmin", std::fmin, vecmathlib::fmin, x, y, 0.0);
-      check_int("ilogb", local_ilogb, (intvec_t(*)(realvec_t))vecmathlib::ilogb, x);
+      check_real("fdim", std::fdim, vecmathlib::fdim, x, y, accuracy());
+      check_real("fma", std::fma, vecmathlib::fma, x, y, z, R(2.0)*accuracy());
+      check_real("fmax", std::fmax, vecmathlib::fmax, x, y, 0.0);
+      check_real("fmin", std::fmin, vecmathlib::fmin, x, y, 0.0);
+      check_int("ilogb",
+                local_ilogb, (intvec_t(*)(realvec_t))vecmathlib::ilogb, x);
 #if defined VML_HAVE_INF && defined VML_HAVE_NAN
       check_bool("isfinite", std::isfinite, vecmathlib::isfinite, x);
 #endif
@@ -971,7 +972,7 @@ struct vecmathlib_test {
 #ifdef VML_HAVE_DENORMALS
       check_bool("isnormal", std::isnormal, vecmathlib::isnormal, x);
 #endif
-      check_real<realvec_t,intvec_t>("ldexp", local_ldexp, vecmathlib::ldexp, x, n, 0.0);
+      check_real("ldexp", local_ldexp, vecmathlib::ldexp, x, n, 0.0);
       check_bool("signbit",
                  (bool(*)(real_t))std::signbit,
                  (boolvec_t(*)(realvec_t))vecmathlib::signbit,
@@ -1045,41 +1046,41 @@ struct vecmathlib_test {
       const realvec_t fn2 = vecmathlib::convert_float(n2);
       const realvec_t fn1h = vecmathlib::convert_float(n1) * RV(0.25);
       const realvec_t fn2h = vecmathlib::convert_float(n2) * RV(0.25);
-      check_real<intvec_t>("convert_float",
-            FP::convert_float, vecmathlib::convert_float, n1, accuracy());
-      check_real<intvec_t>("convert_float",
-            FP::convert_float, vecmathlib::convert_float, n2, accuracy());
+      check_real("convert_float",
+                 FP::convert_float, vecmathlib::convert_float, n1, accuracy());
+      check_real("convert_float",
+                 FP::convert_float, vecmathlib::convert_float, n2, accuracy());
       // Note: RV(int_max) > int_max due to rounding
       if (all(x >= RV(int_min) && x < RV(int_max))) {
         check_int("convert_int",
                   (int_t(*)(real_t))FP::convert_int,
                   (intvec_t(*)(realvec_t))vecmathlib::convert_int, x);
       }
-      check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, x, accuracy());
-      check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, fn1, accuracy());
-      check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, fn2, accuracy());
-      check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, fn1h, accuracy());
-      check_real<realvec_t>("ceil", std::ceil, vecmathlib::ceil, fn2h, accuracy());
-      check_real<realvec_t>("floor", std::floor, vecmathlib::floor, x, accuracy());
-      check_real<realvec_t>("floor", std::floor, vecmathlib::floor, fn1, accuracy());
-      check_real<realvec_t>("floor", std::floor, vecmathlib::floor, fn2, accuracy());
-      check_real<realvec_t>("floor", std::floor, vecmathlib::floor, fn1h, accuracy());
-      check_real<realvec_t>("floor", std::floor, vecmathlib::floor, fn2h, accuracy());
-      check_real<realvec_t>("rint", std::rint, vecmathlib::rint, x, accuracy());
-      check_real<realvec_t>("rint", std::rint, vecmathlib::rint, fn1, accuracy());
-      check_real<realvec_t>("rint", std::rint, vecmathlib::rint, fn2, accuracy());
-      check_real<realvec_t>("rint", std::rint, vecmathlib::rint, fn1h, accuracy());
-      check_real<realvec_t>("rint", std::rint, vecmathlib::rint, fn2h, accuracy());
-      check_real<realvec_t>("round", std::round, vecmathlib::round, x, accuracy());
-      check_real<realvec_t>("round", std::round, vecmathlib::round, fn1, accuracy());
-      check_real<realvec_t>("round", std::round, vecmathlib::round, fn2, accuracy());
-      check_real<realvec_t>("round", std::round, vecmathlib::round, fn1h, accuracy());
-      check_real<realvec_t>("round", std::round, vecmathlib::round, fn2h, accuracy());
-      check_real<realvec_t>("trunc", std::trunc, vecmathlib::trunc, x, accuracy());
-      check_real<realvec_t>("trunc", std::trunc, vecmathlib::trunc, fn1, accuracy());
-      check_real<realvec_t>("trunc", std::trunc, vecmathlib::trunc, fn2, accuracy());
-      check_real<realvec_t>("trunc", std::trunc, vecmathlib::trunc, fn1h, accuracy());
-      check_real<realvec_t>("trunc", std::trunc, vecmathlib::trunc, fn2h, accuracy());
+      check_real("ceil", std::ceil, vecmathlib::ceil, x, accuracy());
+      check_real("ceil", std::ceil, vecmathlib::ceil, fn1, accuracy());
+      check_real("ceil", std::ceil, vecmathlib::ceil, fn2, accuracy());
+      check_real("ceil", std::ceil, vecmathlib::ceil, fn1h, accuracy());
+      check_real("ceil", std::ceil, vecmathlib::ceil, fn2h, accuracy());
+      check_real("floor", std::floor, vecmathlib::floor, x, accuracy());
+      check_real("floor", std::floor, vecmathlib::floor, fn1, accuracy());
+      check_real("floor", std::floor, vecmathlib::floor, fn2, accuracy());
+      check_real("floor", std::floor, vecmathlib::floor, fn1h, accuracy());
+      check_real("floor", std::floor, vecmathlib::floor, fn2h, accuracy());
+      check_real("rint", std::rint, vecmathlib::rint, x, accuracy());
+      check_real("rint", std::rint, vecmathlib::rint, fn1, accuracy());
+      check_real("rint", std::rint, vecmathlib::rint, fn2, accuracy());
+      check_real("rint", std::rint, vecmathlib::rint, fn1h, accuracy());
+      check_real("rint", std::rint, vecmathlib::rint, fn2h, accuracy());
+      check_real("round", std::round, vecmathlib::round, x, accuracy());
+      check_real("round", std::round, vecmathlib::round, fn1, accuracy());
+      check_real("round", std::round, vecmathlib::round, fn2, accuracy());
+      check_real("round", std::round, vecmathlib::round, fn1h, accuracy());
+      check_real("round", std::round, vecmathlib::round, fn2h, accuracy());
+      check_real("trunc", std::trunc, vecmathlib::trunc, x, accuracy());
+      check_real("trunc", std::trunc, vecmathlib::trunc, fn1, accuracy());
+      check_real("trunc", std::trunc, vecmathlib::trunc, fn2, accuracy());
+      check_real("trunc", std::trunc, vecmathlib::trunc, fn1h, accuracy());
+      check_real("trunc", std::trunc, vecmathlib::trunc, fn2h, accuracy());
     }
   }
   
@@ -1087,15 +1088,15 @@ struct vecmathlib_test {
   
   static void test_asin()
   {
-    cout << "   testing asin acos atan...\n" << flush;
+    cout << "   testing asin acos atan atan2...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1.0), R(+1.0));
-      check_real<realvec_t>("asin", std::asin, vecmathlib::asin, x, accuracy());
-      check_real<realvec_t>("acos", std::acos, vecmathlib::acos, x, accuracy());
+      check_real("asin", std::asin, vecmathlib::asin, x, accuracy());
+      check_real("acos", std::acos, vecmathlib::acos, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
-      check_real<realvec_t>("atan", std::atan, vecmathlib::atan, x, accuracy());
+      check_real("atan", std::atan, vecmathlib::atan, x, accuracy());
     }
   }
   
@@ -1104,15 +1105,15 @@ struct vecmathlib_test {
     cout << "   testing asinh acosh atanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1000.0), R(+1000.0));
-      check_real<realvec_t>("asinh", std::asinh, vecmathlib::asinh, x, accuracy());
+      check_real("asinh", std::asinh, vecmathlib::asinh, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(1.0), R(1000.0));
-      check_real<realvec_t>("acosh", std::acosh, vecmathlib::acosh, x, accuracy());
+      check_real("acosh", std::acosh, vecmathlib::acosh, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1.0), R(+1.0));
-      check_real<realvec_t>("atanh", std::atanh, vecmathlib::atanh, x, accuracy());
+      check_real("atanh", std::atanh, vecmathlib::atanh, x, accuracy());
     }
   }
   
@@ -1122,10 +1123,10 @@ struct vecmathlib_test {
     cout << "   testing exp exp10 exp2 expm1...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
-      check_real<realvec_t>("exp", std::exp, vecmathlib::exp, x, accuracy());
-      check_real<realvec_t>("exp10", local_exp10, vecmathlib::exp10, x, accuracy());
-      check_real<realvec_t>("exp2", std::exp2, vecmathlib::exp2, x, accuracy());
-      check_real<realvec_t>("expm1", std::expm1, vecmathlib::expm1, x, accuracy());
+      check_real("exp", std::exp, vecmathlib::exp, x, accuracy());
+      check_real("exp10", local_exp10, vecmathlib::exp10, x, accuracy());
+      check_real("exp2", std::exp2, vecmathlib::exp2, x, accuracy());
+      check_real("expm1", std::expm1, vecmathlib::expm1, x, accuracy());
     }
   }
   
@@ -1134,10 +1135,10 @@ struct vecmathlib_test {
     cout << "   testing log log10 log1p log2...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(1.0e-10), R(1.0e+10));
-      check_real<realvec_t>("log", std::log, vecmathlib::log, x, accuracy());
-      check_real<realvec_t>("log10", std::log10, vecmathlib::log10, x, accuracy());
-      check_real<realvec_t>("log1p", std::log1p, vecmathlib::log1p, x, accuracy());
-      check_real<realvec_t>("log2", std::log2, vecmathlib::log2, x, accuracy());
+      check_real("log", std::log, vecmathlib::log, x, accuracy());
+      check_real("log10", std::log10, vecmathlib::log10, x, accuracy());
+      check_real("log1p", std::log1p, vecmathlib::log1p, x, accuracy());
+      check_real("log2", std::log2, vecmathlib::log2, x, accuracy());
     }
   }
   
@@ -1172,18 +1173,24 @@ struct vecmathlib_test {
       const realvec_t fn = vecmathlib::convert_float(n);
       const realvec_t fm = vecmathlib::convert_float
         (m + vecmathlib::convert_int(m == intvec_t(I(0))));
-      check_real<realvec_t>("rcp", local_rcp, vecmathlib::rcp, x, accuracy());
-      check_real<realvec_t,realvec_t>("fmod(x,y)", std::fmod, vecmathlib::fmod, x, y, 2.0*accuracy());
-      check_real<realvec_t,realvec_t>("fmod(x,m)", std::fmod, vecmathlib::fmod, x, fm, 2.0*accuracy());
-      check_real<realvec_t,realvec_t>("fmod(n,y)", std::fmod, vecmathlib::fmod, fn, y, 2.0*accuracy());
-      check_real<realvec_t,realvec_t>("remainder(x,y)",
-				 std::remainder, vecmathlib::remainder, x, y, R(2.0)*accuracy());
-      check_real<realvec_t,realvec_t>("remainder(x,m)",
-				 std::remainder, vecmathlib::remainder, x, fm, R(2.0)*accuracy());
-      check_real<realvec_t,realvec_t>("remainder(n,y)",
-				 std::remainder, vecmathlib::remainder, fn, y, R(2.0)*accuracy());
       check_real("/",
                  local_div<real_t>, local_div<realvec_t>, x, y, accuracy());
+      check_real("rcp", local_rcp, vecmathlib::rcp, x, accuracy());
+      check_real("fmod(x,y)", std::fmod, vecmathlib::fmod,
+                 x, y, 2.0*accuracy());
+      check_real("fmod(x,m)", std::fmod, vecmathlib::fmod,
+                 x, fm, 2.0*accuracy());
+      check_real("fmod(n,y)", std::fmod, vecmathlib::fmod,
+                 fn, y, 2.0*accuracy());
+      check_real("remainder(x,y)",
+                 std::remainder, vecmathlib::remainder,
+                 x, y, R(2.0)*accuracy());
+      check_real("remainder(x,m)",
+                 std::remainder, vecmathlib::remainder,
+                 x, fm, R(2.0)*accuracy());
+      check_real("remainder(n,y)",
+                 std::remainder, vecmathlib::remainder,
+                 fn, y, R(2.0)*accuracy());
     }
   }
   
@@ -1192,8 +1199,8 @@ struct vecmathlib_test {
     cout << "   testing cos sin tan...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-10.0), R(+10.0));
-      check_real<realvec_t>("sin", std::sin, vecmathlib::sin, x, accuracy());
-      check_real<realvec_t>("cos", std::cos, vecmathlib::cos, x, accuracy());
+      check_real("sin", std::sin, vecmathlib::sin, x, accuracy());
+      check_real("cos", std::cos, vecmathlib::cos, x, accuracy());
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x0 = random(R(-1.55), R(+1.55));
@@ -1201,7 +1208,7 @@ struct vecmathlib_test {
       const realvec_t x = x0 + vecmathlib::convert_float(n) * RV(M_PI);
       // tan loses accuracy near pi/2
       // (by definition, not by implementation?)
-      check_real<realvec_t>("tan", std::tan, vecmathlib::tan, x, R(100.0)*accuracy());
+      check_real("tan", std::tan, vecmathlib::tan, x, R(100.0)*accuracy());
     }
   }
   
@@ -1210,9 +1217,9 @@ struct vecmathlib_test {
     cout << "   testing cosh sinh tanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-10.0), R(+10.0));
-      check_real<realvec_t>("sinh", std::sinh, vecmathlib::sinh, x, accuracy());
-      check_real<realvec_t>("cosh", std::cosh, vecmathlib::cosh, x, accuracy());
-      check_real<realvec_t>("tanh", std::tanh, vecmathlib::tanh, x, accuracy());
+      check_real("sinh", std::sinh, vecmathlib::sinh, x, accuracy());
+      check_real("cosh", std::cosh, vecmathlib::cosh, x, accuracy());
+      check_real("tanh", std::tanh, vecmathlib::tanh, x, accuracy());
     }
   }
   
@@ -1224,10 +1231,10 @@ struct vecmathlib_test {
       const realvec_t x = random(R(0.0), R(1.0e+3));
       const realvec_t y = random(-R(1.0e+3), R(1.0e+3));
       const realvec_t z = random(-R(1.0e+3), R(1.0e+3));
-      check_real<realvec_t>("cbrt", std::cbrt, vecmathlib::cbrt, x, accuracy());
-      check_real<realvec_t,realvec_t>("hypot", std::hypot, vecmathlib::hypot, y, z, accuracy());
-      check_real<realvec_t>("rsqrt", local_rsqrt, vecmathlib::rsqrt, x, accuracy());
-      check_real<realvec_t>("sqrt", std::sqrt, vecmathlib::sqrt, x, accuracy());
+      check_real("cbrt", std::cbrt, vecmathlib::cbrt, x, accuracy());
+      check_real("hypot", std::hypot, vecmathlib::hypot, y, z, accuracy());
+      check_real("rsqrt", local_rsqrt, vecmathlib::rsqrt, x, accuracy());
+      check_real("sqrt", std::sqrt, vecmathlib::sqrt, x, accuracy());
     }
   }
   
