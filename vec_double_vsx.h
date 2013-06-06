@@ -282,27 +282,27 @@ namespace vecmathlib {
     intvec lsr(intvec n) const
     {
       // return vec_sr(v, (__vector unsigned long long)n.v);
-      intvec r = *this;
+      intvec r;
       for (int i=0; i<size; ++i) {
-        r.set_elt(i, U(r[i]) >> U(n[i]));
+        r.set_elt(i, U((*this)[i]) >> U(n[i]));
       }
       return r;
     }
     intvec operator>>(intvec n) const
     {
       // return vec_sra(v, (__vector unsigned long long)n.v);
-      intvec r = *this;
+      intvec r;
       for (int i=0; i<size; ++i) {
-        r.set_elt(i, r[i] >> n[i]);
+        r.set_elt(i, (*this)[i] >> n[i]);
       }
       return r;
     }
     intvec operator<<(intvec n) const
     {
       // return vec_sl(v, (__vector unsigned long long)n.v);
-      intvec r = *this;
+      intvec r;
       for (int i=0; i<size; ++i) {
-        r.set_elt(i, r[i] << n[i]);
+        r.set_elt(i, (*this)[i] << n[i]);
       }
       return r;
     }
