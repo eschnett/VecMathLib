@@ -773,6 +773,9 @@ struct vecmathlib_test {
   template<typename T> static T local_not(T x) { return ~x; }
   template<typename T> static T local_add(T x, T y) { return x+y; }
   template<typename T> static T local_sub(T x, T y) { return x-y; }
+  template<typename T> static T local_mul(T x, T y) { return x*y; }
+  template<typename T> static T local_div(T x, T y) { return x/y; }
+  template<typename T> static T local_mod(T x, T y) { return x%y; }
   template<typename T> static T local_and(T x, T y) { return x&y; }
   template<typename T> static T local_or(T x, T y) { return x|y; }
   template<typename T> static T local_xor(T x, T y) { return x^y; }
@@ -877,7 +880,7 @@ struct vecmathlib_test {
   static real_t local_ldexp(real_t x, int_t n) { return ldexp(x, n); }
   static void test_fabs()
   {
-    cout << "   testing copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
+    cout << "   testing + - + - * == != < <= > >= copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
     
     const real_t eps = FP::epsilon();
     const real_t int_min = R(std::numeric_limits<int_t>::min());
@@ -928,6 +931,21 @@ struct vecmathlib_test {
       const realvec_t z =
         i<8*nvalues && i&4 ? RV(values[i/8]) : random(R(-10.0), R(+10.0));
       const intvec_t n = random(int_t(-10), int_t(+10));
+      
+      check_real("+", local_pos<real_t>, local_pos<realvec_t>, x, R(0.0));
+      check_real("-", local_neg<real_t>, local_neg<realvec_t>, x, R(0.0));
+      
+      check_real("+", local_add<real_t>, local_add<realvec_t>, x, y, R(0.0));
+      check_real("-", local_sub<real_t>, local_sub<realvec_t>, x, y, R(0.0));
+      check_real("*", local_mul<real_t>, local_mul<realvec_t>, x, y, R(0.0));
+
+      check_bool("==", local_eq<real_t>, local_veq<realvec_t>, x, y);
+      check_bool("!=", local_ne<real_t>, local_vne<realvec_t>, x, y);
+      check_bool("<", local_lt<real_t>, local_vlt<realvec_t>, x, y);
+      check_bool("<=", local_le<real_t>, local_vle<realvec_t>, x, y);
+      check_bool(">", local_gt<real_t>, local_vgt<realvec_t>, x, y);
+      check_bool(">=", local_ge<real_t>, local_vge<realvec_t>, x, y);
+      
       check_real("copysign",
                  (real_t(*)(real_t,real_t))std::copysign,
                  (realvec_t(*)(realvec_t,realvec_t))vecmathlib::copysign,
@@ -1132,19 +1150,20 @@ struct vecmathlib_test {
       const realvec_t ya = fabs(y);
       const intvec_t n = random(I(-10), I(+10));
       const realvec_t fn = vecmathlib::convert_float(n);
-      check_real<realvec_t,realvec_t>("pow(0,y)", std::pow, vecmathlib::pow, RV(0.0), ya, accuracy());
-      check_real<realvec_t,realvec_t>("pow(x,0)", std::pow, vecmathlib::pow, x, RV(0.0), accuracy());
+      check_real("pow(0,y)",
+                 std::pow, vecmathlib::pow, RV(0.0), ya, accuracy());
+      check_real("pow(x,0)", std::pow, vecmathlib::pow, x, RV(0.0), accuracy());
       // just to check
-      check_real<realvec_t>("log(x)", std::log, vecmathlib::log, x, accuracy());
-      check_real<realvec_t,realvec_t>("pow(x,y)", std::pow, vecmathlib::pow, x, y, accuracy());
-      check_real<realvec_t,realvec_t>("pow(-x,n)", std::pow, vecmathlib::pow, -x, fn, accuracy());
+      check_real("log(x)", std::log, vecmathlib::log, x, accuracy());
+      check_real("pow(x,y)", std::pow, vecmathlib::pow, x, y, accuracy());
+      check_real("pow(-x,n)", std::pow, vecmathlib::pow, -x, fn, accuracy());
     }
   }
   
   static real_t local_rcp(real_t x) { return R(1.0)/x; }
   static void test_rcp()
   {
-    cout << "   testing fmod rcp remainder...\n" << flush;
+    cout << "   testing / fmod rcp remainder...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
       const realvec_t y = random(R(-100.0), R(+100.0));
@@ -1163,6 +1182,8 @@ struct vecmathlib_test {
 				 std::remainder, vecmathlib::remainder, x, fm, R(2.0)*accuracy());
       check_real<realvec_t,realvec_t>("remainder(n,y)",
 				 std::remainder, vecmathlib::remainder, fn, y, R(2.0)*accuracy());
+      check_real("/",
+                 local_div<real_t>, local_div<realvec_t>, x, y, accuracy());
     }
   }
   
@@ -1219,7 +1240,6 @@ struct vecmathlib_test {
     
     test_bool();
     test_int();
-    // test_float();
     
     test_mem();
     
