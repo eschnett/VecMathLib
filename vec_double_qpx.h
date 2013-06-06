@@ -172,12 +172,12 @@ namespace vecmathlib {
     int_t operator[](int n) const
     {
       // return ((int_t const*)&v)[n];
-      return v[n];
+      return FP::as_int(v[n]);
     }
     intvec& set_elt(int n, int_t a)
     {
       // return ((int_t*)&v)[n]=a, *this;
-      return v[n]=a, *this;
+      return v[n]=FP::as_float(a), *this;
     }
     
     
