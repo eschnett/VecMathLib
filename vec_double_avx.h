@@ -272,8 +272,8 @@ namespace vecmathlib {
       vlo = _mm_srli_epi64(vlo, n);
       vhi = _mm_srli_epi64(vhi, n);
       // Undo conversion
-      vlo = _mm_sub_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-n)));
-      vhi = _mm_sub_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-n)));
+      vlo = _mm_sub_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-1-n)));
+      vhi = _mm_sub_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1-n)));
 #endif
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }

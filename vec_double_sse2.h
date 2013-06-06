@@ -235,9 +235,9 @@ namespace vecmathlib {
       // Convert signed to unsiged
       x += U(1) << (bits-1);
       // Shift
-      x = x.lsr(x);
+      x = x.lsr(n);
       // Undo conversion
-      x -= U(1) << (bits-n);
+      x -= U(1) << (bits-1-n);
       return x;
     }
     intvec operator<<(int_t n) const { return _mm_slli_epi64(v, n); }
