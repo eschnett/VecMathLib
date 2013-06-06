@@ -258,7 +258,9 @@ def decl_close():
 
 
 def mktype(tp, vectype):
-    (space, basetype, sizename) = re.match("(global|local|private)?(float|double)([0-9]*)", vectype).groups()
+    (space, basetype, sizename) = (
+        re.match("(global|local|private)?(float|double)([0-9]*)", vectype).
+        groups())
     size = 1 if sizename=="" else int(sizename)
     if tp==SK:
         if size==1: return "int"
@@ -431,7 +433,8 @@ def output_vmlfunc_upcast(func, vectype):
              mktype(arg, vectype), mktype(arg, othertype), n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
                                zip(range(0, 100), args)))
-    out("  %s r = %s(%s);" % (mktype(ret, othertype), prefixed(name), callargstr))
+    out("  %s r = %s(%s);" %
+        (mktype(ret, othertype), prefixed(name), callargstr))
     out("  return bitcast<%s,%s>(r);" %
         (mktype(ret, othertype), mktype(ret, vectype)))
     out("}")
@@ -453,11 +456,19 @@ def output_vmlfunc_split(func, vectype):
     decl("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("%s %s(%s)" % (mktype(ret, vectype), prefixed(name), funcargstr))
     out("{")
+    if ret in (SF, SK):
+        split_ret = SF
+    elif ret in (VI, VJ, VK):
+        split_ret = VI
+    elif ret in (VF):
+        split_ret = VF
+    else:
+        raise "missing"
     # LLVM has a bug, which makes it combine pair types for different
     # vector sizes. Therefore we need to ensure that pairs for
     # difference types and sizes have different names.
     out("  struct pair_%s_ret { %s lo, hi; };" %
-        (mktype(ret, othertype), mktype(ret, othertype)))
+        (mktype(split_ret, othertype), mktype(split_ret, othertype)))
     for (n, arg) in zip(range(0, 100), args):
         out("  struct pair_%s_arg%d { %s lo, hi; };" %
             (mktype(arg, othertype), n, mktype(arg, othertype)))
@@ -465,7 +476,7 @@ def output_vmlfunc_split(func, vectype):
         out("  pair_%s_arg%d y%d = bitcast<%s,pair_%s_arg%d>(x%d);" %
             (mktype(arg, othertype), n, n,
              mktype(arg, vectype), mktype(arg, othertype), n, n))
-    out("  pair_%s_ret r;" % mktype(ret, othertype))
+    out("  pair_%s_ret r;" % mktype(split_ret, othertype))
     # in OpenCL: for scalars, true==+1, but for vectors, true==-1
     conv = ""
     if vmlret==VB:
@@ -478,8 +489,10 @@ def output_vmlfunc_split(func, vectype):
         callargstr = ", ".join(map(lambda (n, arg): "y%d.%s" % (n, suffix),
                                    zip(range(0, 100), args)))
         out("  r.%s = %s%s(%s);" % (suffix, conv, prefixed(name), callargstr))
+    out("  pocl_static_assert(sizeof(pair_%s_ret) == sizeof(%s));" %
+        (mktype(split_ret, othertype), mktype(ret, vectype)))
     out("  return bitcast<pair_%s_ret,%s>(r);" %
-        (mktype(ret, othertype), mktype(ret, vectype)))
+        (mktype(split_ret, othertype), mktype(ret, vectype)))
     out("}")
 
 
@@ -487,7 +500,9 @@ def output_vmlfunc_split(func, vectype):
 def output_directfunc_direct(func, vectype):
     (name, args, ret, impl) = func
     out("// Implement %s directly" % name)
-    (space, basetype, sizename) = re.match("(global|local|private)?(float|double)([0-9]*)", vectype).groups()
+    (space, basetype, sizename) = (
+        re.match("(global|local|private)?(float|double)([0-9]*)", vectype).
+        groups())
     size = 1 if sizename=="" else int(sizename)
     funcargstr = ", ".join(map(lambda (n, arg):
                                    "%s x%d" % (mktype(arg, vectype), n),
@@ -578,11 +593,13 @@ def output_directfunc(func):
     if is_first_open:
         out("// Note: This file has been automatically generated. Do not modify.")
         out("")
+        out("// Define dummy values")
         out("#ifndef cl_khr_fp64")
-        out("#define M_PI M_PI_F")
-        out("#define M_PI_2 M_PI_2_F")
-        out("#define LONG_MIN INT_MIN")
+        out("#  define M_PI M_PI_F")
+        out("#  define M_PI_2 M_PI_2_F")
+        out("#  define LONG_MIN INT_MIN")
         out("#endif") 
+        out("")
     else:
         out("")
         out("")

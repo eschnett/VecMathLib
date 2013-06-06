@@ -16,6 +16,9 @@
 #include <cstdint>
 #include <cstring>
 
+#define pocl_static_assert(b) typedef char _static_assert[(b)?+1:-1]
+
+// Define dummy values
 #ifndef cl_khr_fp64
 #  undef M_PI
 #  define M_PI M_PI_F
