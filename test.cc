@@ -684,6 +684,28 @@ struct vecmathlib_test {
   
   
   
+  static bool local_convert_bool(int_t x) { return x; }
+  static int_t local_convert_int(bool x) { return x; }
+  template<typename T> static T local_pos(T x) { return +x; }
+  template<typename T> static T local_neg(T x) { return -x; }
+  template<typename T> static T local_not(T x) { return ~x; }
+  template<typename T> static T local_add(T x, T y) { return x+y; }
+  template<typename T> static T local_sub(T x, T y) { return x-y; }
+  template<typename T> static T local_and(T x, T y) { return x&y; }
+  template<typename T> static T local_or(T x, T y) { return x|y; }
+  template<typename T> static T local_xor(T x, T y) { return x^y; }
+  template<typename T> static bool local_eq(T x, T y) { return x==y; }
+  template<typename T> static bool local_ne(T x, T y) { return x!=y; }
+  template<typename T> static bool local_lt(T x, T y) { return x<y; }
+  template<typename T> static bool local_le(T x, T y) { return x<=y; }
+  template<typename T> static bool local_gt(T x, T y) { return x>y; }
+  template<typename T> static bool local_ge(T x, T y) { return x>=y; }
+  template<typename T> static boolvec_t local_veq(T x, T y) { return x==y; }
+  template<typename T> static boolvec_t local_vne(T x, T y) { return x!=y; }
+  template<typename T> static boolvec_t local_vlt(T x, T y) { return x<y; }
+  template<typename T> static boolvec_t local_vle(T x, T y) { return x<=y; }
+  template<typename T> static boolvec_t local_vgt(T x, T y) { return x>y; }
+  template<typename T> static boolvec_t local_vge(T x, T y) { return x>=y; }
   static void test_int()
   {
     cout << "   testing integer operations...\n" << flush;
@@ -711,68 +733,31 @@ struct vecmathlib_test {
       }
       boolvec_t b = convert_bool(random(I(0), I(1)));
       
-      check_bool<intvec_t>("int::convert_bool",
-                      [](int_t x)->bool{return x;},
-                      [](intvec_t x)->boolvec_t{return convert_bool(x);},
-                      x);
-      check_int<boolvec_t>("bool::convert_int",
-                       [](bool x)->int_t{return x;},
-                       [](boolvec_t x)->intvec_t{return convert_int(x);},
-                       b);
+      check_bool("convert_bool(int)",
+                 local_convert_bool,
+                 (boolvec_t(*)(intvec_t))vecmathlib::convert_bool,
+                  x);
+      check_int("convert_int(bool)",
+                local_convert_int,
+                (intvec_t(*)(boolvec_t))vecmathlib::convert_int,
+                b);
       
-      check_int<intvec_t>("-",
-                      [](int_t x)->int_t{return -x;},
-                      [](intvec_t x)->intvec_t{return -x;},
-                      x);
-      check_int<intvec_t>("~",
-                      [](int_t x)->int_t{return ~x;},
-                      [](intvec_t x)->intvec_t{return ~x;},
-                      x);
+      check_int("+", local_pos<int_t>, local_pos<intvec_t>, x);
+      check_int("-", local_neg<int_t>, local_neg<intvec_t>, x);
+      check_int("~", local_not<int_t>, local_not<intvec_t>, x);
       
-      check_int<intvec_t,intvec_t>("+",
-                               [](int_t x, int_t y)->int_t{return x+y;},
-                               [](intvec_t x, intvec_t y)->intvec_t{return x+y;},
-                               x, y);
-      check_int<intvec_t,intvec_t>("-",
-                               [](int_t x, int_t y)->int_t{return x-y;},
-                               [](intvec_t x, intvec_t y)->intvec_t{return x-y;},
-                               x, y);
-      check_int<intvec_t,intvec_t>("&",
-                               [](int_t x, int_t y)->int_t{return x&y;},
-                               [](intvec_t x, intvec_t y)->intvec_t{return x&y;},
-                               x, y);
-      check_int<intvec_t,intvec_t>("|",
-                               [](int_t x, int_t y)->int_t{return x|y;},
-                               [](intvec_t x, intvec_t y)->intvec_t{return x|y;},
-                               x, y);
-      check_int<intvec_t,intvec_t>("^",
-                               [](int_t x, int_t y)->int_t{return x^y;},
-                               [](intvec_t x, intvec_t y)->intvec_t{return x^y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>("==",
-                               [](int_t x, int_t y)->bool{return x==y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x==y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>("!=",
-                               [](int_t x, int_t y)->bool{return x!=y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x!=y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>("<",
-                               [](int_t x, int_t y)->bool{return x<y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x<y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>("<=",
-                               [](int_t x, int_t y)->bool{return x<=y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x<=y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>(">",
-                               [](int_t x, int_t y)->bool{return x>y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x>y;},
-                               x, y);
-      check_bool<intvec_t,intvec_t>(">=",
-                               [](int_t x, int_t y)->bool{return x>=y;},
-                               [](intvec_t x, intvec_t y)->boolvec_t{return x>=y;},
-                               x, y);
+      check_int("+", local_add<int_t>, local_add<intvec_t>, x, y);
+      check_int("-", local_sub<int_t>, local_sub<intvec_t>, x, y);
+      check_int("&", local_and<int_t>, local_and<intvec_t>, x, y);
+      check_int("|", local_or<int_t>, local_or<intvec_t>, x, y);
+      check_int("^", local_xor<int_t>, local_xor<intvec_t>, x, y);
+      
+      check_bool("==", local_eq<int_t>, local_veq<intvec_t>, x, y);
+      check_bool("!=", local_ne<int_t>, local_vne<intvec_t>, x, y);
+      check_bool("<", local_lt<int_t>, local_vlt<intvec_t>, x, y);
+      check_bool("<=", local_le<int_t>, local_vle<intvec_t>, x, y);
+      check_bool(">", local_gt<int_t>, local_vgt<intvec_t>, x, y);
+      check_bool(">=", local_ge<int_t>, local_vge<intvec_t>, x, y);
     }
   }
   
