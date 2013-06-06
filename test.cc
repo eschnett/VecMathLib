@@ -1184,6 +1184,7 @@ int main(int argc, char** argv)
 #endif
     "]\n";
   
+#warning "TODO"
 //   vecmathlib_test<realpseudovec<float,1>>::test();
 //   // vecmathlib_test<realbuiltinvec<float,1>>::test();
 //   vecmathlib_test<realtestvec<float,1>>::test();
@@ -1216,9 +1217,9 @@ int main(int argc, char** argv)
 //   vecmathlib_test<realvec<double,2>>::test();
 // #endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
-  vecmathlib_test<realpseudovec<double,4>>::test();
-  // vecmathlib_test<realbuiltinvec<double,4>>::test();
-  vecmathlib_test<realtestvec<double,4>>::test();
+//   vecmathlib_test<realpseudovec<double,4>>::test();
+//   // vecmathlib_test<realbuiltinvec<double,4>>::test();
+//   vecmathlib_test<realtestvec<double,4>>::test();
   vecmathlib_test<realvec<double,4>>::test();
 #endif
   
