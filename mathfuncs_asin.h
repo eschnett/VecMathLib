@@ -77,6 +77,23 @@ namespace vecmathlib {
     return RV(2.0) * atan(x / (RV(1.0) + sqrt(RV(1.0) - x*x)));
   }
   
+  
+  
+  // Note: the order of arguments is y, x, as is convention for atan2
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_atan2(realvec_t y, realvec_t x)
+  {
+    realvec_t r = atan(y/x);
+    realvec_t offset = copysign(ifthen(signbit(x), RV(M_PI), RV(0.0)), y);
+    r = r + offset;
+    // Note: the case x=y=0 is implemented via the second if
+    // condition; thus, the order of the two if conditions cannot be
+    // exchanged
+    r = ifthen(x==RV(0.0), copysign(RV(M_PI_2), y), r);
+    r = ifthen(y==RV(0.0), offset, r);
+    return r;
+  }
+  
 }; // namespace vecmathlib
 
 #endif  // #ifndef MATHFUNCS_ASIN_H

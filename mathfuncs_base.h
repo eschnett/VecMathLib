@@ -42,6 +42,7 @@ namespace vecmathlib {
     static realvec_t vml_acos(realvec_t x);
     static realvec_t vml_asin(realvec_t x);
     static realvec_t vml_atan(realvec_t x);
+    static realvec_t vml_atan2(realvec_t y, realvec_t x);
     
     // asinh
     static realvec_t vml_acosh(realvec_t x);
