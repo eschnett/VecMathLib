@@ -456,17 +456,53 @@ struct vecmathlib_test {
   
   template<typename A, typename B>
   static void check_real(const char* const func,
-                         real_t fstd(typename A::scalar_t x,
-                                     typename B::scalar_t y),
+                         real_t fstd(typename A::scalar_t x, B y),
                          realvec_t fvml(A x, B y),
                          const A x, const B y,
                          const real_t accuracy)
   {
     realvec_t rstd;
     for (int i=0; i<realvec_t::size; ++i) {
-      rstd.set_elt(i, fstd(x[i], y[i]));
+      rstd.set_elt(i, fstd(x[i], y));
     }
     const realvec_t rvml = fvml(x, y);
+    const realvec_t dr = rstd - rvml;
+    const realvec_t scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
+    const boolvec_t isbad =
+      supported(x) && supported(rstd) && fabs(dr) > realvec_t(accuracy) * scale;
+    if (any(isbad)) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << "(" << x << "," << y << " "
+           << "[" << hex(x) << "],[" << hex(y) << "]):\n"
+           << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   abs-error(x,y)=" << fabs(dr) << "\n"
+           << "   rel-error(x,y)=" << fabs(dr) / scale << "\n"
+           << "   isbad(x,y)=" << isbad << "\n"
+           << "   accuracy=" << accuracy << "\n"
+           << flush;
+    }
+  }
+  
+  template<typename A, typename B>
+  static void check_real(const char* const func,
+                         real_t fstd(typename A::scalar_t x,
+                                     typename B::scalar_t y),
+                         realvec_t fvml(A x, B y),
+                         const A x, const B y,
+                         const real_t accuracy,
+                         const realvec_t offset = RV(0.0))
+  {
+    realvec_t rstd;
+    for (int i=0; i<realvec_t::size; ++i) {
+      rstd.set_elt(i, fstd(x[i], y[i]));
+    }
+    realvec_t rvml = fvml(x, y);
+    // Fix up rvml by adding/subtracting the offset
+    rvml = ifthen(fabs(rstd-rvml)>fabs(offset/RV(2.0)),
+                  rvml + copysign(offset, rstd-rvml),
+                  rvml);
     const realvec_t dr = rstd - rvml;
     const realvec_t scale = fabs(rstd) + fabs(rvml) + realvec_t(1.0);
     const boolvec_t isbad =
