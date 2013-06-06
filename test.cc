@@ -336,6 +336,33 @@ struct vecmathlib_test {
   
   template<typename A, typename B>
   static void check_int(const char* const func,
+                        int_t fstd(typename A::scalar_t x, B y),
+                        intvec_t fvml(A x, B y),
+                        const A x, const B y)
+  {
+    intvec_t rstd;
+    for (int i=0; i<intvec_t::size; ++i) {
+      rstd.set_elt(i, fstd(x[i], y));
+    }
+    const intvec_t rvml = fvml(x, y);
+    const intvec_t dr = rstd - rvml;
+    const boolvec_t isbad = supported(x) && supported(rstd) && convert_bool(dr);
+    if (any(isbad)) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
+           << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
+           << "   isbad(x,y)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  template<typename A, typename B>
+  static void check_int(const char* const func,
                         int_t fstd(typename A::scalar_t x,
                                    typename B::scalar_t y),
                         intvec_t fvml(A x, B y),
@@ -749,6 +776,19 @@ struct vecmathlib_test {
   template<typename T> static T local_and(T x, T y) { return x&y; }
   template<typename T> static T local_or(T x, T y) { return x|y; }
   template<typename T> static T local_xor(T x, T y) { return x^y; }
+  
+  static int_t local_lsr(int_t x, int_t y) { return uint_t(x)>>uint_t(y); }
+  template<typename T> static T local_srs(T x, typename T::scalar_t y)
+  {
+    return x>>y;
+  }
+  template<typename T> static T local_sls(T x, typename T::scalar_t y)
+  {
+    return x<<y;
+  }
+  template<typename T> static T local_sr(T x, T y) { return x>>y; }
+  template<typename T> static T local_sl(T x, T y) { return x<<y; }
+
   template<typename T> static bool local_eq(T x, T y) { return x==y; }
   template<typename T> static bool local_ne(T x, T y) { return x!=y; }
   template<typename T> static bool local_lt(T x, T y) { return x<y; }
@@ -806,6 +846,16 @@ struct vecmathlib_test {
       check_int("&", local_and<int_t>, local_and<intvec_t>, x, y);
       check_int("|", local_or<int_t>, local_or<intvec_t>, x, y);
       check_int("^", local_xor<int_t>, local_xor<intvec_t>, x, y);
+      
+      const int_t bits = 8*sizeof(int_t);
+      check_int("lsr",
+                local_lsr, (intvec_t(*)(intvec_t,int_t))vecmathlib::lsr,
+                x, y[0] & (bits-1));
+      check_int(">>", local_sr<int_t>, local_srs<intvec_t>, x, y[0] & (bits-1));
+      check_int("<<", local_sl<int_t>, local_sls<intvec_t>, x, y[0] & (bits-1));
+      check_int("lsr", local_lsr, vecmathlib::lsr, x, y & IV(bits-1));
+      check_int(">>", local_sr<int_t>, local_sr<intvec_t>, x, y & IV(bits-1));
+      check_int("<<", local_sl<int_t>, local_sl<intvec_t>, x, y & IV(bits-1));
       
       check_bool("==", local_eq<int_t>, local_veq<intvec_t>, x, y);
       check_bool("!=", local_ne<int_t>, local_vne<intvec_t>, x, y);
