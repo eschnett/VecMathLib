@@ -236,6 +236,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> atan2(realvec<real_t, size> x,
+                                     realvec<real_t, size> y)
+  {
+    return x.atan2(y);
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> atanh(realvec<real_t, size> x)
   {
     return x.atanh();

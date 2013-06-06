@@ -680,6 +680,10 @@ namespace vecmathlib {
     realpseudovec asin() const { return map(std::asin); }
     realpseudovec asinh() const { return map(std::asinh); }
     realpseudovec atan() const { return map(std::atan); }
+    realpseudovec atan2(realpseudovec y) const
+    {
+      return MF::vml_atan2(*this, y);
+    }
     realpseudovec atanh() const { return map(std::atanh); }
     realpseudovec cbrt() const { return map(std::cbrt); }
     realpseudovec ceil() const { return map(std::ceil); }
@@ -1038,6 +1042,13 @@ namespace vecmathlib {
   inline realpseudovec<real_t, size> atan(realpseudovec<real_t, size> x)
   {
     return x.atan();
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> atan2(realpseudovec<real_t, size> x,
+                                           realpseudovec<real_t, size> y)
+  {
+    return x.atan2(y);
   }
   
   template<typename real_t, int size>

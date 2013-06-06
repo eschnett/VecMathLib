@@ -1096,7 +1096,9 @@ struct vecmathlib_test {
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
+      const realvec_t y = random(R(-100.0), R(+100.0));
       check_real("atan", std::atan, vecmathlib::atan, x, accuracy());
+      check_real("atan2", std::atan2, vecmathlib::atan2, x, y, accuracy());
     }
   }
   

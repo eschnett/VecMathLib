@@ -533,6 +533,7 @@ namespace vecmathlib {
     realvec asin() const { return asind4(v); }
     realvec asinh() const { return asinhd4(v); }
     realvec atan() const { return atand4(v); }
+    realvec atan2(realvec y) const { return atan2d4(v, y.v); }
     realvec atanh() const { return atanhd4(v); }
     realvec cbrt() const { return cbrtd4(v); }
     realvec ceil() const { return vec_ceil(v); }

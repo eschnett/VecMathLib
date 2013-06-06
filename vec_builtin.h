@@ -511,6 +511,7 @@ namespace vecmathlib {
     realvec_t asin() const { return MF::vml_asin(*this); }
     realvec_t asinh() const { return MF::vml_asinh(*this); }
     realvec_t atan() const { return MF::vml_atan(*this); }
+    realvec_t atan2(realvec_t y) const { return MF::vml_atan(*this, y); }
     realvec_t atanh() const { return MF::vml_atanh(*this); }
     realvec_t cbrt() const { return MF::vml_cbrt(*this); }
     realvec_t ceil() const { return MF::vml_ceil(*this); }
@@ -834,6 +835,13 @@ namespace vecmathlib {
   inline realbuiltinvec<real_t, size> atan(realbuiltinvec<real_t, size> x)
   {
     return x.atan();
+  }
+  
+  template<typename real_t, int size>
+  inline realbuiltinvec<real_t, size> atan2(realbuiltinvec<real_t, size> x,
+                                            realbuiltinvec<real_t, size> y)
+  {
+    return x.atan2(y);
   }
   
   template<typename real_t, int size>

@@ -543,6 +543,7 @@ namespace vecmathlib {
     realvec asin() const { return MF::vml_asin(*this); }
     realvec asinh() const { return MF::vml_asinh(*this); }
     realvec atan() const { return MF::vml_atan(*this); }
+    realvec atan2(realvec y) const { return MF::vml_atan2(*this, y); }
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec cbrt() const { return MF::vml_cbrt(*this); }
     realvec ceil() const { return _mm256_ceil_ps(v); }
