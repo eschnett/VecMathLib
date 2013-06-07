@@ -1361,16 +1361,15 @@ struct vecmathlib_test {
     // Test "basic" functions first
     test_fabs();
     test_convert();
-#warning "TODO"
-    // test_rcp();
-    // test_sqrt();
-    // test_exp();
-    // test_log();
-    // test_pow();
-    // test_sin();
-    // test_sinh();
-    // test_asin();
-    // test_asinh();
+    test_rcp();
+    test_sqrt();
+    test_exp();
+    test_log();
+    test_pow();
+    test_sin();
+    test_sinh();
+    test_asin();
+    test_asinh();
   }
 };
 
@@ -1412,42 +1411,41 @@ int main(int argc, char** argv)
 #endif
     "]\n";
   
-#warning "TODO"
-//   vecmathlib_test<realpseudovec<float,1>>::test();
-//   // vecmathlib_test<realbuiltinvec<float,1>>::test();
-//   vecmathlib_test<realtestvec<float,1>>::test();
-// #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
-//   vecmathlib_test<realvec<float,1>>::test();
-// #endif
-//   vecmathlib_test<realpseudovec<float,4>>::test();
-//   // vecmathlib_test<realbuiltinvec<float,4>>::test();
-//   vecmathlib_test<realtestvec<float,4>>::test();
-// #ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
-//   vecmathlib_test<realvec<float,4>>::test();
-// #endif
-// #ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
-//   vecmathlib_test<realpseudovec<float,8>>::test();
-//   // vecmathlib_test<realbuiltinvec<float,8>>::test();
-//   vecmathlib_test<realtestvec<float,8>>::test();
-//   vecmathlib_test<realvec<float,8>>::test();
-// #endif
-//   
-//   vecmathlib_test<realpseudovec<double,1>>::test();
-//   // vecmathlib_test<realbuiltinvec<double,1>>::test();
-//   vecmathlib_test<realtestvec<double,1>>::test();
-// #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
-//   vecmathlib_test<realvec<double,1>>::test();
-// #endif
-//   vecmathlib_test<realpseudovec<double,2>>::test();
-//   // vecmathlib_test<realbuiltinvec<double,2>>::test();
-//   vecmathlib_test<realtestvec<double,2>>::test();
-// #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
-//   vecmathlib_test<realvec<double,2>>::test();
-// #endif
+  vecmathlib_test<realpseudovec<float,1>>::test();
+  // vecmathlib_test<realbuiltinvec<float,1>>::test();
+  vecmathlib_test<realtestvec<float,1>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
+  vecmathlib_test<realvec<float,1>>::test();
+#endif
+  vecmathlib_test<realpseudovec<float,4>>::test();
+  // vecmathlib_test<realbuiltinvec<float,4>>::test();
+  vecmathlib_test<realtestvec<float,4>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_4
+  vecmathlib_test<realvec<float,4>>::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
+  vecmathlib_test<realpseudovec<float,8>>::test();
+  // vecmathlib_test<realbuiltinvec<float,8>>::test();
+  vecmathlib_test<realtestvec<float,8>>::test();
+  vecmathlib_test<realvec<float,8>>::test();
+#endif
+  
+  vecmathlib_test<realpseudovec<double,1>>::test();
+  // vecmathlib_test<realbuiltinvec<double,1>>::test();
+  vecmathlib_test<realtestvec<double,1>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_1
+  vecmathlib_test<realvec<double,1>>::test();
+#endif
+  vecmathlib_test<realpseudovec<double,2>>::test();
+  // vecmathlib_test<realbuiltinvec<double,2>>::test();
+  vecmathlib_test<realtestvec<double,2>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_2
+  vecmathlib_test<realvec<double,2>>::test();
+#endif
 #ifdef VECMATHLIB_HAVE_VEC_DOUBLE_4
-//   vecmathlib_test<realpseudovec<double,4>>::test();
-//   // vecmathlib_test<realbuiltinvec<double,4>>::test();
-//   vecmathlib_test<realtestvec<double,4>>::test();
+  vecmathlib_test<realpseudovec<double,4>>::test();
+  // vecmathlib_test<realbuiltinvec<double,4>>::test();
+  vecmathlib_test<realtestvec<double,4>>::test();
   vecmathlib_test<realvec<double,4>>::test();
 #endif
   
