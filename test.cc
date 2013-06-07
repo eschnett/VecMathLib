@@ -308,6 +308,23 @@ struct vecmathlib_test {
     }
   }
   
+  static void check_int(const char* const func,
+                        const int_t rstd, const int_t rvml)
+  {
+    const int_t dr = rstd - rvml;
+    const bool isbad = dr;
+    if (isbad) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << ":\n"
+           << "   fstd()=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml()=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error()=" << dr << " [" << hex(dr) << "]\n"
+           << "   isbad()=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
   template<typename A>
   static void check_int(const char* const func,
                         int_t fstd(typename A::scalar_t x),
@@ -418,6 +435,23 @@ struct vecmathlib_test {
            << "   fvml(x,y,z)=" << rvml << " [" << hex(rvml) << "]\n"
 	   << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y,z)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  static void check_real(const char* const func,
+                         const real_t rstd, const real_t rvml)
+  {
+    const real_t dr = rstd - rvml;
+    const bool isbad = dr != R(0.0);
+    if (isbad) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << "():\n"
+           << "   fstd()=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml()=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   error()=" << dr << "\n"
+           << "   isbad()=" << isbad << "\n"
            << flush;
     }
   }
@@ -844,6 +878,24 @@ struct vecmathlib_test {
   {
     cout << "   testing integer operations...\n" << flush;
     
+    intvec_t i0 = intvec_t(I(0));
+    intvec_t i1 = intvec_t(I(1));
+    for (int i=0; i<realvec_t::size; ++i) {
+      check_int("0", 0, i0[i]);
+      check_int("1", 1, i1[i]);
+    }
+    
+    i0 = intvec_t(I(1));
+    i1 = intvec_t(I(0));
+    for (int n=0; n<realvec_t::size; ++n) {
+      i0.set_elt(n, 0);
+      i1.set_elt(n, 1);
+      for (int i=0; i<realvec_t::size; ++i) {
+        check_bool("set_elt", i<=n ? 0 : 1, i0[i], 0);
+        check_bool("set_elt", i<=n ? 1 : 0, i1[i], 1);
+      }
+    }
+    
     const int_t int_min = std::numeric_limits<int_t>::min();
     const int_t int_max = std::numeric_limits<int_t>::max();
     const int_t values[] = {
@@ -896,6 +948,29 @@ struct vecmathlib_test {
       check_bool<IV,IV>("<=", local_le, local_vle, x, y);
       check_bool<IV,IV>(">", local_gt, local_vgt, x, y);
       check_bool<IV,IV>(">=", local_ge, local_vge, x, y);
+    }
+  }
+  
+  static void test_real()
+  {
+    cout << "   testing real operations...\n" << flush;
+    
+    realvec_t r0 = realvec_t(0.0);
+    realvec_t r1 = realvec_t(1.0);
+    for (int i=0; i<realvec_t::size; ++i) {
+      check_real("0.0", R(0.0), r0[i]);
+      check_real("1.0", R(1.0), r1[i]);
+    }
+    
+    r0 = realvec_t(1.0);
+    r1 = realvec_t(0.0);
+    for (int n=0; n<realvec_t::size; ++n) {
+      r0.set_elt(n, R(0.0));
+      r1.set_elt(n, R(1.0));
+      for (int i=0; i<realvec_t::size; ++i) {
+        check_bool("set_elt", i<=n ? R(0.0) : R(1.0), r0[i], R(0.0));
+        check_bool("set_elt", i<=n ? R(1.0) : R(0.0), r1[i], R(1.0));
+      }
     }
   }
   
@@ -1279,6 +1354,7 @@ struct vecmathlib_test {
     
     test_bool();
     test_int();
+    test_real();
     
     test_mem();
     
