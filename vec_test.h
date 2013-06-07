@@ -709,7 +709,6 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto booltestvec<T,N>::as_int() const -> intvec_t
   typename booltestvec<T,N>::intvec_t booltestvec<T,N>::as_int() const
   {
     return convert_int();
@@ -717,7 +716,6 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto booltestvec<T,N>::convert_int() const -> intvec_t
   typename booltestvec<T,N>::intvec_t booltestvec<T,N>::convert_int() const
   {
     intvec_t res;
@@ -727,8 +725,8 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto booltestvec<T,N>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
-  typename booltestvec<T,N>::intvec_t booltestvec<T,N>::ifthen(intvec_t x, intvec_t y) const
+  typename booltestvec<T,N>::intvec_t
+  booltestvec<T,N>::ifthen(intvec_t x, intvec_t y) const
   {
     intvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = v[d] ? x.v[d] : y.v[d];
@@ -737,8 +735,8 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto booltestvec<T,N>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
-  typename booltestvec<T,N>::realvec_t booltestvec<T,N>::ifthen(realvec_t x, realvec_t y) const
+  typename booltestvec<T,N>::realvec_t
+  booltestvec<T,N>::ifthen(realvec_t x, realvec_t y) const
   {
     realvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = v[d] ? x.v[d] : y.v[d];
@@ -750,8 +748,8 @@ namespace vecmathlib {
   // inttestvec definitions
   
   template<typename T, int N>
-  // inline auto inttestvec<T,N>::as_float() const -> realvec_t
-  inline typename inttestvec<T,N>::realvec_t inttestvec<T,N>::as_float() const
+  inline
+  typename inttestvec<T,N>::realvec_t inttestvec<T,N>::as_float() const
   {
     realvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = FP::as_float(v[d]);
@@ -759,8 +757,8 @@ namespace vecmathlib {
   }
   
   template<typename T, int N>
-  // inline auto inttestvec<T,N>::convert_float() const -> realvec_t
-  inline typename inttestvec<T,N>::realvec_t inttestvec<T,N>::convert_float() const
+  inline
+  typename inttestvec<T,N>::realvec_t inttestvec<T,N>::convert_float() const
   {
     return MF::vml_convert_float(*this);
   }

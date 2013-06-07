@@ -51,7 +51,6 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_ilogb(realvec_t x) -> intvec_t
   typename realvec_t::intvec_t mathfuncs<realvec_t>::vml_ilogb(realvec_t x)
   {
     intvec_t e = lsr(as_int(x) & IV(FP::exponent_mask), FP::mantissa_bits);
@@ -67,22 +66,22 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_ieee_isfinite(realvec_t x) -> boolvec_t
-  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_ieee_isfinite(realvec_t x)
+  typename realvec_t::boolvec_t
+  mathfuncs<realvec_t>::vml_ieee_isfinite(realvec_t x)
   {
     return (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask);
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_ieee_isinf(realvec_t x) -> boolvec_t
-  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_ieee_isinf(realvec_t x)
+  typename realvec_t::boolvec_t
+  mathfuncs<realvec_t>::vml_ieee_isinf(realvec_t x)
   {
     return (as_int(x) & IV(~FP::signbit_mask)) == IV(FP::exponent_mask);
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_ieee_isnan(realvec_t x) -> boolvec_t
-  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_ieee_isnan(realvec_t x)
+  typename realvec_t::boolvec_t
+  mathfuncs<realvec_t>::vml_ieee_isnan(realvec_t x)
   {
     return
       (as_int(x) & IV(FP::exponent_mask)) == IV(FP::exponent_mask) &&
@@ -90,8 +89,8 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_ieee_isnormal(realvec_t x) -> boolvec_t
-  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_ieee_isnormal(realvec_t x)
+  typename realvec_t::boolvec_t
+  mathfuncs<realvec_t>::vml_ieee_isnormal(realvec_t x)
   {
     return
       (as_int(x) & IV(FP::exponent_mask)) != IV(FP::exponent_mask) &&
@@ -99,8 +98,8 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_isfinite(realvec_t x) -> boolvec_t
-  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_isfinite(realvec_t x)
+  typename realvec_t::boolvec_t
+  mathfuncs<realvec_t>::vml_isfinite(realvec_t x)
   {
 #if defined VML_HAVE_INF || defined VML_HAVE_NAN
     return vml_ieee_isfinite(x);
@@ -110,7 +109,6 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_isinf(realvec_t x) -> boolvec_t
   typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_isinf(realvec_t x)
   {
 #if defined VML_HAVE_INF
@@ -149,7 +147,6 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  // auto mathfuncs<realvec_t>::vml_signbit(realvec_t x) -> boolvec_t
   typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_signbit(realvec_t x)
   {
     return convert_bool(as_int(x) & IV(FP::signbit_mask));

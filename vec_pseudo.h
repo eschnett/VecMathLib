@@ -773,7 +773,6 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto boolpseudovec<T,N>::as_int() const -> intvec_t
   typename boolpseudovec<T,N>::intvec_t boolpseudovec<T,N>::as_int() const
   {
     return convert_int();
@@ -781,7 +780,6 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto boolpseudovec<T,N>::convert_int() const -> intvec_t
   typename boolpseudovec<T,N>::intvec_t boolpseudovec<T,N>::convert_int() const
   {
     intvec_t res;
@@ -791,8 +789,8 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto boolpseudovec<T,N>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
-  typename boolpseudovec<T,N>::intvec_t boolpseudovec<T,N>::ifthen(intvec_t x, intvec_t y) const
+  typename boolpseudovec<T,N>::intvec_t
+  boolpseudovec<T,N>::ifthen(intvec_t x, intvec_t y) const
   {
     intvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = v[d] ? x.v[d] : y.v[d];
@@ -801,8 +799,8 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
-  // auto boolpseudovec<T,N>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
-  typename boolpseudovec<T,N>::realvec_t boolpseudovec<T,N>::ifthen(realvec_t x, realvec_t y) const
+  typename boolpseudovec<T,N>::realvec_t
+  boolpseudovec<T,N>::ifthen(realvec_t x, realvec_t y) const
   {
     realvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = v[d] ? x.v[d] : y.v[d];
@@ -814,8 +812,8 @@ namespace vecmathlib {
   // intpseudovec definitions
   
   template<typename T, int N>
-  // inline auto intpseudovec<T,N>::as_float() const -> realvec_t
-  inline typename intpseudovec<T,N>::realvec_t intpseudovec<T,N>::as_float() const
+  inline
+  typename intpseudovec<T,N>::realvec_t intpseudovec<T,N>::as_float() const
   {
     realvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = FP::as_float(v[d]);
@@ -823,8 +821,8 @@ namespace vecmathlib {
   }
   
   template<typename T, int N>
-  // inline auto intpseudovec<T,N>::convert_float() const -> realvec_t
-  inline typename intpseudovec<T,N>::realvec_t intpseudovec<T,N>::convert_float() const
+  inline
+  typename intpseudovec<T,N>::realvec_t intpseudovec<T,N>::convert_float() const
   {
     realvec_t res;
     for (int d=0; d<size; ++d) res.v[d] = FP::convert_float(v[d]);
@@ -1200,7 +1198,8 @@ namespace vecmathlib {
   template<typename real_t, int size>
   inline
   realpseudovec<real_t, size> ldexp(realpseudovec<real_t, size> x,
-                                    typename intpseudovec<real_t, size>::int_t n)
+                                    typename intpseudovec<real_t, size>::int_t
+                                    n)
   {
     return x.ldexp(n);
   }
