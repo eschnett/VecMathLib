@@ -458,6 +458,27 @@ struct vecmathlib_test {
   
   template<typename A>
   static void check_real(const char* const func,
+                         const real_t rstd, const real_t rvml, const A x,
+                         const real_t accuracy)
+  {
+    const real_t dr = rstd - rvml;
+    const real_t scale = fabs(rstd) + fabs(rvml) + R(1.0);
+    const bool isbad = fabs(dr) > accuracy * scale;
+    if (isbad) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << "():\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
+           << "   error(x)=" << dr << "\n"
+           << "   isbad(x)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
+  template<typename A>
+  static void check_real(const char* const func,
                          real_t fstd(typename A::scalar_t x),
                          realvec_t fvml(A x),
                          const A x,
@@ -1047,7 +1068,24 @@ struct vecmathlib_test {
       check_real<RV,RV>("+", local_add, local_add, x, y, R(0.0));
       check_real<RV,RV>("-", local_sub, local_sub, x, y, R(0.0));
       check_real<RV,RV>("*", local_mul, local_mul, x, y, R(0.0));
-
+      
+      {
+        real_t rstd = 0.0;
+        for (int i=0; i<realvec_t::size; ++i) {
+          rstd += x[i];
+        }
+        real_t rvml = sum(x);
+        check_real("sum", rstd, rvml, x, accuracy());
+      }
+      {
+        real_t rstd = 1.0;
+        for (int i=0; i<realvec_t::size; ++i) {
+          rstd *= x[i];
+        }
+        real_t rvml = prod(x);
+        check_real("prod", rstd, rvml, x, accuracy());
+      }
+      
       check_bool<RV,RV>("==", local_eq, local_veq, x, y);
       check_bool<RV,RV>("!=", local_ne, local_vne, x, y);
       check_bool<RV,RV>("<", local_lt, local_vlt, x, y);
