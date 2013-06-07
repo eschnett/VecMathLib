@@ -476,8 +476,8 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << " "
-           << "[" << hex(x) << "]):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   abs-error(x)=" << fabs(dr) << "\n"
@@ -507,8 +507,9 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "," << y << " "
-           << "[" << hex(x) << "],[" << hex(y) << "]):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   abs-error(x,y)=" << fabs(dr) << "\n"
@@ -545,8 +546,9 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "," << y << " "
-           << "[" << hex(x) << "],[" << hex(y) << "]):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   abs-error(x,y)=" << fabs(dr) << "\n"
@@ -579,8 +581,10 @@ struct vecmathlib_test {
     if (any(isbad)) {
       ++ num_errors;
       cout << setprecision(realvec_t::digits10+2)
-           << "Error in " << func << "(" << x << "," << y<< "," << z << " "
-           << "[" << hex(x) << "," << hex(y) << "," << hex(z) << "]):\n"
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
+           << "   z=" << z << " [" << hex(z) << "]\n"
            << "   fstd(x,y,z)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y,z)=" << rvml << " [" << hex(rvml) << "]\n"
            << "   abs-error(x,y,z)=" << fabs(dr) << "\n"
