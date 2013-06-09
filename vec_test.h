@@ -685,6 +685,10 @@ namespace vecmathlib {
     realtestvec log10() const { return MF::vml_log10(*this); }
     realtestvec log1p() const { return MF::vml_log1p(*this); }
     realtestvec log2() const { return MF::vml_log2(*this); }
+    realtestvec nextafter(realtestvec y) const
+    {
+      return MF::vml_nextafter(*this, y);
+    }
     realtestvec pow(realtestvec y) const { return MF::vml_pow(*this, y); }
     realtestvec rcp() const { return MF::vml_rcp(*this); }
     realtestvec remainder(realtestvec y) const
@@ -1167,6 +1171,13 @@ namespace vecmathlib {
   inline realtestvec<real_t, size> log2(realtestvec<real_t, size> x)
   {
     return x.log2();
+  }
+  
+  template<typename real_t, int size>
+  inline realtestvec<real_t, size> nextafter(realtestvec<real_t, size> x,
+                                             realtestvec<real_t, size> y)
+  {
+    return x.nextafter(y);
   }
   
   template<typename real_t, int size>

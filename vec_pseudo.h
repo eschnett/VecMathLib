@@ -744,6 +744,10 @@ namespace vecmathlib {
     realpseudovec log10() const { return map(std::log10); }
     realpseudovec log1p() const { return map(std::log1p); }
     realpseudovec log2() const { return map(std::log2); }
+    realpseudovec nextafter(realpseudovec y) const
+    {
+      return map(std::nextafter, y);
+    }
     realpseudovec pow(realpseudovec y) const { return map(std::pow, y); }
     realpseudovec rcp() const
     {
@@ -1234,6 +1238,13 @@ namespace vecmathlib {
   inline realpseudovec<real_t, size> log2(realpseudovec<real_t, size> x)
   {
     return x.log2();
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> nextafter(realpseudovec<real_t, size> x,
+                                               realpseudovec<real_t, size> y)
+  {
+    return x.nextafter(y);
   }
   
   template<typename real_t, int size>

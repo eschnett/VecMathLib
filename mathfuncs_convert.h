@@ -172,6 +172,23 @@ namespace vecmathlib {
     return r;
   }
   
+  // Next machine representable number from x in direction y
+  template<typename realvec_t>
+  realvec_t mathfuncs<realvec_t>::vml_nextafter(realvec_t x, realvec_t y)
+  {
+    realvec_t dir = y - x;
+    realvec_t offset = ldexp(RV(FP::epsilon()), ilogb(x));
+    offset = copysign(offset, dir);
+    offset = ifthen(convert_bool(as_int(x) & IV(FP::mantissa_mask)) ||
+                    signbit(x) == signbit(offset),
+                    offset,
+                    offset * RV(0.5));
+    realvec_t r = x + offset;
+    real_t smallest_pos = std::ldexp(FP::min(), -FP::mantissa_bits);
+    return ifthen(dir==RV(0.0), y,
+                  ifthen(x==RV(0.0), copysign(RV(smallest_pos), dir), r));
+  }
+  
 }; // namespace vecmathlib
 
 #endif  // #ifndef MATHFUNCS_CONVERT_H

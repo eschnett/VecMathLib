@@ -57,6 +57,7 @@ namespace vecmathlib {
     static realvec_t vml_floor(realvec_t x);
     static realvec_t vml_rint(realvec_t x);
     static realvec_t vml_round(realvec_t x);
+    static realvec_t vml_nextafter(realvec_t x, realvec_t y);
     static realvec_t vml_trunc(realvec_t x);
     
     // fabs

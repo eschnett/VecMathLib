@@ -1010,7 +1010,7 @@ struct vecmathlib_test {
   static real_t local_ldexp(real_t x, int_t n) { return ldexp(x, n); }
   static void test_fabs()
   {
-    cout << "   testing + - + - * == != < <= > >= copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp signbit...\n" << flush;
+    cout << "   testing + - + - * == != < <= > >= copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp nextafter signbit...\n" << flush;
     
     const real_t eps = FP::epsilon();
     const real_t int_min = R(std::numeric_limits<int_t>::min());
@@ -1118,6 +1118,8 @@ struct vecmathlib_test {
 #endif
       check_real<RV,I>("ldexp", local_ldexp, vecmathlib::ldexp, x, n[0], 0.0);
       check_real<RV,IV>("ldexp", local_ldexp, vecmathlib::ldexp, x, n, 0.0);
+      check_real<RV,RV>("nextafter",
+                        std::nextafter, vecmathlib::nextafter, x, y, 0.0);
       check_bool<RV>("signbit", std::signbit, vecmathlib::signbit, x);
     }
   }

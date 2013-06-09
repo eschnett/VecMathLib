@@ -429,6 +429,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> nextafter(realvec<real_t, size> x,
+                                         realvec<real_t, size> y)
+  {
+    return x.nextafter(y);
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> pow(realvec<real_t, size> x,
                                    realvec<real_t, size> y)
   {

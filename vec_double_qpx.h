@@ -581,6 +581,7 @@ namespace vecmathlib {
     realvec log10() const { return log10d4(v); }
     realvec log1p() const { return log1pd4(v); }
     realvec log2() const { return log2d4(v); }
+    realvec nextafter(realvec y) const { return nexafterd4(v, y.v); }
     realvec pow(realvec y) const { return powd4(v, y.v); }
     realvec rcp() const { return RV(1.0)/(*this); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
