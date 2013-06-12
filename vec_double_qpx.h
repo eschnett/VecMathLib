@@ -506,7 +506,11 @@ namespace vecmathlib {
     realvec operator+(realvec x) const { return vec_add(v, x.v); }
     realvec operator-(realvec x) const { return vec_sub(v, x.v); }
     realvec operator*(realvec x) const { return vec_mul(v, x.v); }
-    realvec operator/(realvec x) const { return vec_swdiv_nochk(v, x.v); }
+    realvec operator/(realvec x) const
+    {
+      // return vec_swdiv_nochk(v, x.v);
+      return div_fastd4(v, x.v);
+    }
     
     realvec& operator+=(realvec const& x) { return *this=*this+x; }
     realvec& operator-=(realvec const& x) { return *this=*this-x; }
@@ -586,9 +590,9 @@ namespace vecmathlib {
     realvec log10() const { return log10d4(v); }
     realvec log1p() const { return log1pd4(v); }
     realvec log2() const { return log2d4(v); }
-    realvec nextafter(realvec y) const { return nexafterd4(v, y.v); }
+    realvec nextafter(realvec y) const { return MF::vml_nextafter(*this, y); }
     realvec pow(realvec y) const { return powd4(v, y.v); }
-    realvec rcp() const { return RV(1.0)/(*this); }
+    realvec rcp() const { return recip_fastd4(v); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
     realvec rint() const { return MF::vml_rint(*this); }
     realvec round() const { return vec_round(v); }
