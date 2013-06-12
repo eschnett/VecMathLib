@@ -40,40 +40,40 @@ namespace std { class type_info; }
 #  define VML_ASSERT(x) ((void)0)
 #endif
 
-// Scalarise all vector operations, and use libm's functions (mostly
-// useful as fallback)
-#include "vec_pseudo.h"
-
-// Use compiler-provided vector types
-// #include "vec_builtin.h"
-
-// Scalarise all vector operations; don't use libm, use only
-// Vecmathlib's functions (mostly useful for testing Vecmathlib)
-#include "vec_test.h"
-
+//TODO // Scalarise all vector operations, and use libm's functions (mostly
+//TODO // useful as fallback)
+//TODO #include "vec_pseudo.h"
+//TODO 
+//TODO // Use compiler-provided vector types
+//TODO // #include "vec_builtin.h"
+//TODO 
+//TODO // Scalarise all vector operations; don't use libm, use only
+//TODO // Vecmathlib's functions (mostly useful for testing Vecmathlib)
+//TODO #include "vec_test.h"
+//TODO 
 #if defined __SSE2__            // Intel SSE 2
-#  include "vec_float_sse2_scalar.h"
-#  include "vec_double_sse2_scalar.h"
-#  include "vec_float_sse2.h"
-#  include "vec_double_sse2.h"
+//TODO #  include "vec_float_sse2_scalar.h"
+//TODO #  include "vec_double_sse2_scalar.h"
+//TODO #  include "vec_float_sse2.h"
+#  include "vec_double2_sse.h"
 #endif
-
-#if defined __AVX__             // Intel AVX
-#  include "vec_fp8_avx.h"
-#  include "vec_fp16_avx.h"
-#  include "vec_float_avx.h"
-#  include "vec_double_avx.h"
-#endif
-
-#if defined __ALTIVEC__         // IBM Altivec
-#  include "vec_float_altivec.h"
-#endif
-#if defined __VSX__             // IBM VSX
-#  include "vec_double_vsx.h"
-#endif
-
-#if defined __bgq__ && defined __VECTOR4DOUBLE__  // Blue Gene/Q QPX
-#  include "vec_double_qpx.h"
-#endif
+//TODO 
+//TODO #if defined __AVX__             // Intel AVX
+//TODO #  include "vec_fp8_avx.h"
+//TODO #  include "vec_fp16_avx.h"
+//TODO #  include "vec_float_avx.h"
+//TODO #  include "vec_double_avx.h"
+//TODO #endif
+//TODO 
+//TODO #if defined __ALTIVEC__         // IBM Altivec
+//TODO #  include "vec_float_altivec.h"
+//TODO #endif
+//TODO #if defined __VSX__             // IBM VSX
+//TODO #  include "vec_double_vsx.h"
+//TODO #endif
+//TODO 
+//TODO #if defined __bgq__ && defined __VECTOR4DOUBLE__  // Blue Gene/Q QPX
+//TODO #  include "vec_double_qpx.h"
+//TODO #endif
 
 #endif // #ifndef VECMATHLIB_H

@@ -3,7 +3,7 @@
 #ifndef MATHFUNCS_BASE_H
 #define MATHFUNCS_BASE_H
 
-#include "floatprops.h"
+#include "real_properties.h"
 #include "vec_base.h"
 
 

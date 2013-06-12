@@ -1,7 +1,7 @@
 // -*-C++-*-
 
-#ifndef FLOATPROPS_H
-#define FLOATPROPS_H
+#ifndef REAL_PROPERTIES_H
+#define REAL_PROPERTIES_H
 
 #include "floattypes.h"
 
@@ -22,7 +22,7 @@ namespace vecmathlib {
   // type. Most properties are already described in numeric_limits, so
   // we inherit it.
   template<typename real_t>
-  struct floatprops {
+  struct real_properties {
     // Some interesting properties are:
     //    min
     //    max
@@ -36,7 +36,7 @@ namespace vecmathlib {
   
   // Properties of fp8
   template<>
-  struct floatprops<fp8> {
+  struct real_properties<fp8> {
     typedef fp8 real_t;
     typedef std::int8_t int_t;
     typedef std::uint8_t uint_t;
@@ -74,7 +74,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static real_t as_float(int_t x)
+    static real_t as_real(int_t x)
     {
       real_t res;
       std::memcpy(&res, &x, sizeof res);
@@ -88,7 +88,7 @@ namespace vecmathlib {
     }
     
     // Convert values (truncate)
-    static real_t convert_float(int_t x) { __builtin_unreachable(); }
+    static real_t convert_real(int_t x) { __builtin_unreachable(); }
     static int_t convert_int(real_t x) { __builtin_unreachable(); }
   };
   
@@ -96,7 +96,7 @@ namespace vecmathlib {
   
   // Properties of fp16
   template<>
-  struct floatprops<fp16> {
+  struct real_properties<fp16> {
     typedef fp16 real_t;
     typedef std::int16_t int_t;
     typedef std::uint16_t uint_t;
@@ -134,7 +134,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static real_t as_float(int_t x)
+    static real_t as_real(int_t x)
     {
       real_t res;
       std::memcpy(&res, &x, sizeof res);
@@ -148,7 +148,7 @@ namespace vecmathlib {
     }
     
     // Convert values (truncate)
-    static real_t convert_float(int_t x) { __builtin_unreachable(); }
+    static real_t convert_real(int_t x) { __builtin_unreachable(); }
     static int_t convert_int(real_t x) { __builtin_unreachable(); }
   };
   
@@ -156,7 +156,7 @@ namespace vecmathlib {
   
   // Properties of float
   template<>
-  struct floatprops<float>: std::numeric_limits<float> {
+  struct real_properties<float>: std::numeric_limits<float> {
     typedef float real_t;
     typedef std::int32_t int_t;
     typedef std::uint32_t uint_t;
@@ -189,7 +189,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static real_t as_float(int_t x)
+    static real_t as_real(int_t x)
     {
       real_t res;
       std::memcpy(&res, &x, sizeof res);
@@ -203,7 +203,7 @@ namespace vecmathlib {
     }
     
     // Convert values (truncate)
-    static real_t convert_float(int_t x) { return real_t(x); }
+    static real_t convert_real(int_t x) { return real_t(x); }
     static int_t convert_int(real_t x) { return int_t(x); }
   };
   
@@ -211,7 +211,7 @@ namespace vecmathlib {
   
   // Properties of double
   template<>
-  struct floatprops<double>: std::numeric_limits<double> {
+  struct real_properties<double>: std::numeric_limits<double> {
     typedef double real_t;
     typedef std::int64_t int_t;
     typedef std::uint64_t uint_t;
@@ -244,7 +244,7 @@ namespace vecmathlib {
                   "error in masks");
     
     // Re-interpret bit patterns
-    static real_t as_float(int_t x)
+    static real_t as_real(int_t x)
     {
       real_t res;
       std::memcpy(&res, &x, sizeof res);
@@ -258,7 +258,7 @@ namespace vecmathlib {
     }
     
     // Convert values (truncate)
-    static real_t convert_float(int_t x) { return real_t(x); }
+    static real_t convert_real(int_t x) { return real_t(x); }
     static int_t convert_int(real_t x) { return int_t(x); }
   };
   
@@ -266,4 +266,4 @@ namespace vecmathlib {
   
 } // namespace vecmathlib
 
-#endif  // #ifndef FLOATPROPS_H
+#endif  // #ifndef REAL_PROPERTIES_H
