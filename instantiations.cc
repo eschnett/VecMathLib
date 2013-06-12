@@ -71,3 +71,129 @@ namespace vecmathlib {
 #endif
   
 }
+
+
+
+// Various tests to detect auto-vectorization features
+
+
+
+#include <cstdlib>
+using namespace std;
+
+// Vector size; this is system-specific and needs to be manually
+// adapted
+#define VECSIZE 4
+
+using namespace vecmathlib;
+typedef realvec<double,VECSIZE> doubleV;
+
+
+
+#define restrict __restrict__
+
+#ifdef __clang__
+#  define __builtin_assume_aligned(exp, align) (exp)
+#endif
+
+
+
+// Simple, naive loop adding two arrays
+extern "C"
+void loop_add(double* a_,
+              double* b_,
+              double* c_,
+              ptrdiff_t n)
+{
+  doubleV* a = (doubleV*)a_;
+  doubleV* b = (doubleV*)b_;
+  doubleV* c = (doubleV*)c_;
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    a[i] = b[i] + c[i];
+  }
+}
+
+
+
+// Declare pointers as restrict
+extern "C"
+void loop_add_restrict(double *restrict a_,
+                       double *restrict b_,
+                       double *restrict c_,
+                       ptrdiff_t n)
+{
+  doubleV *restrict a = (doubleV*)a_;
+  doubleV *restrict b = (doubleV*)b_;
+  doubleV *restrict c = (doubleV*)c_;
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    a[i] = b[i] + c[i];
+  }
+}
+
+
+
+// Declare pointers as restrict and aligned
+extern "C"
+void loop_add_aligned(double *restrict a_,
+                      double *restrict b_,
+                      double *restrict c_,
+                      ptrdiff_t n)
+{
+  doubleV *restrict a = (doubleV*)__builtin_assume_aligned(a_, sizeof *a);
+  doubleV *restrict b = (doubleV*)__builtin_assume_aligned(b_, sizeof *b);
+  doubleV *restrict c = (doubleV*)__builtin_assume_aligned(c_, sizeof *c);
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    a[i] = b[i] + c[i];
+  }
+}
+
+
+
+// Reduction loop
+extern "C"
+double loop_dot_reduce(double *restrict a_,
+                       double *restrict b_,
+                       ptrdiff_t n)
+{
+  doubleV *restrict a = (doubleV*)__builtin_assume_aligned(a_, sizeof *a);
+  doubleV *restrict b = (doubleV*)__builtin_assume_aligned(b_, sizeof *b);
+  doubleV sumV = 0.0;
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    sumV += a[i] * b[i];
+  }
+  return sum(sumV);
+}
+
+
+
+// Loop with a simple if condition (fmax)
+extern "C"
+void loop_if_simple(double *restrict a_,
+                    double *restrict b_,
+                    double *restrict c_,
+                    ptrdiff_t n)
+{
+  doubleV *restrict a = (doubleV*)__builtin_assume_aligned(a_, sizeof *a);
+  doubleV *restrict b = (doubleV*)__builtin_assume_aligned(b_, sizeof *b);
+  doubleV *restrict c = (doubleV*)__builtin_assume_aligned(c_, sizeof *c);
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    a[i] = ifthen(b[i] > c[i], b[i], c[i]);
+  }
+}
+
+
+
+// Loop with a complex if condition (select)
+extern "C"
+void loop_if(double *restrict a_,
+             double *restrict b_,
+             double *restrict c_,
+             ptrdiff_t n)
+{
+  doubleV *restrict a = (doubleV*)__builtin_assume_aligned(a_, sizeof *a);
+  doubleV *restrict b = (doubleV*)__builtin_assume_aligned(b_, sizeof *b);
+  doubleV *restrict c = (doubleV*)__builtin_assume_aligned(c_, sizeof *c);
+  for (ptrdiff_t i=0; i<n/VECSIZE; ++i) {
+    a[i] = ifthen(b[i] > doubleV(0.0), b[i] * c[i], doubleV(1.0));
+  }
+}
