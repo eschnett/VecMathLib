@@ -355,6 +355,13 @@ namespace vecmathlib {
     
     
     
+    boolvec_t signbit() const
+    {
+      boolvec_t res;
+      for (int d=0; d<size; ++d) res.set_elt(d, v[d] < 0);
+      return res;
+    }
+    
     boolvec_t operator==(intpseudovec const& x) const
     {
       boolvec_t res;
@@ -916,6 +923,12 @@ namespace vecmathlib {
                                         intpseudovec<real_t, size> n)
   {
     return x.lsr(n);
+  }
+  
+  template<typename real_t, int size>
+  inline boolpseudovec<real_t, size> signbit(intpseudovec<real_t, size> x)
+  {
+    return x.signbit();
   }
   
   

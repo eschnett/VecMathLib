@@ -887,6 +887,7 @@ struct vecmathlib_test {
   template<typename T> static T local_sr(T x, T y) { return x>>y; }
   template<typename T> static T local_sl(T x, T y) { return x<<y; }
 
+  template<typename T> static bool local_signbit(T x) { return x<0; }
   template<typename T> static bool local_eq(T x, T y) { return x==y; }
   template<typename T> static bool local_ne(T x, T y) { return x!=y; }
   template<typename T> static bool local_lt(T x, T y) { return x<y; }
@@ -967,6 +968,7 @@ struct vecmathlib_test {
       check_int<IV,IV>(">>", local_sr, local_sr, x, y & IV(bits-1));
       check_int<IV,IV>("<<", local_sl, local_sl, x, y & IV(bits-1));
       
+      check_bool<IV>("signbit", local_signbit, vecmathlib::signbit, x);
       check_bool<IV,IV>("==", local_eq, local_veq, x, y);
       check_bool<IV,IV>("!=", local_ne, local_vne, x, y);
       check_bool<IV,IV>("<", local_lt, local_vlt, x, y);

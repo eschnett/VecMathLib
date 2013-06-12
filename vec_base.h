@@ -105,6 +105,12 @@ namespace vecmathlib {
     return x.lsr(n);
   }
   
+  template<typename real_t, int size>
+  inline boolvec<real_t, size> signbit(intvec<real_t, size> x)
+  {
+    return x.signbit();
+  }
+  
   
   
   // realvec wrappers

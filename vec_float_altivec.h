@@ -209,6 +209,11 @@ namespace vecmathlib {
     
     
     
+    boolvec_t signbit() const
+    {
+      return *this < IV(I(0));
+    }
+    
     boolvec_t operator==(intvec const& x) const { return vec_cmpeq(v, x.v); }
     boolvec_t operator!=(intvec const& x) const { return !(*this == x); }
     boolvec_t operator<(intvec const& x) const { return vec_cmplt(v, x.v); }

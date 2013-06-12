@@ -317,6 +317,11 @@ namespace vecmathlib {
     
     
     
+    boolvec_t signbit() const
+    {
+      return as_bool();
+    }
+    
     boolvec_t operator==(intvec const& x) const
     {
       return ! (*this != x);
