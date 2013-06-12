@@ -12,11 +12,9 @@ namespace vecmathlib {
   template<typename realvec_t>
   class mask_t {
     
-    // friend realvec_t;
-    
     typedef typename realvec_t::boolvec_t boolvec_t;
     typedef typename realvec_t::intvec_t intvec_t;
-    static int const size = realvec_t::size;
+    static const int size = realvec_t::size;
     
   public:
     std::ptrdiff_t imin, imax;
@@ -25,29 +23,45 @@ namespace vecmathlib {
     bool all_m;
     
   public:
+    
+    // Construct a mask from a boolvec
     mask_t(boolvec_t m_): m(m_), all_m(all(m)) {}
-    mask_t(std::ptrdiff_t imin_, std::ptrdiff_t imax_, std::ptrdiff_t ioff):
-      imin(imin_), imax(imax_),
-      i(imin - (ioff + imin) % size)
+    
+    // Construct a mask for a particular location i
+    mask_t(std::ptrdiff_t i_,
+           std::ptrdiff_t imin_, std::ptrdiff_t imax_, std::ptrdiff_t ioff):
+      imin(imin_), imax(imax_), i(i_)
     {
-      all_m = i>=imin && i<=imax-size;
+      all_m = i-imin >= 0 && i+size-1-imax < 0;
       if (__builtin_expect(all_m, true)) {
         m = true;
       } else {
-        m = (intvec_t(i) >= intvec_t(imin     ) - intvec_t::iota() &&
-             intvec_t(i) <= intvec_t(imax-size) - intvec_t::iota());
+        m = (! signbit(intvec_t(i          - imin) + intvec_t::iota()) &&
+               signbit(intvec_t(i + size-1 - imax) + intvec_t::iota()));
       }
     }
+    
+    // Construct a mask for a loop starting at imin, aligned down
+    mask_t(std::ptrdiff_t imin_, std::ptrdiff_t imax_, std::ptrdiff_t ioff):
+      mask_t(imin_ - (ioff + imin_) % size, imin_, imax_, ioff)
+    {
+    }
+    
+    // Get current index
     std::ptrdiff_t index() const { return i; }
+    
+    // Looping condition
     operator bool() const { return i<imax; }
+    
+    // Loop stepper
     void operator++()
     {
       i += size;
-      all_m = i<=imax-size;
+      all_m = i + size-1 - imax < 0;
       if (__builtin_expect(all_m, true)) {
         m = true;
       } else {
-        m = intvec_t(i) <= intvec_t(imax-size) - intvec_t::iota();
+        m = signbit(intvec_t(i + size-1 - imax) + intvec_t::iota());
       }
     }
   };
