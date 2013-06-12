@@ -1016,13 +1016,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline auto prod(realpseudovec<real_t, size> x) -> real_t
+  inline real_t prod(realpseudovec<real_t, size> x)
   {
     return x.prod();
   }
   
   template<typename real_t, int size>
-  inline auto sum(realpseudovec<real_t, size> x) -> real_t
+  inline real_t sum(realpseudovec<real_t, size> x)
   {
     return x.sum();
   }

@@ -119,7 +119,7 @@ namespace vecmathlib {
   }
   
   template<typename realvec_t>
-  auto mathfuncs<realvec_t>::vml_isnan(realvec_t x) -> boolvec_t
+  typename realvec_t::boolvec_t mathfuncs<realvec_t>::vml_isnan(realvec_t x)
   {
 #if defined VML_HAVE_NAN
     return vml_ieee_isnan(x);

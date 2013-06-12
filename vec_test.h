@@ -950,13 +950,13 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline auto prod(realtestvec<real_t, size> x) -> real_t
+  inline real_t prod(realtestvec<real_t, size> x)
   {
     return x.prod();
   }
   
   template<typename real_t, int size>
-  inline auto sum(realtestvec<real_t, size> x) -> real_t
+  inline real_t sum(realtestvec<real_t, size> x)
   {
     return x.sum();
   }
