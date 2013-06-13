@@ -451,7 +451,11 @@ namespace vecmathlib {
       // return vrndm_f32(v);
       return MF::vml_floor(*this);
     }
-    realvec fma(realvec y, realvec z) const { return vmla_f32(v, y.v, z.v); }
+    realvec fma(realvec y, realvec z) const
+    {
+      // TODO: vfma_f32
+      return vmla_f32(z.v, v, y.v);
+    }
     realvec fmax(realvec y) const { return vmax_f32(v, y.v); }
     realvec fmin(realvec y) const { return vmin_f32(v, y.v); }
     realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
