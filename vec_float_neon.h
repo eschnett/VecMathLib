@@ -187,7 +187,7 @@ namespace vecmathlib {
     
     intvec operator~() const { return vmvn_s32(v); }
     
-    intvec operator&(intvec x) const { return vadd_s32(v, x.v); }
+    intvec operator&(intvec x) const { return vand_s32(v, x.v); }
     intvec operator|(intvec x) const { return vorr_s32(v, x.v); }
     intvec operator^(intvec x) const { return veor_s32(v, x.v); }
     
