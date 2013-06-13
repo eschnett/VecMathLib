@@ -95,17 +95,13 @@ namespace vecmathlib {
     
     bool all() const
     {
-      boolvec x = v;
-      v = vpmin_u32(v, v);
-      v = vpmin_u32(v, v);
-      return to_bool(v[0]);
+      boolvec r = vpmin_u32(v, v);
+      return to_bool(r[0]);
     }
     bool any() const
     {
-      boolvec x = v;
-      v = vpmax_u32(v, v);
-      v = vpmax_u32(v, v);
-      return to_bool(v[0]);
+      boolvec r = vpmax_u32(v, v);
+      return to_bool(r[0]);
     }
     
     
@@ -206,7 +202,7 @@ namespace vecmathlib {
     
     intvec lsr(intvec n) const
     {
-      return vreinterpret_u32_s32(vshl_u32(vreinterpret_s32_u32(v), (-n).v));
+      return vreinterpret_s32_u32(vshl_u32(vreinterpret_s32_u32(v), (-n).v));
     }
     intvec operator>>(intvec n) const
     {
@@ -403,24 +399,22 @@ namespace vecmathlib {
     
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      return (*this)[0] * (*this)[1];
     }
     real_t sum() const
     {
-      boolvec x = v;
-      v = vpadd_f32(v, v);
-      v = vpadd_f32(v, v);
-      return v[0];
+      realvec r = vpadd_f32(v, v);
+      return r[0];
     }
     
     
     
-    boolvec_t operator==(intvec const& x) const { return vceq_f32(v, x.v); }
-    boolvec_t operator!=(intvec const& x) const { return !(*this == x); }
-    boolvec_t operator<(intvec const& x) const { return vclt_f32(v, x.v); }
-    boolvec_t operator<=(intvec const& x) const { return vcle_f32(v, x.v); }
-    boolvec_t operator>(intvec const& x) const { return vcgt_f32(v, x.v); }
-    boolvec_t operator>=(intvec const& x) const { return vcge_f32(v, x.v); }
+    boolvec_t operator==(realvec const& x) const { return vceq_f32(v, x.v); }
+    boolvec_t operator!=(realvec const& x) const { return !(*this == x); }
+    boolvec_t operator<(realvec const& x) const { return vclt_f32(v, x.v); }
+    boolvec_t operator<=(realvec const& x) const { return vcle_f32(v, x.v); }
+    boolvec_t operator>(realvec const& x) const { return vcgt_f32(v, x.v); }
+    boolvec_t operator>=(realvec const& x) const { return vcge_f32(v, x.v); }
     
     
     
@@ -432,10 +426,14 @@ namespace vecmathlib {
     realvec atan2(realvec y) const { return MF::vml_atan2(*this, y); }
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec cbrt() const { return MF::vml_cbrt(*this); }
-    realvec ceil() const { return vrndp_f32(v); }
+    realvec ceil() const
+    {
+      // return vrndp_f32(v);
+      return MF::vml_ceil(*this);
+    }
     realvec copysign(realvec y) const
     {
-      return vbsl_f32(FP::signbit_mask, y.v, v);
+      return vbsl_f32(vdup_n_u32(FP::signbit_mask), y.v, v);
     }
     realvec cos() const { return MF::vml_cos(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
@@ -445,7 +443,11 @@ namespace vecmathlib {
     realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return vabs_f32(v); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return vrndm_f32(v); }
+    realvec floor() const
+    {
+      // return vrndm_f32(v);
+      return MF::vml_floor(*this);
+    }
     realvec fma(realvec y, realvec z) const { return vmla_f32(v, y.v, z.v); }
     realvec fmax(realvec y) const { return vmax_f32(v, y.v); }
     realvec fmin(realvec y) const { return vmin_f32(v, y.v); }
@@ -472,8 +474,16 @@ namespace vecmathlib {
       return r;
     }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec rint() const { return vrndn_f32(v); }
-    realvec round() const { return vrnda_f32(v); }
+    realvec rint() const
+    {
+      // return vrndn_f32(v);
+      return MF::vml_rint(*this);
+    }
+    realvec round() const
+    {
+      // return vrnda_f32(v);
+      return MF::vml_round(*this);
+    }
     realvec rsqrt() const
     {
       realvec r = vrsqrte_f32(v);
@@ -503,7 +513,7 @@ namespace vecmathlib {
   inline
   auto boolvec<float,2>::convert_int() const -> intvec_t
   {
-    return -v.as_int();
+    return (- *this).as_int();
   }
   
   inline
