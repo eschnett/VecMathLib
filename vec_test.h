@@ -427,7 +427,7 @@ namespace vecmathlib {
 #  elif defined __PPC64__       // maybe also __PPC__
       for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
 #  elif defined __arm__
-      for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+w" (v[d]));
 #  else
 #    error "Floating point barrier undefined on this architecture"
 #  endif
