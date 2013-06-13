@@ -51,7 +51,7 @@ namespace std { class type_info; }
 // Vecmathlib's functions (mostly useful for testing Vecmathlib)
 #include "vec_test.h"
 
-#if defined __ARM_NEON__        // ARM NEON
+#if defined __ARM_PCS_VFP       // ARM NEON
 // TODO: VFP
 #  include "vec_float_neon.h"
 #endif
