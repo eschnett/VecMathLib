@@ -223,7 +223,7 @@ namespace vecmathlib {
     boolvec_t signbit() const
     {
       //return *this < IV(I(0));
-      return vshr_n_s32(v, FP::bits-1);
+      return intvec(vshr_n_s32(v, FP::bits-1)).as_bool();
     }
     
     boolvec_t operator==(intvec const& x) const { return vceq_s32(v, x.v); }
