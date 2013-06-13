@@ -1431,6 +1431,9 @@ int main(int argc, char** argv)
 #ifdef VML_DEBUG
     "-DEBUG"
 #endif
+#ifdef __ARM_PCS_VFP
+    "-NEON"
+#endif
 #ifdef __ALTIVEC__
     "-Altivec"
 #endif
@@ -1462,6 +1465,12 @@ int main(int argc, char** argv)
   vecmathlib_test<realtestvec<float,1>>::test();
 #ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
   vecmathlib_test<realvec<float,1>>::test();
+#endif
+  vecmathlib_test<realpseudovec<float,2>>::test();
+  // vecmathlib_test<realbuiltinvec<float,2>>::test();
+  vecmathlib_test<realtestvec<float,2>>::test();
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_2
+  vecmathlib_test<realvec<float,2>>::test();
 #endif
   vecmathlib_test<realpseudovec<float,4>>::test();
   // vecmathlib_test<realbuiltinvec<float,4>>::test();
