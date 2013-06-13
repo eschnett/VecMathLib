@@ -153,7 +153,10 @@ namespace vecmathlib {
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
-    static intvec iota() { return vcreate_s32((0 << uint64_t(32)) | 1); }
+    static intvec iota()
+    {
+      return vcreate_s32((uint64_t(0) << uint64_t(32)) | uint64_t(1));
+    }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
@@ -202,7 +205,7 @@ namespace vecmathlib {
     
     intvec lsr(intvec n) const
     {
-      return vreinterpret_s32_u32(vshl_u32(vreinterpret_s32_u32(v), (-n).v));
+      return vreinterpret_s32_u32(vshl_u32(vreinterpret_u32_s32(v), (-n).v));
     }
     intvec operator>>(intvec n) const
     {
@@ -220,7 +223,7 @@ namespace vecmathlib {
     boolvec_t signbit() const
     {
       //return *this < IV(I(0));
-      return vshr_n_s32(FP::bits-1);
+      return vshr_n_s32(v, FP::bits-1);
     }
     
     boolvec_t operator==(intvec const& x) const { return vceq_s32(v, x.v); }
@@ -497,7 +500,11 @@ namespace vecmathlib {
     realvec sqrt() const { return *this * rsqrt(); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
-    realvec trunc() const { return vrnd_f32(v); }
+    realvec trunc() const
+    {
+      // return vrnd_f32(v);
+      return MF::vml_trunc(*this);
+    }
   };
   
   
@@ -513,7 +520,7 @@ namespace vecmathlib {
   inline
   auto boolvec<float,2>::convert_int() const -> intvec_t
   {
-    return (- *this).as_int();
+    return - as_int();
   }
   
   inline
