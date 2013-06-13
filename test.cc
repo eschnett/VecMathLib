@@ -1431,14 +1431,14 @@ int main(int argc, char** argv)
 #ifdef VML_DEBUG
     "-DEBUG"
 #endif
-#ifdef __ARM_PCS_VFP
-    "-NEON"
-#endif
 #ifdef __ALTIVEC__
     "-Altivec"
 #endif
 #ifdef __VSX__
     "-VSX"
+#endif
+#ifdef __ARM_PCS_VFP
+    "-NEON"
 #endif
 #if defined __bgq__ && defined __VECTOR4DOUBLE__
     "-QPX"
