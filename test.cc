@@ -1329,20 +1329,20 @@ struct vecmathlib_test {
       check_real<RV,RV>("/", local_div, local_div, x, y, accuracy());
       check_real<RV>("rcp", local_rcp, vecmathlib::rcp, x, accuracy());
       check_real<RV,RV>("fmod(x,y)",
-                        std::fmod, vecmathlib::fmod, x, y, 2.0*accuracy());
+                        std::fmod, vecmathlib::fmod, x, y, 2.0*accuracy(), y);
       check_real<RV,RV>("fmod(x,m)",
-                        std::fmod, vecmathlib::fmod, x, fm, 2.0*accuracy());
+                        std::fmod, vecmathlib::fmod, x, fm, 2.0*accuracy(), fm);
       check_real<RV,RV>("fmod(n,y)",
-                        std::fmod, vecmathlib::fmod, fn, y, 2.0*accuracy());
+                        std::fmod, vecmathlib::fmod, fn, y, 2.0*accuracy(), y);
       check_real<RV,RV>("remainder(x,y)",
                         std::remainder, vecmathlib::remainder,
-                        x, y, R(2.0)*accuracy());
+                        x, y, R(2.0)*accuracy(), y);
       check_real<RV,RV>("remainder(x,m)",
                         std::remainder, vecmathlib::remainder,
                         x, fm, R(2.0)*accuracy(), fm);
       check_real<RV,RV>("remainder(n,y)",
                         std::remainder, vecmathlib::remainder,
-                        fn, y, R(2.0)*accuracy());
+                        fn, y, R(2.0)*accuracy(), y);
     }
   }
   
