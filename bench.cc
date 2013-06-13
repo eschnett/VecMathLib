@@ -11,6 +11,7 @@
 #include <string>
 
 #include <sys/time.h>
+#include <time.h>
 
 using namespace std;
 using namespace vecmathlib;
@@ -28,12 +29,11 @@ inline ticks getticks()
 {
 #if __has_builtin(__builtin_readcyclecounter)
   return __builtin_readcyclecounter();
-#else
-#  if defined __x86_64__
+#elif defined __x86_64__
   ticks a, d;
   asm volatile("rdtsc" : "=a" (a), "=d" (d));
   return a | (d << 32);
-#  elif defined __powerpc__
+#elif defined __powerpc__
   unsigned int tbl, tbu, tbu1;
   do {
     asm volatile("mftbu %0": "=r"(tbu));
@@ -41,7 +41,13 @@ inline ticks getticks()
     asm volatile("mftbu %0": "=r"(tbu1));
   } while (tbu != tbu1);
   return ((unsigned long long)tbu << 32) | tbl;
-#  endif
+#else
+  timeval tv;
+  gettimeofday(&tv, NULL);
+  return 1000000ULL * tv.tv_sec + tv.tv_usec;
+  // timespec ts;
+  // clock_gettime(CLOCK_REALTIME, &ts);
+  // return 1000000000ULL * ts.tv_sec + ts.tv_nsec;
 #endif
 }
 inline double elapsed(ticks t1, ticks t0)
@@ -51,9 +57,12 @@ inline double elapsed(ticks t1, ticks t0)
 
 double get_sys_time()
 {
-  timeval tp;
-  gettimeofday(&tp, NULL);
-  return tp.tv_sec + 1.0e-6 * tp.tv_usec;
+  timeval tv;
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec + 1.0e-6 * tv.tv_usec;
+  // timespec ts;
+  // clock_gettime(CLOCK_REALTIME, &ts);
+  // return ts.tv_sec + 1.0e-9 * ts.tv_nsec;
 }
 
 double measure_tick()
