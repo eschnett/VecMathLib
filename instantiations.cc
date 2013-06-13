@@ -82,12 +82,24 @@ namespace vecmathlib {
 #include <cstdlib>
 using namespace std;
 
-// Vector size; this is system-specific and needs to be manually
-// adapted
-const int VECSIZE = 4;
-
 using namespace vecmathlib;
-typedef realvec<double,VECSIZE> doubleV;
+
+#if defined VECMATHLIB_HAVE_VEC_DOUBLE_4
+typedef realvec<double,4> realV;
+#elif defined VECMATHLIB_HAVE_VEC_DOUBLE_2
+typedef realvec<double,2> realV;
+#elif defined VECMATHLIB_HAVE_VEC_FLOAT_8
+typedef realvec<float,8> realV;
+#elif defined VECMATHLIB_HAVE_VEC_FLOAT_4
+typedef realvec<float,4> realV;
+#elif defined VECMATHLIB_HAVE_VEC_FLOAT_2
+typedef realvec<float,2> realV;
+#else
+#  error "There are no vector types"
+#endif
+
+typedef realV::scalar_t real;
+const int vecsize = realV::size;
 
 
 
@@ -101,15 +113,15 @@ typedef realvec<double,VECSIZE> doubleV;
 
 // Simple, naive loop adding two arrays
 extern "C"
-void loop_add(double* a,
-              double* b,
-              double* c,
+void loop_add(real* a,
+              real* b,
+              real* c,
               ptrdiff_t n)
 {
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpb = doubleV::loadu(&b[i]);
-    doubleV tmpc = doubleV::loadu(&c[i]);
-    doubleV tmpa = tmpb + tmpc;
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpb = realV::loadu(&b[i]);
+    realV tmpc = realV::loadu(&c[i]);
+    realV tmpa = tmpb + tmpc;
     storeu(tmpa, &a[i]);
   }
 }
@@ -118,15 +130,15 @@ void loop_add(double* a,
 
 // Declare pointers as restrict
 extern "C"
-void loop_add_restrict(double *restrict a,
-                       double *restrict b,
-                       double *restrict c,
+void loop_add_restrict(real *restrict a,
+                       real *restrict b,
+                       real *restrict c,
                        ptrdiff_t n)
 {
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpb = doubleV::loadu(&b[i]);
-    doubleV tmpc = doubleV::loadu(&c[i]);
-    doubleV tmpa = tmpb + tmpc;
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpb = realV::loadu(&b[i]);
+    realV tmpc = realV::loadu(&c[i]);
+    realV tmpa = tmpb + tmpc;
     storeu(tmpa, &a[i]);
   }
 }
@@ -135,15 +147,15 @@ void loop_add_restrict(double *restrict a,
 
 // Declare pointers as restrict and aligned
 extern "C"
-void loop_add_aligned(double *restrict a,
-                      double *restrict b,
-                      double *restrict c,
+void loop_add_aligned(real *restrict a,
+                      real *restrict b,
+                      real *restrict c,
                       ptrdiff_t n)
 {
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpb = doubleV::loada(&b[i]);
-    doubleV tmpc = doubleV::loada(&c[i]);
-    doubleV tmpa = tmpb + tmpc;
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpb = realV::loada(&b[i]);
+    realV tmpc = realV::loada(&c[i]);
+    realV tmpa = tmpb + tmpc;
     storea(tmpa, &a[i]);
   }
 }
@@ -152,14 +164,14 @@ void loop_add_aligned(double *restrict a,
 
 // Reduction loop
 extern "C"
-double loop_dot_reduce(double *restrict a,
-                       double *restrict b,
+real loop_dot_reduce(real *restrict a,
+                       real *restrict b,
                        ptrdiff_t n)
 {
-  doubleV sumV = 0.0;
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpa = doubleV::loada(&a[i]);
-    doubleV tmpb = doubleV::loada(&b[i]);
+  realV sumV = 0.0;
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpa = realV::loada(&a[i]);
+    realV tmpb = realV::loada(&b[i]);
     sumV += tmpa * tmpb;
   }
   return sum(sumV);
@@ -169,15 +181,15 @@ double loop_dot_reduce(double *restrict a,
 
 // Loop with a simple if condition (fmax)
 extern "C"
-void loop_if_simple(double *restrict a,
-                    double *restrict b,
-                    double *restrict c,
+void loop_if_simple(real *restrict a,
+                    real *restrict b,
+                    real *restrict c,
                     ptrdiff_t n)
 {
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpb = doubleV::loada(&b[i]);
-    doubleV tmpc = doubleV::loada(&c[i]);
-    doubleV tmpa = ifthen(tmpb > tmpc, tmpb, tmpc);
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpb = realV::loada(&b[i]);
+    realV tmpc = realV::loada(&c[i]);
+    realV tmpa = ifthen(tmpb > tmpc, tmpb, tmpc);
     storea(tmpa, &a[i]);
   }
 }
@@ -186,15 +198,15 @@ void loop_if_simple(double *restrict a,
 
 // Loop with a complex if condition (select)
 extern "C"
-void loop_if(double *restrict a,
-             double *restrict b,
-             double *restrict c,
+void loop_if(real *restrict a,
+             real *restrict b,
+             real *restrict c,
              ptrdiff_t n)
 {
-  for (ptrdiff_t i=0; i<n; i+=VECSIZE) {
-    doubleV tmpb = doubleV::loada(&b[i]);
-    doubleV tmpc = doubleV::loada(&c[i]);
-    doubleV tmpa = ifthen(tmpb > doubleV(0.0), tmpb * tmpc, doubleV(1.0));
+  for (ptrdiff_t i=0; i<n; i+=vecsize) {
+    realV tmpb = realV::loada(&b[i]);
+    realV tmpc = realV::loada(&c[i]);
+    realV tmpa = ifthen(tmpb > realV(0.0), tmpb * tmpc, realV(1.0));
     storea(tmpa, &a[i]);
   }
 }
@@ -203,16 +215,16 @@ void loop_if(double *restrict a,
 
 // Skip ghost points
 extern "C"
-void loop_add_masked(double *restrict a,
-                     double *restrict b,
-                     double *restrict c,
+void loop_add_masked(real *restrict a,
+                     real *restrict b,
+                     real *restrict c,
                      ptrdiff_t n)
 {
-  for (doubleV::mask_t mask(1, n-1, 0); mask; ++mask) {
+  for (realV::mask_t mask(1, n-1, 0); mask; ++mask) {
     ptrdiff_t i = mask.index();
-    doubleV tmpb = doubleV::loada(&b[i]);
-    doubleV tmpc = doubleV::loada(&c[i]);
-    doubleV tmpa = tmpb + tmpc;
+    realV tmpb = realV::loada(&b[i]);
+    realV tmpc = realV::loada(&c[i]);
+    realV tmpa = tmpb + tmpc;
     storea(tmpa, &a[i], mask);
   }
 }
