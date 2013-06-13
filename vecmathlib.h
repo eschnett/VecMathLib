@@ -72,7 +72,10 @@ namespace std { class type_info; }
 #  include "vec_double_vsx.h"
 #endif
 
-#if defined __bgq__ && defined __VECTOR4DOUBLE__  // Blue Gene/Q QPX
+// TODO: IBM Blue Gene/P DoubleHummer
+
+#if defined __bgq__ && defined __VECTOR4DOUBLE__ // IBM Blue Gene/Q QPX
+// TODO: vec_float_qpx
 #  include "vec_double_qpx.h"
 #endif
 
