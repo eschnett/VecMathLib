@@ -906,9 +906,11 @@ struct vecmathlib_test {
     
     intvec_t i0 = intvec_t(I(0));
     intvec_t i1 = intvec_t(I(1));
+    intvec_t iiota = intvec_t::iota();
     for (int i=0; i<realvec_t::size; ++i) {
       check_int("0", 0, i0[i]);
       check_int("1", 1, i1[i]);
+      check_int("iota", i, iiota[i]);
     }
     
     i0 = intvec_t(I(1));
