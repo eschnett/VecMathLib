@@ -1,7 +1,9 @@
 // -*-C++-*-
 
-#ifndef VEC_DOUBLE_VSX_H
-#define VEC_DOUBLE_VSX_H
+// <http://gcc.gnu.org/onlinedocs/gcc/ARM-NEON-Intrinsics.html>
+
+#ifndef VEC_NEON_FLOAT2_H
+#define VEC_NEON_FLOAT2_H
 
 #include "floatprops.h"
 #include "mathfuncs.h"
@@ -9,29 +11,26 @@
 
 #include <cmath>
 
-// VSX intrinsics
-#include <altivec.h>
-#undef vector
-#undef pixel
-#undef bool
+// Neon intrinsics
+#include <arm_neon.h>
 
 
 
 namespace vecmathlib {
   
-#define VECMATHLIB_HAVE_VEC_DOUBLE_2
-  template<> struct boolvec<double,2>;
-  template<> struct intvec<double,2>;
-  template<> struct realvec<double,2>;
+#define VECMATHLIB_HAVE_VEC_FLOAT_2
+  template<> struct boolvec<float,2>;
+  template<> struct intvec<float,2>;
+  template<> struct realvec<float,2>;
   
   
   
   template<>
-  struct boolvec<double,2>: floatprops<double>
+  struct boolvec<float,2>: floatprops<float>
   {
     static int const size = 2;
     typedef bool scalar_t;
-    typedef __vector __bool long long bvector_t;
+    typedef uint32x2_t bvector_t;
     static int const alignment = sizeof(bvector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
@@ -39,7 +38,6 @@ namespace vecmathlib {
     
   private:
     // true values are -1, false values are 0
-    // truth values are interpreted bit-wise
     static uint_t from_bool(bool a) { return -int_t(a); }
     static bool to_bool(uint_t a) { return a; }
   public:
@@ -68,7 +66,7 @@ namespace vecmathlib {
     // boolvec(boolvec const& x): v(x.v) {}
     // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     boolvec(bvector_t x): v(x) {}
-    boolvec(bool a): v(vec_splats(from_bool(a))) {}
+    boolvec(bool a): v(vdup_n_u32(from_bool(a))) {}
     boolvec(bool const* as)
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
@@ -88,44 +86,22 @@ namespace vecmathlib {
     
     
     
-    boolvec operator!() const
-    {
-      return
-	(__vector __bool long long)(__vector long long)
-	vec_nor((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)v);
-    }
+    boolvec operator!() const { return vmvn_u32(v); }
     
-    boolvec operator&&(boolvec x) const
-    {
-      return
-	(__vector __bool long long)(__vector long long)
-	vec_and((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)x.v);
-    }
-    boolvec operator||(boolvec x) const
-    {
-      return
-	(__vector __bool long long)(__vector long long)
-	vec_or((__vector double)(__vector long long)v,
-	       (__vector double)(__vector long long)x.v);
-    }
-    boolvec operator==(boolvec x) const { return !(*this!=x); }
-    boolvec operator!=(boolvec x) const
-    {
-      return
-	(__vector __bool long long)(__vector long long)
-	vec_xor((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)x.v);
-    }
+    boolvec operator&&(boolvec x) const { return vand_u32(v, x.v); }
+    boolvec operator||(boolvec x) const { return vorr_u32(v, x.v); }
+    boolvec operator==(boolvec x) const { return vceq_u32(v, x.v); }
+    boolvec operator!=(boolvec x) const { return veor_u32(v, x.v); }
     
     bool all() const
     {
-      return vec_all_ne((__vector int)v, (__vector int)BV(false).v);
+      boolvec r = vpmin_u32(v, v);
+      return to_bool(r[0]);
     }
     bool any() const
     {
-      return vec_any_ne((__vector int)v, (__vector int)BV(false).v);
+      boolvec r = vpmax_u32(v, v);
+      return to_bool(r[0]);
     }
     
     
@@ -138,11 +114,11 @@ namespace vecmathlib {
   
   
   template<>
-  struct intvec<double,2>: floatprops<double>
+  struct intvec<float,2>: floatprops<float>
   {
     static int const size = 2;
     typedef int_t scalar_t;
-    typedef __vector long long ivector_t;
+    typedef int32x2_t ivector_t;
     static int const alignment = sizeof(ivector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(ivector_t),
@@ -172,12 +148,15 @@ namespace vecmathlib {
     // intvec(intvec const& x): v(x.v) {}
     // intvec& operator=(intvec const& x) { return v=x.v, *this; }
     intvec(ivector_t x): v(x) {}
-    intvec(int_t a): v(vec_splats(a)) {}
+    intvec(int_t a): v(vdup_n_s32(a)) {}
     intvec(int_t const* as)
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
-    static intvec iota() { return (__vector long long){0, 1}; }
+    static intvec iota()
+    {
+      return vcreate_s32((uint64_t(0) << uint64_t(32)) | uint64_t(1));
+    }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
@@ -186,86 +165,31 @@ namespace vecmathlib {
     
     
     // Vector casts do not change the bit battern
-    boolvec_t as_bool() const { return (__vector __bool long long)v; }
-    boolvec_t convert_bool() const { return *this != IV(I(0)); }
+    boolvec_t as_bool() const { return vreinterpret_u32_s32(v); }
+    boolvec_t convert_bool() const { return *this != IV(0); }
     realvec_t as_float() const;      // defined after realvec
     realvec_t convert_float() const; // defined after realvec
     
     
     
-    // Permutation control words
-  private:
-    // 0123 4567 -> 1436
-    // exchange pairs
-    static __vector unsigned char perm_int_swap()
-    {
-      return
-	(__vector unsigned char)
-	{4,5,6,7, 16,17,18,19, 12,13,14,15, 24,25,26,27};
-    }
-    // 0123 4567 -> 0426
-    // broadcast high elements of pairs
-    static __vector unsigned char perm_int_bchi()
-    {
-      return
-	(__vector unsigned char)
-	{0,1,2,3, 16,17,18,19, 8,9,10,11, 24,25,26,27};
-    }
-  public:
-    
-    
-
     intvec operator+() const { return *this; }
-    intvec operator-() const { return IV(I(0)) - *this; }
+    intvec operator-() const { return vneg_s32(v); }
     
-    intvec operator+(intvec x) const
-    {
-      // return vec_add(v, x.v);
-      __vector unsigned int a = (__vector unsigned int)v;
-      __vector unsigned int b = (__vector unsigned int)x.v;
-      __vector unsigned int s = vec_add(a, b);
-      __vector unsigned int c = vec_addc(a, b);
-      __vector unsigned int z = vec_xor(z, z);
-      c = vec_perm(c, z, perm_int_swap());
-      s = vec_add(s, c);
-      return (__vector long long)s;
-    }
-    intvec operator-(intvec x) const
-    {
-      // return vec_sub(v, x.v);
-      __vector unsigned int a = (__vector unsigned int)v;
-      __vector unsigned int b = (__vector unsigned int)x.v;
-      __vector unsigned int d = vec_sub(a, b);
-      __vector unsigned int c = vec_subc(a, b);
-      c = vec_sub(vec_splats(1U), c);
-      __vector unsigned int z = vec_xor(z, z);
-      c = vec_perm(c, z, perm_int_swap());
-      d = vec_sub(d, c);
-      return (__vector long long)d;
-    }
+    intvec operator+(intvec x) const { return vadd_s32(v, x.v); }
+    intvec operator-(intvec x) const { return vsub_s32(v, x.v); }
+    intvec operator*(intvec x) const { return vmul_s32(v, x.v); }
     
     intvec& operator+=(intvec const& x) { return *this=*this+x; }
     intvec& operator-=(intvec const& x) { return *this=*this-x; }
+    intvec& operator*=(intvec const& x) { return *this=*this*x; }
     
     
     
-    intvec operator~() const
-    {
-      return (__vector long long)vec_nor((__vector int)v, (__vector int)v);
-    }
+    intvec operator~() const { return vmvn_s32(v); }
     
-    intvec operator&(intvec x) const
-    {
-      return (__vector long long)vec_and((__vector int)v, (__vector int)x.v);
-    }
-    intvec operator|(intvec x) const
-    {
-      return (__vector long long)vec_or ((__vector int)v, (__vector int)x.v);
-    }
-    intvec operator^(intvec x) const
-    {
-      return (__vector long long)vec_xor((__vector int)v, (__vector int)x.v);
-    }
+    intvec operator&(intvec x) const { return vand_s32(v, x.v); }
+    intvec operator|(intvec x) const { return vorr_s32(v, x.v); }
+    intvec operator^(intvec x) const { return veor_s32(v, x.v); }
     
     intvec& operator&=(intvec const& x) { return *this=*this&x; }
     intvec& operator|=(intvec const& x) { return *this=*this|x; }
@@ -281,30 +205,15 @@ namespace vecmathlib {
     
     intvec lsr(intvec n) const
     {
-      // return vec_sr(v, (__vector unsigned long long)n.v);
-      intvec r;
-      for (int i=0; i<size; ++i) {
-        r.set_elt(i, U((*this)[i]) >> U(n[i]));
-      }
-      return r;
+      return vreinterpret_s32_u32(vshl_u32(vreinterpret_u32_s32(v), (-n).v));
     }
     intvec operator>>(intvec n) const
     {
-      // return vec_sra(v, (__vector unsigned long long)n.v);
-      intvec r;
-      for (int i=0; i<size; ++i) {
-        r.set_elt(i, (*this)[i] >> n[i]);
-      }
-      return r;
+      return vshl_s32(v, (-n).v);
     }
     intvec operator<<(intvec n) const
     {
-      // return vec_sl(v, (__vector unsigned long long)n.v);
-      intvec r;
-      for (int i=0; i<size; ++i) {
-        r.set_elt(i, (*this)[i] << n[i]);
-      }
-      return r;
+      return vshl_s32(v, n.v);
     }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
@@ -313,60 +222,30 @@ namespace vecmathlib {
     
     boolvec_t signbit() const
     {
-      return (*this >> (bits-1)).as_bool();
+      //return *this < IV(I(0));
+      return intvec(vshr_n_s32(v, FP::bits-1)).as_bool();
     }
     
-    boolvec_t operator==(intvec const& x) const
-    {
-      // return vec_cmpeq(v, x.v);
-      __vector int a = (__vector int)v;
-      __vector int b = (__vector int)x.v;
-      __vector __bool int c = vec_cmpeq(a, b);
-      __vector __bool int cx = vec_perm(c, c, perm_int_swap());
-      __vector __bool int r = vec_and(c, cx);
-      return (__vector __bool long long)r;
-    }
+    boolvec_t operator==(intvec const& x) const { return vceq_s32(v, x.v); }
     boolvec_t operator!=(intvec const& x) const { return !(*this == x); }
-    boolvec_t operator<(intvec const& x) const
-    {
-      __vector int a = (__vector int)v;
-      __vector int b = (__vector int)x.v;
-      __vector __bool int lt = vec_cmplt(a, b);
-      __vector __bool int eq = vec_cmpeq(a, b);
-      __vector unsigned int ua = (__vector unsigned int)v;
-      __vector unsigned int ub = (__vector unsigned int)x.v;
-      __vector __bool int ult = vec_cmplt(ua, ub);
-      __vector __bool int ultx = vec_perm(ult, ult, perm_int_swap());
-      __vector __bool int r = vec_or(lt, vec_and(eq, ultx));
-      r = vec_perm(r, r, perm_int_bchi());
-      return (__vector __bool long long)r;
-    }
-    boolvec_t operator<=(intvec const& x) const
-    {
-      return ! (*this > x);
-    }
-    boolvec_t operator>(intvec const& x) const
-    {
-      return x < *this;
-    }
-    boolvec_t operator>=(intvec const& x) const
-    {
-      return ! (*this < x);
-    }
+    boolvec_t operator<(intvec const& x) const { return vclt_s32(v, x.v); }
+    boolvec_t operator<=(intvec const& x) const { return vcle_s32(v, x.v); }
+    boolvec_t operator>(intvec const& x) const { return vcgt_s32(v, x.v); }
+    boolvec_t operator>=(intvec const& x) const { return vcge_s32(v, x.v); }
   };
   
   
   
   template<>
-  struct realvec<double,2>: floatprops<double>
+  struct realvec<float,2>: floatprops<float>
   {
     static int const size = 2;
     typedef real_t scalar_t;
-    typedef __vector double vector_t;
+    typedef float32x2_t vector_t;
     static int const alignment = sizeof(vector_t);
     
-    static char const* name() { return "<VSX:2*double>"; }
-    void barrier() { __asm__("": "+v" (v)); }
+    static char const* name() { return "<NEON:2*float>"; }
+    void barrier() { __asm__("": "+w" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
@@ -395,7 +274,7 @@ namespace vecmathlib {
     // realvec(realvec const& x): v(x.v) {}
     // realvec& operator=(realvec const& x) { return v=x.v, *this; }
     realvec(vector_t x): v(x) {}
-    realvec(real_t a): v(vec_splats(a)) {}
+    realvec(real_t a): v(vdup_n_f32(a)) {}
     realvec(real_t const* as)
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
@@ -412,13 +291,15 @@ namespace vecmathlib {
     static realvec_t loada(real_t const* p)
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
-      return vec_ld(0, (const __vector double*)p);
+      return vld1_f32(p);
     }
     static realvec_t loadu(real_t const* p)
     {
-      realvec_t v0 = vec_ld(0, (const __vector double*)p);
-      realvec_t v1 = vec_ld(15, (const __vector double*)p);
-      return vec_perm(v0.v, v1.v, vec_lvsl(0, p));
+#if defined __ARM_FEATURE_UNALIGNED
+      return vld1_f32(p);
+#else
+#  error "unaligned NEON loads not implemented"
+#endif
     }
     static realvec_t loadu(real_t const* p, std::ptrdiff_t ioff)
     {
@@ -453,15 +334,19 @@ namespace vecmathlib {
     void storea(real_t* p) const
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
-      vec_st(v, 0, (__vector double*)p);
+      vst1_f32(p, v);
     }
     void storeu(real_t* p) const
     {
       // Vector stores would require vector loads, which would need to
       // be atomic
-      // TODO: see <https://developer.apple.com/hardwaredrivers/ve/alignment.html> for good ideas
-      p[0] = (*this)[0];
-      p[1] = (*this)[1];
+      // p[0] = (*this)[0];
+      // p[1] = (*this)[1];
+#if defined __ARM_FEATURE_UNALIGNED
+      vst1_f32(p, v);
+#else
+#  error "unaligned NEON stores not implemented"
+#endif
     }
     void storeu(real_t* p, std::ptrdiff_t ioff) const
     {
@@ -475,7 +360,6 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storea(p);
       } else {
-	// Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
       }
@@ -485,7 +369,6 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storeu(p);
       } else {
-	// Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
       }
@@ -499,18 +382,18 @@ namespace vecmathlib {
     
     
     
-    intvec_t as_int() const { return (__vector long long) v; }
-    intvec_t convert_int() const { return MF::vml_convert_int(*this); }
+    intvec_t as_int() const { return vreinterpret_s32_f32(v); }
+    intvec_t convert_int() const { return vcvt_s32_f32(v); }
     
     
     
     realvec operator+() const { return *this; }
-    realvec operator-() const { return RV(0.0) - *this; }
+    realvec operator-() const { return vneg_f32(v); }
     
-    realvec operator+(realvec x) const { return vec_add(v, x.v); }
-    realvec operator-(realvec x) const { return vec_sub(v, x.v); }
-    realvec operator*(realvec x) const { return vec_mul(v, x.v); }
-    realvec operator/(realvec x) const { return vec_div(v, x.v); }
+    realvec operator+(realvec x) const { return vadd_f32(v, x.v); }
+    realvec operator-(realvec x) const { return vsub_f32(v, x.v); }
+    realvec operator*(realvec x) const { return vmul_f32(v, x.v); }
+    realvec operator/(realvec x) const { return *this * x.rcp(); }
     
     realvec& operator+=(realvec const& x) { return *this=*this+x; }
     realvec& operator-=(realvec const& x) { return *this=*this-x; }
@@ -519,21 +402,22 @@ namespace vecmathlib {
     
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      return (*this)[0] * (*this)[1];
     }
     real_t sum() const
     {
-      return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      realvec r = vpadd_f32(v, v);
+      return r[0];
     }
     
     
     
-    boolvec_t operator==(realvec const& x) const { return vec_cmpeq(v, x.v); }
-    boolvec_t operator!=(realvec const& x) const { return ! (*this == x); }
-    boolvec_t operator<(realvec const& x) const { return vec_cmplt(v, x.v); }
-    boolvec_t operator<=(realvec const& x) const { return vec_cmple(v, x.v); }
-    boolvec_t operator>(realvec const& x) const { return vec_cmpgt(v, x.v); }
-    boolvec_t operator>=(realvec const& x) const { return vec_cmpge(v, x.v); }
+    boolvec_t operator==(realvec const& x) const { return vceq_f32(v, x.v); }
+    boolvec_t operator!=(realvec const& x) const { return !(*this == x); }
+    boolvec_t operator<(realvec const& x) const { return vclt_f32(v, x.v); }
+    boolvec_t operator<=(realvec const& x) const { return vcle_f32(v, x.v); }
+    boolvec_t operator>(realvec const& x) const { return vcgt_f32(v, x.v); }
+    boolvec_t operator>=(realvec const& x) const { return vcge_f32(v, x.v); }
     
     
     
@@ -545,20 +429,35 @@ namespace vecmathlib {
     realvec atan2(realvec y) const { return MF::vml_atan2(*this, y); }
     realvec atanh() const { return MF::vml_atanh(*this); }
     realvec cbrt() const { return MF::vml_cbrt(*this); }
-    realvec ceil() const { return vec_ceil(v); }
-    realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
+    realvec ceil() const
+    {
+      // return vrndp_f32(v);
+      return MF::vml_ceil(*this);
+    }
+    realvec copysign(realvec y) const
+    {
+      return vbsl_f32(vdup_n_u32(FP::signbit_mask), y.v, v);
+    }
     realvec cos() const { return MF::vml_cos(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
     realvec exp() const { return MF::vml_exp(*this); }
     realvec exp10() const { return MF::vml_exp10(*this); }
     realvec exp2() const { return MF::vml_exp2(*this); }
     realvec expm1() const { return MF::vml_expm1(*this); }
-    realvec fabs() const { return vec_abs(v); }
+    realvec fabs() const { return vabs_f32(v); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return vec_floor(v); }
-    realvec fma(realvec y, realvec z) const { return vec_madd(v, y.v, z.v); }
-    realvec fmax(realvec y) const { return vec_max(v, y.v); }
-    realvec fmin(realvec y) const { return vec_min(v, y.v); }
+    realvec floor() const
+    {
+      // return vrndm_f32(v);
+      return MF::vml_floor(*this);
+    }
+    realvec fma(realvec y, realvec z) const
+    {
+      // TODO: vfma_f32
+      return vmla_f32(z.v, v, y.v);
+    }
+    realvec fmax(realvec y) const { return vmax_f32(v, y.v); }
+    realvec fmin(realvec y) const { return vmin_f32(v, y.v); }
     realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
@@ -576,36 +475,40 @@ namespace vecmathlib {
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const
     {
-      realvec x = *this;
-      realvec r = vec_re(v);    // this is only an approximation
-      // TODO: use fma
-      // Note: don't rewrite this expression, this may introduce
-      // cancellation errors
-      r += r * (RV(1.0) - x*r); // two Newton iterations (see vml_rcp)
-      r += r * (RV(1.0) - x*r);
+      realvec r = vrecpe_f32(v);
+      r *= vrecps_f32(v, r);
+      r *= vrecps_f32(v, r);
       return r;
     }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec rint() const { return vec_rint(v); }
-    realvec round() const { return MF::vml_round(*this); }
+    realvec rint() const
+    {
+      // return vrndn_f32(v);
+      return MF::vml_rint(*this);
+    }
+    realvec round() const
+    {
+      // return vrnda_f32(v);
+      return MF::vml_round(*this);
+    }
     realvec rsqrt() const
     {
-      // realvec x = *this;
-      // realvec r = vec_rsqrte(x.v); // this is only an approximation
-      // // TODO: use fma
-      // // one Newton iteration (see vml_rsqrt)
-      // r += RV(0.5)*r * (RV(1.0) - x * r*r);
-      // return r;
-      return vec_rsqrt(v);
+      realvec r = vrsqrte_f32(v);
+      r *= vrsqrts_f32(v, r*r);
+      r *= vrsqrts_f32(v, r*r);
+      return r;
     }
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
-    // realvec sqrt() const { return *this * rsqrt(); }
-    realvec sqrt() const { return vec_sqrt(v); }
+    realvec sqrt() const { return *this * rsqrt(); }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
-    realvec trunc() const { return vec_trunc(v); }
+    realvec trunc() const
+    {
+      // return vrnd_f32(v);
+      return MF::vml_trunc(*this);
+    }
   };
   
   
@@ -613,44 +516,43 @@ namespace vecmathlib {
   // boolvec definitions
   
   inline
-  auto boolvec<double,2>::as_int() const -> intvec_t
+  auto boolvec<float,2>::as_int() const -> intvec_t
   {
-    return (__vector long long) v;
+    return vreinterpret_s32_u32(v);
   }
   
   inline
-  auto boolvec<double,2>::convert_int() const -> intvec_t
+  auto boolvec<float,2>::convert_int() const -> intvec_t
   {
-    return -(__vector long long)v;
+    return - as_int();
   }
   
   inline
-  auto boolvec<double,2>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  auto boolvec<float,2>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
   {
-    return vec_sel(y.v, x.v, v);
+    return vbsl_s32(v, x.v, y.v);
   }
   
   inline
-  auto boolvec<double,2>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  auto boolvec<float,2>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
   {
-    return vec_sel(y.v, x.v, v);
+    return vbsl_f32(v, x.v, y.v);
   }
   
   
   
   // intvec definitions
   
-  inline auto intvec<double,2>::as_float() const -> realvec_t
+  inline auto intvec<float,2>::as_float() const -> realvec_t
   {
-    return (__vector double)v;
+    return vreinterpret_f32_s32(v);
   }
   
-  inline auto intvec<double,2>::convert_float() const -> realvec_t
+  inline auto intvec<float,2>::convert_float() const -> realvec_t
   {
-    // return vec_ctd(v, 0);
-    return MF::vml_convert_float(*this);
+    return vcvt_f32_s32(v);
   }
   
 } // namespace vecmathlib
 
-#endif  // #ifndef VEC_DOUBLE_VSX_H
+#endif  // #ifndef VEC_NEON_FLOAT2_H

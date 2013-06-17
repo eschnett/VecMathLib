@@ -53,35 +53,38 @@ namespace std { class type_info; }
 
 #if defined __ARM_PCS_VFP       // ARM NEON
 // TODO: VFP
-#  include "vec_float_neon.h"
+// TODO: vec_neon_float4
+#  include "vec_neon_float2.h"
 #endif
 
 #if defined __SSE2__            // Intel SSE 2
-#  include "vec_float_sse2_scalar.h"
-#  include "vec_double_sse2_scalar.h"
-#  include "vec_float_sse2.h"
-#  include "vec_double_sse2.h"
+#  include "vec_sse_float1.h"
+#  include "vec_sse_float4.h"
+#  include "vec_sse_double1.h"
+#  include "vec_sse_double2.h"
 #endif
 
 #if defined __AVX__             // Intel AVX
-#  include "vec_fp8_avx.h"
-#  include "vec_fp16_avx.h"
-#  include "vec_float_avx.h"
-#  include "vec_double_avx.h"
+#  include "vec_avx_fp8_32.h"
+#  include "vec_avx_fp16_16.h"
+#  include "vec_avx_float8.h"
+#  include "vec_avx_double4.h"
 #endif
 
+// TODO: MIC
+
 #if defined __ALTIVEC__         // IBM Altivec
-#  include "vec_float_altivec.h"
+#  include "vec_altivec_float4.h"
 #endif
 #if defined __VSX__             // IBM VSX
-#  include "vec_double_vsx.h"
+#  include "vec_vsx_double2.h"
 #endif
 
 // TODO: IBM Blue Gene/P DoubleHummer
 
 #if defined __bgq__ && defined __VECTOR4DOUBLE__ // IBM Blue Gene/Q QPX
-// TODO: vec_float_qpx
-#  include "vec_double_qpx.h"
+// TODO: vec_qpx_float4
+#  include "vec_qpx_double4.h"
 #endif
 
 #endif // #ifndef VECMATHLIB_H

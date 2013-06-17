@@ -1,7 +1,7 @@
 // -*-C++-*-
 
-#ifndef VEC_DOUBLE_AVX_H
-#define VEC_DOUBLE_AVX_H
+#ifndef VEC_AVX_FP8_32_H
+#define VEC_AVX_FP8_32_H
 
 #include "floatprops.h"
 #include "mathfuncs.h"
@@ -16,19 +16,19 @@
 
 namespace vecmathlib {
   
-#define VECMATHLIB_HAVE_VEC_DOUBLE_4
-  template<> struct boolvec<double,4>;
-  template<> struct intvec<double,4>;
-  template<> struct realvec<double,4>;
+#define VECMATHLIB_HAVE_VEC_FP8_32
+  template<> struct boolvec<fp8,32>;
+  template<> struct intvec<fp8,32>;
+  template<> struct realvec<fp8,32>;
   
   
   
   template<>
-  struct boolvec<double,4>: floatprops<double>
+  struct boolvec<fp8,32>: floatprops<fp8>
   {
-    static int const size = 4;
+    static int const size = 32;
     typedef bool scalar_t;
-    typedef __m256d bvector_t;
+    typedef __m256i bvector_t;
     static int const alignment = sizeof(bvector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
@@ -64,13 +64,40 @@ namespace vecmathlib {
     // boolvec(boolvec const& x): v(x.v) {}
     // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     boolvec(bvector_t x): v(x) {}
-    boolvec(bool a):
-    v(_mm256_castsi256_pd(_mm256_set1_epi64x(from_bool(a)))) {}
+    boolvec(bool a): v(_mm256_set1_epi8(from_bool(a))) {}
     boolvec(bool const* as):
-    v(_mm256_castsi256_pd(_mm256_set_epi64x(from_bool(as[3]),
-                                            from_bool(as[2]),
-                                            from_bool(as[1]),
-                                            from_bool(as[0])))) {}
+    v(_mm256_set_epi8(from_bool(as[31]),
+                      from_bool(as[30]),
+                      from_bool(as[29]),
+                      from_bool(as[28]),
+                      from_bool(as[27]),
+                      from_bool(as[26]),
+                      from_bool(as[25]),
+                      from_bool(as[24]),
+                      from_bool(as[23]),
+                      from_bool(as[22]),
+                      from_bool(as[21]),
+                      from_bool(as[20]),
+                      from_bool(as[19]),
+                      from_bool(as[18]),
+                      from_bool(as[17]),
+                      from_bool(as[16]),
+                      from_bool(as[15]),
+                      from_bool(as[14]),
+                      from_bool(as[13]),
+                      from_bool(as[12]),
+                      from_bool(as[11]),
+                      from_bool(as[10]),
+                      from_bool(as[ 9]),
+                      from_bool(as[ 8]),
+                      from_bool(as[ 7]),
+                      from_bool(as[ 6]),
+                      from_bool(as[ 5]),
+                      from_bool(as[ 4]),
+                      from_bool(as[ 3]),
+                      from_bool(as[ 2]),
+                      from_bool(as[ 1]),
+                      from_bool(as[ 0]))) {}
     
     operator bvector_t() const { return v; }
     bool operator[](int n) const { return to_bool(((uint_t const*)&v)[n]); }
@@ -86,22 +113,36 @@ namespace vecmathlib {
     
     
     
-    boolvec operator!() const { return _mm256_xor_pd(boolvec(true), v); }
+    boolvec operator!() const { return *this != boolvec(true); }
     
-    boolvec operator&&(boolvec x) const { return _mm256_and_pd(v, x.v); }
-    boolvec operator||(boolvec x) const { return _mm256_or_pd(v, x.v); }
+    boolvec operator&&(boolvec x) const 
+    {
+      return _mm256_castps_si256(_mm256_and_ps(_mm256_castsi256_ps(v),
+                                               _mm256_castsi256_ps(x.v)));
+    }
+    boolvec operator||(boolvec x) const
+    {
+      return _mm256_castps_si256(_mm256_or_ps(_mm256_castsi256_ps(v),
+                                              _mm256_castsi256_ps(x.v)));
+    }
     boolvec operator==(boolvec x) const { return !(*this!=x); }
-    boolvec operator!=(boolvec x) const { return _mm256_xor_pd(v, x.v); }
+    boolvec operator!=(boolvec x) const
+    {
+      return _mm256_castps_si256(_mm256_xor_ps(_mm256_castsi256_ps(v),
+                                               _mm256_castsi256_ps(x.v)));
+    }
     
     bool all() const
     {
-      // return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
-      return ! (! *this).any();
+      bool r = true;
+      for (int n=0; n<size; ++n) r = r && (*this)[n];
+      return r;
     }
     bool any() const
     {
-      // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
-      return ! _mm256_testz_pd(v, v);
+      bool r = false;
+      for (int n=0; n<size; ++n) r = r || (*this)[n];
+      return r;
     }
     
     
@@ -114,9 +155,9 @@ namespace vecmathlib {
   
   
   template<>
-  struct intvec<double,4>: floatprops<double>
+  struct intvec<fp8,32>: floatprops<fp8>
   {
-    static int const size = 4;
+    static int const size = 32;
     typedef int_t scalar_t;
     typedef __m256i ivector_t;
     static int const alignment = sizeof(ivector_t);
@@ -148,9 +189,47 @@ namespace vecmathlib {
     // intvec(intvec const& x): v(x.v) {}
     // intvec& operator=(intvec const& x) { return v=x.v, *this; }
     intvec(ivector_t x): v(x) {}
-    intvec(int_t a): v(_mm256_set1_epi64x(a)) {}
-    intvec(int_t const* as): v(_mm256_set_epi64x(as[3], as[2], as[1], as[0])) {}
-    static intvec iota() { return _mm256_set_epi64x(3, 2, 1, 0); }
+    intvec(int_t a): v(_mm256_set1_epi8(a)) {}
+    intvec(int_t const* as):
+    v(_mm256_set_epi8(as[31],
+                      as[30],
+                      as[29],
+                      as[28],
+                      as[27],
+                      as[26],
+                      as[25],
+                      as[24],
+                      as[23],
+                      as[22],
+                      as[21],
+                      as[20],
+                      as[19],
+                      as[18],
+                      as[17],
+                      as[16],
+                      as[15],
+                      as[14],
+                      as[13],
+                      as[12],
+                      as[11],
+                      as[10],
+                      as[ 9],
+                      as[ 8],
+                      as[ 7],
+                      as[ 6],
+                      as[ 5],
+                      as[ 4],
+                      as[ 3],
+                      as[ 2],
+                      as[ 1],
+                      as[ 0])) {}
+    static intvec iota()
+    {
+      return _mm256_set_epi8(31, 30, 29, 28, 27, 26, 25, 24,
+                             23, 22, 21, 20, 19, 18, 17, 16,
+                             15, 14, 13, 12, 11, 10, 9, 8,
+                             7, 6, 5, 4, 3, 2, 1, 0);
+    }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
@@ -158,7 +237,7 @@ namespace vecmathlib {
     
     
     
-    boolvec_t as_bool() const { return _mm256_castsi256_pd(v); }
+    boolvec_t as_bool() const { return v; }
     boolvec_t convert_bool() const
     {
       // Result: convert_bool(0)=false, convert_bool(else)=true
@@ -186,8 +265,8 @@ namespace vecmathlib {
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       __m128i xvlo = _mm256_castsi256_si128(x.v);
       __m128i xvhi = _mm256_extractf128_si256(x.v, 1);
-      vlo = _mm_add_epi64(vlo, xvlo);
-      vhi = _mm_add_epi64(vhi, xvhi);
+      vlo = _mm_add_epi8(vlo, xvlo);
+      vhi = _mm_add_epi8(vhi, xvhi);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator-(intvec x) const
@@ -196,8 +275,8 @@ namespace vecmathlib {
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       __m128i xvlo = _mm256_castsi256_si128(x.v);
       __m128i xvhi = _mm256_extractf128_si256(x.v, 1);
-      vlo = _mm_sub_epi64(vlo, xvlo);
-      vhi = _mm_sub_epi64(vhi, xvhi);
+      vlo = _mm_sub_epi8(vlo, xvlo);
+      vhi = _mm_sub_epi8(vhi, xvhi);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     
@@ -210,18 +289,18 @@ namespace vecmathlib {
     
     intvec operator&(intvec x) const
     {
-      return _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(v),
-                                               _mm256_castsi256_pd(x.v)));
+      return _mm256_castps_si256(_mm256_and_ps(_mm256_castsi256_ps(v),
+                                               _mm256_castsi256_ps(x.v)));
     }
     intvec operator|(intvec x) const
     {
-      return _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(v),
-                                              _mm256_castsi256_pd(x.v)));
+      return _mm256_castps_si256(_mm256_or_ps(_mm256_castsi256_ps(v),
+                                              _mm256_castsi256_ps(x.v)));
     }
     intvec operator^(intvec x) const
     {
-      return _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(v),
-                                               _mm256_castsi256_pd(x.v)));
+      return _mm256_castps_si256(_mm256_xor_ps(_mm256_castsi256_ps(v),
+                                               _mm256_castsi256_ps(x.v)));
     }
     
     intvec& operator&=(intvec const& x) { return *this=*this&x; }
@@ -234,47 +313,40 @@ namespace vecmathlib {
     {
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
-      vlo = _mm_srli_epi64(vlo, n);
-      vhi = _mm_srli_epi64(vhi, n);
+      uint_t masklo = U(0x00ffU) >> U(n);
+      uint_t maskhi = U(0xff00U);
+      __m128i mask = _mm_set1_epi16(masklo | maskhi);
+      vlo = _mm_and_si128(_mm_srli_epi16(vlo, n), mask);
+      vhi = _mm_and_si128(_mm_srli_epi16(vhi, n), mask);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator>>(int_t n) const
     {
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
-      // There is no _mm_srai_epi64. To emulate it, add 0x80000000
-      // before shifting, and subtract the shifted 0x80000000 after
-      // shifting
-#if 0
-      __m128i signmask01 = _mm_sub_epi64(_mm_set1_epi64x(0),
-                                         _mm_srli_epi64(vlo, 63));
-      __m128i signmask23 = _mm_sub_epi64(_mm_set1_epi64x(0),
-                                         _mm_srli_epi64(vhi, 63));
-      vlo = _mm_xor_si128(signmask01, vlo);
-      vhi = _mm_xor_si128(signmask23, vhi);
-      vlo = _mm_srli_epi64(vlo, n);
-      vhi = _mm_srli_epi64(vhi, n);
-      vlo = _mm_xor_si128(signmask01, vlo);
-      vhi = _mm_xor_si128(signmask23, vhi);
-#else
-      // Convert signed to unsiged
-      vlo = _mm_add_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-1)));
-      vhi = _mm_add_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1)));
-      // Shift
-      vlo = _mm_srli_epi64(vlo, n);
-      vhi = _mm_srli_epi64(vhi, n);
-      // Undo conversion
-      vlo = _mm_sub_epi64(vlo, _mm_set1_epi64x(U(1) << (bits-1-n)));
-      vhi = _mm_sub_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1-n)));
-#endif
+      uint_t masklo = U(0x00ffU);
+      uint_t maskhi = U(0xff00U);
+      __m128i vlolo = _mm_and_si128(_mm_srai_epi16(_mm_slli_epi16(vlo, 8), n+8),
+                                    _mm_set1_epi16(masklo));
+      __m128i vlohi = _mm_and_si128(_mm_srai_epi16(vlo, n),
+                                    _mm_set1_epi16(maskhi));
+      vlo = _mm_or_si128(vlolo, vlohi);
+      __m128i vhilo = _mm_and_si128(_mm_srai_epi16(_mm_slli_epi16(vhi, 8), n+8),
+                                    _mm_set1_epi16(masklo));
+      __m128i vhihi = _mm_and_si128(_mm_srai_epi16(vhi, n),
+                                    _mm_set1_epi16(maskhi));
+      vhi = _mm_or_si128(vhilo, vhihi);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec operator<<(int_t n) const
     {
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
-      vlo = _mm_slli_epi64(vlo, n);
-      vhi = _mm_slli_epi64(vhi, n);
+      uint_t masklo = U(0x00ffU);
+      uint_t maskhi = U(0xff00U) << U(n);
+      __m128i mask = _mm_set1_epi16(masklo | maskhi);
+      vlo = _mm_and_si128(_mm_slli_epi16(vlo, n), mask);
+      vhi = _mm_and_si128(_mm_slli_epi16(vhi, n), mask);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
     }
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
@@ -309,11 +381,6 @@ namespace vecmathlib {
     
     
     
-    boolvec_t signbit() const
-    {
-      return as_bool();
-    }
-    
     boolvec_t operator==(intvec const& x) const
     {
       return ! (*this != x);
@@ -322,40 +389,19 @@ namespace vecmathlib {
     {
       return (*this ^ x).convert_bool();
     }
-    boolvec_t operator<(intvec const& x) const
-    {
-      // return (*this - x).as_bool();
-      boolvec_t r;
-      for (int i=0; i<size; ++i) {
-        r.set_elt(i, (*this)[i] < x[i]);
-      }
-      return r;
-    }
-    boolvec_t operator<=(intvec const& x) const
-    {
-      return ! (*this > x);
-    }
-    boolvec_t operator>(intvec const& x) const
-    {
-      return x < *this;
-    }
-    boolvec_t operator>=(intvec const& x) const
-    {
-      return ! (*this < x);
-    }
   };
   
   
   
   template<>
-  struct realvec<double,4>: floatprops<double>
+  struct realvec<fp8,32>: floatprops<fp8>
   {
-    static int const size = 4;
+    static int const size = 32;
     typedef real_t scalar_t;
-    typedef __m256d vector_t;
+    typedef __m256i vector_t;
     static int const alignment = sizeof(vector_t);
     
-    static char const* name() { return "<AVX:4*double>"; }
+    static char const* name() { return "<AVX:32*fp8>"; }
     void barrier() { __asm__("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
@@ -385,8 +431,40 @@ namespace vecmathlib {
     // realvec(realvec const& x): v(x.v) {}
     // realvec& operator=(realvec const& x) { return v=x.v, *this; }
     realvec(vector_t x): v(x) {}
-    realvec(real_t a): v(_mm256_set1_pd(a)) {}
-    realvec(real_t const* as): v(_mm256_set_pd(as[3], as[2], as[1], as[0])) {}
+    realvec(real_t a): v(_mm256_set1_epi8(FP::as_int(a))) {}
+    realvec(real_t const* as):
+    v(_mm256_set_epi8(FP::as_int(as[31]),
+                      FP::as_int(as[30]),
+                      FP::as_int(as[29]),
+                      FP::as_int(as[28]),
+                      FP::as_int(as[27]),
+                      FP::as_int(as[26]),
+                      FP::as_int(as[25]),
+                      FP::as_int(as[24]),
+                      FP::as_int(as[23]),
+                      FP::as_int(as[22]),
+                      FP::as_int(as[21]),
+                      FP::as_int(as[20]),
+                      FP::as_int(as[19]),
+                      FP::as_int(as[18]),
+                      FP::as_int(as[17]),
+                      FP::as_int(as[16]),
+                      FP::as_int(as[15]),
+                      FP::as_int(as[14]),
+                      FP::as_int(as[13]),
+                      FP::as_int(as[12]),
+                      FP::as_int(as[11]),
+                      FP::as_int(as[10]),
+                      FP::as_int(as[ 9]),
+                      FP::as_int(as[ 8]),
+                      FP::as_int(as[ 7]),
+                      FP::as_int(as[ 6]),
+                      FP::as_int(as[ 5]),
+                      FP::as_int(as[ 4]),
+                      FP::as_int(as[ 3]),
+                      FP::as_int(as[ 2]),
+                      FP::as_int(as[ 1]),
+                      FP::as_int(as[ 0]))) {}
     
     operator vector_t() const { return v; }
     real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
@@ -399,11 +477,11 @@ namespace vecmathlib {
     static realvec_t loada(real_t const* p)
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
-      return _mm256_load_pd(p);
+      return _mm256_load_si256((__m256i const*)p);
     }
     static realvec_t loadu(real_t const* p)
     {
-      return _mm256_loadu_pd(p);
+      return _mm256_loadu_si256((__m256i const*)p);
     }
     static realvec_t loadu(real_t const* p, std::ptrdiff_t ioff)
     {
@@ -438,11 +516,11 @@ namespace vecmathlib {
     void storea(real_t* p) const
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
-      _mm256_store_pd(p, v);
+      _mm256_store_si256((__m256i*)p, v);
     }
     void storeu(real_t* p) const
     {
-      return _mm256_storeu_pd(p, v);
+      return _mm256_storeu_si256((__m256i*)p, v);
     }
     void storeu(real_t* p, std::ptrdiff_t ioff) const
     {
@@ -456,7 +534,8 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storea(p);
       } else {
-        _mm256_maskstore_pd(p, m.m.as_int(), v);
+        // TODO: this is expensive
+        for (int n=0; n<size; ++n) if (m.m[n]) p[n] = (*this)[n];
       }
     }
     void storeu(real_t* p, mask_t const& m) const
@@ -464,10 +543,8 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storeu(p);
       } else {
-        if (m.m[0]) p[0] = (*this)[0];
-        if (m.m[1]) p[1] = (*this)[1];
-        if (m.m[2]) p[2] = (*this)[2];
-        if (m.m[3]) p[3] = (*this)[3];
+        // TODO: this is expensive
+        for (int n=0; n<size; ++n) if (m.m[n]) p[n] = (*this)[n];
       }
     }
     void storeu(real_t* p, std::ptrdiff_t ioff, mask_t const& m) const
@@ -479,120 +556,48 @@ namespace vecmathlib {
     
     
     
-    intvec_t as_int() const { return _mm256_castpd_si256(v); }
-    intvec_t convert_int() const { return MF::vml_convert_int(*this); }
+    intvec_t as_int() const { return v; }
+    intvec_t convert_int() const { __builtin_unreachable(); }
     
     
     
-    realvec operator+() const { return *this; }
-    realvec operator-() const { return RV(0.0) - *this; }
+    realvec operator+() const { __builtin_unreachable(); }
+    realvec operator-() const { __builtin_unreachable(); }
     
-    realvec operator+(realvec x) const { return _mm256_add_pd(v, x.v); }
-    realvec operator-(realvec x) const { return _mm256_sub_pd(v, x.v); }
-    realvec operator*(realvec x) const { return _mm256_mul_pd(v, x.v); }
-    realvec operator/(realvec x) const { return _mm256_div_pd(v, x.v); }
+    realvec operator+(realvec x) const { __builtin_unreachable(); }
+    realvec operator-(realvec x) const { __builtin_unreachable(); }
+    realvec operator*(realvec x) const { __builtin_unreachable(); }
+    realvec operator/(realvec x) const { __builtin_unreachable(); }
     
     realvec& operator+=(realvec const& x) { return *this=*this+x; }
     realvec& operator-=(realvec const& x) { return *this=*this-x; }
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
-    real_t prod() const
-    {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
-    }
-    real_t sum() const
-    {
-      // return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
-      // __m256d x = _mm256_hadd_pd(v, v);
-      // __m128d xlo = _mm256_extractf128_pd(x, 0);
-      // __m128d xhi = _mm256_extractf128_pd(x, 1);
-      realvec x = *this;
-      x = _mm256_hadd_pd(x.v, x.v);
-      return x[0] + x[2];
-    }
+    real_t prod() const { __builtin_unreachable(); }
+    real_t sum() const { __builtin_unreachable(); }
     
     
     
-    boolvec_t operator==(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_EQ_OQ);
-    }
-    boolvec_t operator!=(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_NEQ_OQ);
-    }
-    boolvec_t operator<(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_LT_OQ);
-    }
-    boolvec_t operator<=(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_LE_OQ);
-    }
-    boolvec_t operator>(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_GT_OQ);
-    }
-    boolvec_t operator>=(realvec const& x) const
-    {
-      return _mm256_cmp_pd(v, x.v, _CMP_GE_OQ);
-    }
+    boolvec_t operator==(realvec const& x) const { __builtin_unreachable(); }
+    boolvec_t operator!=(realvec const& x) const { __builtin_unreachable(); }
+    boolvec_t operator<(realvec const& x) const { __builtin_unreachable(); }
+    boolvec_t operator<=(realvec const& x) const { __builtin_unreachable(); }
+    boolvec_t operator>(realvec const& x) const { __builtin_unreachable(); }
+    boolvec_t operator>=(realvec const& x) const { __builtin_unreachable(); }
     
     
     
-    realvec acos() const { return MF::vml_acos(*this); }
-    realvec acosh() const { return MF::vml_acosh(*this); }
-    realvec asin() const { return MF::vml_asin(*this); }
-    realvec asinh() const { return MF::vml_asinh(*this); }
-    realvec atan() const { return MF::vml_atan(*this); }
-    realvec atan2(realvec y) const { return MF::vml_atan2(*this, y); }
-    realvec atanh() const { return MF::vml_atanh(*this); }
-    realvec cbrt() const { return MF::vml_cbrt(*this); }
-    realvec ceil() const { return _mm256_ceil_pd(v); }
     realvec copysign(realvec y) const { return MF::vml_copysign(*this, y); }
-    realvec cos() const { return MF::vml_cos(*this); }
-    realvec cosh() const { return MF::vml_cosh(*this); }
-    realvec exp() const { return MF::vml_exp(*this); }
-    realvec exp10() const { return MF::vml_exp10(*this); }
-    realvec exp2() const { return MF::vml_exp2(*this); }
-    realvec expm1() const { return MF::vml_expm1(*this); }
     realvec fabs() const { return MF::vml_fabs(*this); }
-    realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
-    realvec floor() const { return _mm256_floor_pd(v); }
-    realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
-    realvec fmax(realvec y) const { return _mm256_max_pd(v, y.v); }
-    realvec fmin(realvec y) const { return _mm256_min_pd(v, y.v); }
-    realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
-    realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
     boolvec_t isinf() const { return MF::vml_isinf(*this); }
-    boolvec_t isnan() const { return _mm256_cmp_pd(v, v, _CMP_UNORD_Q); }
+    boolvec_t isnan() const { return MF::vml_isnan(*this); }
     boolvec_t isnormal() const { return MF::vml_isnormal(*this); }
     realvec ldexp(int_t n) const { return MF::vml_ldexp(*this, n); }
     realvec ldexp(intvec_t n) const { return MF::vml_ldexp(*this, n); }
-    realvec log() const { return MF::vml_log(*this); }
-    realvec log10() const { return MF::vml_log10(*this); }
-    realvec log1p() const { return MF::vml_log1p(*this); }
-    realvec log2() const { return MF::vml_log2(*this); }
-    realvec nextafter(realvec y) const { return MF::vml_nextafter(*this, y); }
-    realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
-    realvec rcp() const { return _mm256_div_pd(_mm256_set1_pd(1.0), v); }
-    realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec rint() const
-    {
-      return _mm256_round_pd(v, _MM_FROUND_TO_NEAREST_INT);
-    }
-    realvec round() const { return MF::vml_round(*this); }
-    realvec rsqrt() const { return MF::vml_rsqrt(*this); }
     boolvec_t signbit() const { return v; }
-    realvec sin() const { return MF::vml_sin(*this); }
-    realvec sinh() const { return MF::vml_sinh(*this); }
-    realvec sqrt() const { return _mm256_sqrt_pd(v); }
-    realvec tan() const { return MF::vml_tan(*this); }
-    realvec tanh() const { return MF::vml_tanh(*this); }
-    realvec trunc() const { return _mm256_round_pd(v, _MM_FROUND_TO_ZERO); }
   };
   
   
@@ -600,44 +605,44 @@ namespace vecmathlib {
   // boolvec definitions
   
   inline
-  auto boolvec<double,4>::as_int() const -> intvec_t
+  auto boolvec<fp8,32>::as_int() const -> intvec_t
   {
-    return _mm256_castpd_si256(v);
+    return v;
   }
   
   inline
-  auto boolvec<double,4>::convert_int() const -> intvec_t
+  auto boolvec<fp8,32>::convert_int() const -> intvec_t
   {
-    //return ifthen(v, U(1), U(0));
     return lsr(as_int(), bits-1);
   }
   
   inline
-  auto boolvec<double,4>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  auto boolvec<fp8,32>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
   {
     return ifthen(x.as_float(), y.as_float()).as_int();
   }
   
   inline
-  auto boolvec<double,4>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  auto boolvec<fp8,32>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
   {
-    return _mm256_blendv_pd(y.v, x.v, v);
+    return (( -convert_int() & x.as_int()) |
+            (~-convert_int() & y.as_int())).as_float();
   }
 
   
   
   // intvec definitions
   
-  inline auto intvec<double,4>::as_float() const -> realvec_t
+  inline auto intvec<fp8,32>::as_float() const -> realvec_t
   {
-    return _mm256_castsi256_pd(v);
+    return v;
   }
   
-  inline auto intvec<double,4>::convert_float() const -> realvec_t
+  inline auto intvec<fp8,32>::convert_float() const -> realvec_t
   {
-    return MF::vml_convert_float(*this);
+    __builtin_unreachable();
   }
   
 } // namespace vecmathlib
 
-#endif  // #ifndef VEC_DOUBLE_AVX_H
+#endif  // #ifndef VEC_AVX_FP8_32_H

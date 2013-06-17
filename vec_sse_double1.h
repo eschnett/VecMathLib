@@ -1,7 +1,7 @@
 // -*-C++-*-
 
-#ifndef VEC_FLOAT_SSE2_SCALAR_H
-#define VEC_FLOAT_SSE2_SCALAR_H
+#ifndef VEC_SSE_DOUBLE1_H
+#define VEC_SSE_DOUBLE1_H
 
 #include "floatprops.h"
 #include "mathfuncs.h"
@@ -28,15 +28,15 @@
 
 namespace vecmathlib {
   
-#define VECMATHLIB_HAVE_VEC_FLOAT_1
-  template<> struct boolvec<float,1>;
-  template<> struct intvec<float,1>;
-  template<> struct realvec<float,1>;
+#define VECMATHLIB_HAVE_VEC_DOUBLE_1
+  template<> struct boolvec<double,1>;
+  template<> struct intvec<double,1>;
+  template<> struct realvec<double,1>;
   
   
   
   template<>
-  struct boolvec<float,1>: floatprops<float>
+  struct boolvec<double,1>: floatprops<double>
   {
     static int const size = 1;
     typedef bool scalar_t;
@@ -108,7 +108,7 @@ namespace vecmathlib {
   
   
   template<>
-  struct intvec<float,1>: floatprops<float>
+  struct intvec<double,1>: floatprops<double>
   {
     static int const size = 1;
     typedef int_t scalar_t;
@@ -203,10 +203,7 @@ namespace vecmathlib {
     
     
     
-    boolvec_t signbit() const
-    {
-      return *this < IV(I(0));
-    }
+    boolvec_t signbit() const { return *this < IV(I(0)); }
     
     boolvec_t operator==(intvec const& x) const { return v==x.v; }
     boolvec_t operator!=(intvec const& x) const { return v!=x.v; }
@@ -219,22 +216,22 @@ namespace vecmathlib {
   
   
   template<>
-  struct realvec<float,1>: floatprops<float>
+  struct realvec<double,1>: floatprops<double>
   {
     static int const size = 1;
     typedef real_t scalar_t;
-    typedef float vector_t;
+    typedef double vector_t;
     static int const alignment = sizeof(vector_t);
     
-    static char const* name() { return "<SSE2:1*float>"; }
+    static char const* name() { return "<SSE2:1*double>"; }
     void barrier() { __asm__("": "+x" (v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
     
   private:
-    static __m128 from_float(float a) { return _mm_set_ss(a); }
-    static float to_float(__m128 a) { return _mm_cvtss_f32(a); }
+    static __m128d from_double(double a) { return _mm_set_sd(a); }
+    static double to_double(__m128d a) { return _mm_cvtsd_f64(a); }
   public:
     
     typedef boolvec<real_t, size> boolvec_t;
@@ -345,8 +342,11 @@ namespace vecmathlib {
     
     intvec_t as_int() const { return floatprops::as_int(v); }
     intvec_t convert_int() const {
-      // return floatprops::convert_int(v);
-      return _mm_cvttss_si32(_mm_set_ss(v));
+#ifdef __x86_64__
+      return _mm_cvttsd_si64(_mm_set_sd(v));
+#else
+      return floatprops::convert_int(v);
+#endif
     }
     
     
@@ -389,7 +389,7 @@ namespace vecmathlib {
     realvec ceil() const
     {
 #ifdef __SSE4_1__
-      return to_float(_mm_ceil_ss(from_float(v), from_float(v)));
+      return to_double(_mm_ceil_sd(from_double(v), from_double(v)));
 #else
       return std::ceil(v);
 #endif
@@ -406,7 +406,7 @@ namespace vecmathlib {
     realvec floor() const
     {
 #ifdef __SSE4_1__
-      return to_float(_mm_floor_ss(from_float(v), from_float(v)));
+      return to_double(_mm_floor_sd(from_double(v), from_double(v)));
 #else
       return std::floor(v);
 #endif
@@ -414,11 +414,11 @@ namespace vecmathlib {
     realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
     realvec fmax(realvec y) const
     {
-      return to_float(_mm_max_ss(from_float(v), from_float(y.v)));
+      return to_double(_mm_max_sd(from_double(v), from_double(y.v)));
     }
     realvec fmin(realvec y) const
     {
-      return to_float(_mm_min_ss(from_float(v), from_float(y.v)));
+      return to_double(_mm_min_sd(from_double(v), from_double(y.v)));
     }
     realvec fmod(realvec y) const { return std::fmod(v, y.v); }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
@@ -433,7 +433,7 @@ namespace vecmathlib {
     boolvec_t isinf() const { return std::isinf(v); }
     boolvec_t isnan() const
     {
-      return _mm_ucomineq_ss(from_float(v), from_float(v));
+      return _mm_ucomineq_sd(from_double(v), from_double(v));
     }
     boolvec_t isnormal() const { return std::isnormal(v); }
     realvec ldexp(int_t n) const { return std::ldexp(v, n); }
@@ -449,8 +449,8 @@ namespace vecmathlib {
     realvec rint() const
     {
 #ifdef __SSE4_1__
-      return to_float(_mm_round_ss(from_float(v), from_float(v),
-                                   _MM_FROUND_TO_NEAREST_INT));
+      return to_double(_mm_round_sd(from_double(v), from_double(v),
+                                    _MM_FROUND_TO_NEAREST_INT));
 #else
       return MF::vml_rint(*this);
 #endif
@@ -460,15 +460,17 @@ namespace vecmathlib {
     boolvec_t signbit() const { return std::signbit(v); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
-    // realvec sqrt1() const { return std::sqrt(v); }
-    realvec sqrt() const { return to_float(_mm_sqrt_ss(from_float(v))); }
+    realvec sqrt() const
+    {
+      return to_double(_mm_sqrt_sd(from_double(v), from_double(v)));
+    }
     realvec tan() const { return MF::vml_tan(*this); }
     realvec tanh() const { return MF::vml_tanh(*this); }
     realvec trunc() const
     {
 #ifdef __SSE4_1__
-      return to_float(_mm_round_ss(from_float(v), from_float(v),
-                                   _MM_FROUND_TO_ZERO));
+      return to_double(_mm_round_sd(from_double(v), from_double(v),
+                                    _MM_FROUND_TO_ZERO));
 #else
       return MF::vml_trunc(*this);
 #endif
@@ -480,25 +482,25 @@ namespace vecmathlib {
   // boolvec definitions
   
   inline
-  auto boolvec<float,1>::as_int() const -> intvec_t
+  auto boolvec<double,1>::as_int() const -> intvec_t
   {
     return I(v);
   }
   
   inline
-  auto boolvec<float,1>::convert_int() const -> intvec_t
+  auto boolvec<double,1>::convert_int() const -> intvec_t
   {
     return v;
   }
   
   inline
-  auto boolvec<float,1>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  auto boolvec<double,1>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
   {
     return v ? x : y;
   }
   
   inline
-  auto boolvec<float,1>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  auto boolvec<double,1>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
   {
     return v ? x : y;
   }
@@ -507,17 +509,20 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline auto intvec<float,1>::as_float() const -> realvec_t
+  inline auto intvec<double,1>::as_float() const -> realvec_t
   {
     return FP::as_float(v);
   }
   
-  inline auto intvec<float,1>::convert_float() const -> realvec_t
+  inline auto intvec<double,1>::convert_float() const -> realvec_t
   {
-    // return FP::convert_float(v);
-    return _mm_cvtss_f32(_mm_cvtsi32_ss(_mm_setzero_ps(), v));
+#ifdef __x86_64__
+    return _mm_cvtsd_f64(_mm_cvtsi64_sd(_mm_setzero_pd(), v));
+#else
+    return FP::convert_float(v);
+#endif
   }
   
 } // namespace vecmathlib
 
-#endif  // #ifndef VEC_FLOAT_SSE2_SCALAR_H
+#endif  // #ifndef VEC_SSE_DOUBLE1_H
