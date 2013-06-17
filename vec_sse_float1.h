@@ -425,8 +425,8 @@ namespace vecmathlib {
     intvec_t ilogb() const
     {
       int_t r = std::ilogb(v);
-      if (r == FP_ILOGB0) r = numeric_limits<int_t>::min();
-      else if (r == FP_ILOGBNAN) r = numeric_limits<int_t>::max();
+      if (r == FP_ILOGB0) r = std::numeric_limits<int_t>::min();
+      else if (r == FP_ILOGBNAN) r = std::numeric_limits<int_t>::max();
       return r;
     }
     boolvec_t isfinite() const { return std::isfinite(v); }
