@@ -1,7 +1,7 @@
 // -*-C++-*-
 
-#ifndef FLOATTYPESS_H
-#define FLOATTYPESS_H
+#ifndef FLOATTYPES_H
+#define FLOATTYPES_H
 
 #if 1
 
