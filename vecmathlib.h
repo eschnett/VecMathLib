@@ -53,8 +53,8 @@ namespace std { class type_info; }
 
 #if defined __ARM_PCS_VFP       // ARM NEON
 // TODO: VFP
-// TODO: vec_neon_float4
 #  include "vec_neon_float2.h"
+#  include "vec_neon_float4.h"
 #endif
 
 #if defined __SSE2__            // Intel SSE 2
