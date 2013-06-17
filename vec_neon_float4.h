@@ -95,13 +95,17 @@ namespace vecmathlib {
     
     bool all() const
     {
-      boolvec r = vpminq_u32(v, v);
-      return to_bool(r[0]);
+      uint32x2_t x = vpmin_u32(vget_low_u32(v), vget_high_u32(v));
+      uint32x2_t y = vpmin_u32(x, x);
+      uint32_t z = vget_lane_u32(y, 0);
+      return to_bool(z);
     }
     bool any() const
     {
-      boolvec r = vpmaxq_u32(v, v);
-      return to_bool(r[0]);
+      uint32x2_t x = vpmax_u32(vget_low_u32(v), vget_high_u32(v));
+      uint32x2_t y = vpmax_u32(x, x);
+      uint32_t z = vget_lane_u32(y, 0);
+      return to_bool(z);
     }
     
     
@@ -155,7 +159,9 @@ namespace vecmathlib {
     }
     static intvec iota()
     {
-      return vcreateq_s32((uint64_t(0) << uint64_t(32)) | uint64_t(1));
+      return
+        vcombine_s32(vcreate_s32((uint64_t(1) << uint64_t(32)) | uint64_t(0)),
+                     vcreate_s32((uint64_t(3) << uint64_t(32)) | uint64_t(2)));
     }
     
     operator ivector_t() const { return v; }
@@ -223,7 +229,7 @@ namespace vecmathlib {
     boolvec_t signbit() const
     {
       //return *this < IV(I(0));
-      return intvec(vshr_n_s32(v, FP::bits-1)).as_bool();
+      return intvec(vshrq_n_s32(v, FP::bits-1)).as_bool();
     }
     
     boolvec_t operator==(intvec const& x) const { return vceqq_s32(v, x.v); }
@@ -342,6 +348,8 @@ namespace vecmathlib {
       // be atomic
       // p[0] = (*this)[0];
       // p[1] = (*this)[1];
+      // p[2] = (*this)[2];
+      // p[3] = (*this)[3];
 #if defined __ARM_FEATURE_UNALIGNED
       vst1q_f32(p, v);
 #else
@@ -362,6 +370,8 @@ namespace vecmathlib {
       } else {
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
+        if (m.m[2]) p[2] = (*this)[2];
+        if (m.m[3]) p[3] = (*this)[3];
       }
     }
     void storeu(real_t* p, mask_t const& m) const
@@ -371,6 +381,8 @@ namespace vecmathlib {
       } else {
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
+        if (m.m[2]) p[2] = (*this)[2];
+        if (m.m[3]) p[3] = (*this)[3];
       }
     }
     void storeu(real_t* p, std::ptrdiff_t ioff, mask_t const& m) const
@@ -402,12 +414,14 @@ namespace vecmathlib {
     
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1];
+      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
     }
     real_t sum() const
     {
-      realvec r = vpaddq_f32(v, v);
-      return r[0];
+      float32x2_t x = vpadd_f32(vget_low_f32(v), vget_high_f32(v));
+      float32x2_t y = vpadd_f32(x, x);
+      float32_t z = vget_lane_f32(y, 0);
+      return z;
     }
     
     

@@ -96,12 +96,12 @@ namespace vecmathlib {
     bool all() const
     {
       boolvec r = vpmin_u32(v, v);
-      return to_bool(r[0]);
+      return r[0];
     }
     bool any() const
     {
       boolvec r = vpmax_u32(v, v);
-      return to_bool(r[0]);
+      return r[0];
     }
     
     
@@ -155,7 +155,7 @@ namespace vecmathlib {
     }
     static intvec iota()
     {
-      return vcreate_s32((uint64_t(0) << uint64_t(32)) | uint64_t(1));
+      return vcreate_s32((uint64_t(1) << uint64_t(32)) | uint64_t(0));
     }
     
     operator ivector_t() const { return v; }
