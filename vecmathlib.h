@@ -13,6 +13,7 @@
 #endif
 
 #undef VML_HAVE_DENORMALS
+#undef VML_HAVE_FP_CONTRACT     // can e.g. re-associate
 #undef VML_HAVE_INF
 #undef VML_HAVE_NAN
 #define VML_HAVE_SIGNED_ZERO
