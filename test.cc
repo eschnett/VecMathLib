@@ -1001,6 +1001,12 @@ struct vecmathlib_test {
         check_bool("set_elt", i<=n ? R(1.0) : R(0.0), r1[i], R(1.0));
       }
     }
+    
+    realvec_t rcancel = r1;
+    rcancel += R(FP::max() / 2);
+    rcancel.barrier();
+    rcancel -= R(FP::max() / 2);
+    check_real("barrier", R(0.0), rcancel[0]);
   }
   
   // Change signature: "int" -> "int_t"
