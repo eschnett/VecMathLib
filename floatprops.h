@@ -6,13 +6,10 @@
 #include "floattypes.h"
 
 #include <cmath>
-//#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <limits>
 #include <sstream>
-
-#include <stdint.h>
 
 
 

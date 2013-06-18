@@ -3,11 +3,14 @@
 #ifndef FLOATTYPES_H
 #define FLOATTYPES_H
 
-#if 1
+#ifndef VML_BROKEN_STL
 
+// The STL works fine
 #include <cstdint>
 
 #else
+
+// The STL has problems with C++11 features
 
 #include <stdint.h>
 namespace std {
