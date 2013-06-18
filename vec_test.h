@@ -420,7 +420,7 @@ namespace vecmathlib {
     }
     inline void barrier()
     {
-#if defined __GNUC__ && !defined __clang__
+#if defined __GNUC__ && !defined __clang__ && !defined __ICC
       // GCC crashes when +X is used as constraint
 #  if defined __SSE2__
       for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
@@ -433,6 +433,12 @@ namespace vecmathlib {
 #  endif
 #elif defined __clang__
       for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
+#elif defined __ICC
+      for (int d=0; d<size; ++d) {
+        real_t tmp = v[d];
+        __asm__("": "+X" (tmp));
+        v[d] = tmp;
+      }
 #elif defined __IBMCPP__
       for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
 #else
