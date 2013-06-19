@@ -1002,11 +1002,20 @@ struct vecmathlib_test {
       }
     }
     
+    // barrier
     realvec_t rcancel = r1;
-    rcancel += R(FP::max() / 2);
+    rcancel += RV(R(FP::max() / 2));
     rcancel.barrier();
-    rcancel -= R(FP::max() / 2);
+    rcancel -= RV(R(FP::max() / 2));
     check_real("barrier", R(0.0), rcancel[0]);
+    
+    // rounding (break ties to even, or break ties away from zero?)
+    realvec_t rbase = RV(R(1.0));
+    rbase += RV(FP::epsilon()/2);
+    check_real("flt_rounds", R(1.0), rbase[0]);
+    rbase = RV(R(1.0) + FP::epsilon());
+    rbase += RV(FP::epsilon()/2);
+    check_real("flt_rounds", R(1.0) + 2*FP::epsilon(), rbase[0]);
   }
   
   // Change signature: "int" -> "int_t"
