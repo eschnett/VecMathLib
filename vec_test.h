@@ -1,4 +1,4 @@
-// -*-c++-*-
+// -*-C++-*-
 
 #ifndef VEC_TEST_H
 #define VEC_TEST_H
