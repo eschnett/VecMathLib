@@ -125,7 +125,8 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_round(realvec_t x)
   {
-    return copysign(floor(fabs(x)+RV(0.5)), x);
+    // return copysign(floor(fabs(x)+RV(0.5)), x);
+    return trunc(x + copysign(RV(0.5), x));
   }
   
   // Round to next integer towards zero
