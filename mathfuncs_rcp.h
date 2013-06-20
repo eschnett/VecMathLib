@@ -38,6 +38,8 @@ namespace vecmathlib {
       // Note: don't rewrite this expression, this may introduce
       // cancellation errors
       r += r * (RV(1.0) - x*r);
+      
+      // NEON: r = r * (RV(2.0) - x*r);
    }
     
     // Handle negative values
