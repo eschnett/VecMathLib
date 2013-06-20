@@ -7,16 +7,16 @@
 
 funcs =
   {
-    {Sin[2 Pi #]&, 0, 1/4, False, 1, 2, 10},
-    {Cos[2 Pi #]&, 0, 1/4, False, 0, 2, 10},
-    {Tan, 0, Pi/4, False, 1, 2, 20},
-    (* {Cot, 0, Pi/2, False, 0, 2, 10}, *)
-    {Log[2, (1+#)/(1-#)]&, 0, 1/3, False, 1, 2, 15},
-    {2^#&, -1/2, +1/2, False, 0, 1, 15},
-    {ArcTan, 0, 1, False, 1, 2, 25}
+    {Sin[2 Pi #]&,           0, 1/4,       1, 2, 10,   1, 1, 1,   {0, 1/4}},
+    {Cos[2 Pi #]&,           0, 1/4,       0, 2, 10,   1, 1, 1,   {0, 1/4}},
+    {Tan[Pi #]&,             0, 1/2,       1, 2, 3,    2, 2, 3,   {0, 1/4}},
+    {Log[2, (1+#)/(1-#)]&,   0, 1/3,       1, 2, 15,   1, 1, 1,   {}},
+    {2^#&,                   -1/2, +1/2,   0, 1, 15,   1, 1, 1,   {}},
+    {ArcTan,                 0, 1/2,       1, 2, 15,   1, 2, 1,   {0, 1}}
   };
 
-findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
+findcoeffs[func_, xmin_, xmax_, dmin_, dstep_, ndegrees_, denndegrees_,
+           conslocs_] :=
   Module[{prec, npts,
           degree,
           qs, q2x, x2q,
@@ -28,13 +28,15 @@ findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
           approx,
           error1, error2, error3, error},
          
+         Print[{"function ", func, ndegrees, denndegrees}];
+         
          (* Working precision *)
          prec = 30;
          
          (* Number of test points *)
          npts = 10000;
          
-         degree = (dmin + ndegrees dstep) / If[pade, 2, 1];
+         degree = dmin + ndegrees dstep;
          
          (* Test points in normalized interval [0,1] *)
          qs = Table[n/(npts-1), {n, 0, npts-1}];
@@ -49,15 +51,10 @@ findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
          (* Function with rescaled input *)
          funcq[q_] = func[q2x[q]];
          
-         polydenom[q_] =
-         If[pade,
-            (* Use denominator of Pade approximant as denominator of
-               our approximant *)
-            funcqpade[q_] = PadeApproximant[funcq[q], {q, 0, degree}];
-            funcqpade[q][[1,1]],
-            (* else *)
-            (* Use a trivial denominator *)
-            1];
+         (* Use denominator of Pade approximant as denominator of our
+            approximant *)
+         funcqpade[q_] = PadeApproximant[funcq[q], {q, 0, denndegrees}];
+         polydenom[q_] = Denominator[funcqpade[q]];
          
          (* List of expansion coefficients *)
          coeffs = Table[c[i], {i, dmin, degree, dstep}];
@@ -90,21 +87,40 @@ findcoeffs[func_, xmin_, xmax_, pade_, dmin_, dstep_, ndegrees_] :=
                             WorkingPrecision -> prec];
          error = Max[error1, error2, error3];
          
-         Print[{func, ndegrees, CForm[error]}];
-         Write[outfile, {func, ndegrees, CForm[error],
+         (* Evaluate at constraint locations to check solution: *)
+         consvals = Map[Abs[approx[x2q[#]] - func[#]]&, conslocs];
+         
+         Print[{"error ", CForm[error], " constraints ", CForm[consvals]}];
+         Write[outfile, {func, ndegrees, denndegrees, CForm[error],
                          CForm[HornerForm[approx[x2q[x]]]]}]];
 
-findcoeffs2[func_, xmin_, xmax_, pade_, dmin_, dstep_, maxndegrees_] :=
-  Do[findcoeffs[func, xmin, xmax, pade, dmin, dstep, ndegrees],
-     {ndegrees, maxndegrees}];
+findcoeffs2[func_, xmin_, xmax_,
+            dmin_, dstep_, maxndegrees_,
+            dendmin_, dendstep_, maxdenndegrees_,
+            conslocs_] :=
+  Do[findcoeffs[func, xmin, xmax, dmin, dstep, ndegrees, denndegrees, conslocs],
+     {ndegrees, maxndegrees},
+     {denndegrees, dendmin, dendstep maxdenndegrees, dendstep}];
+
+outfile = OpenWrite["/tmp/tmp"];
+(* findcoeffs[Tan[Pi #]&, 0, 1/2,   1, 2, 3,   4, {0, 1/4}]; *)
+(* findcoeffs[Tan[Pi #]&, 0, 1/2,   1, 2, 3,   4, {0, 1/4}]; *)
+(* findcoeffs2[Tan[Pi #]&, 0, 1/2,   1, 2, 5,   2, 2, 5, {0, 1/4}]; *)
 
 (*
-outfile = First[Streams["stdout"]];
-(* outfile = OpenWrite[]; *)
-findcoeffs[ArcTan, 0, 1, False, 1, 2, 25];
+PADE DOES NOT REMOVE SINGULARITIES
+PROBABLY NEED TO DO THAT MANUALLY.
 *)
 
+(* findcoeffs[ArcTan[#]&, 0, 1,   1, 2, 10,   1, {0, 1}]; *)
+(* findcoeffs2[ArcTan,   0, 1,   1, 2, 10,   1, 2, 10,   {0, 1}]; *)
+findcoeffs2[ArcTan[#]&,   0, 1/2,   1, 2, 15,   1, 2, 1,   {0, 1/2}];
+
+
+
+(*
 outfile = OpenWrite["coeffs.out"];
 Write[outfile, "(* Coefficients for function approximations *)"];
 Map[findcoeffs2@@# &, funcs];
 Close[outfile];
+*)
