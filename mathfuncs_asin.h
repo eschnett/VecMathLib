@@ -28,6 +28,7 @@ namespace vecmathlib {
     // This is necessary for good convergence below.
     x = x / (RV(1.0) + sqrt(RV(1.0) + x*x));
     
+#if 0
     // Taylor expansion; see
     // <https://en.wikipedia.org/wiki/Inverse_trigonometric_functions>.
     VML_ASSERT(all(x >= RV(0.0) && x <= RV(0.5)));
@@ -39,8 +40,64 @@ namespace vecmathlib {
       y *= RV(R(n-1) / R(n)) * x2;
       r += y;
     }
+#endif
+    
+    // Polynomial expansion
+    realvec_t x2 = x*x;
+    realvec_t r;
+    switch (sizeof(real_t)) {
+    case 4:
+#ifdef VML_HAVE_FP_CONTRACT
+      // float, error=6.66422646286979497624922530951e-8
+      r = RV(+0.067880041389077294203913658751);
+      r = fma(r, x2, RV(-0.133733063898947623461317627449));
+      r = fma(r, x2, RV(+0.19911334683762018553047223812));
+      r = fma(r, x2, RV(-0.333297629421461914979541552214));
+      r = fma(r, x2, RV(0.99999959717590068040974191128));
+#else
+      // float, error=1.32698047768409645072438892571e-6
+      r = RV(-0.097792979486911722224672843246);
+      r = fma(r, x2, RV(+0.192823203439066255014185816489));
+      r = fma(r, x2, RV(-0.332894374801791377010848071499));
+      r = fma(r, x2, RV(+0.99999272283064606320969693166));
+#endif
+      break;
+    case 8:
+#ifdef VML_HAVE_FP_CONTRACT
+      // double, error=7.23827307971781482562906889298e-17
+      r = RV(-0.0119268581772947474118625342812);
+      r = fma(r, x2, RV(+0.0314136659341247717203573238714));
+      r = fma(r, x2, RV(-0.0471488852137420698546535537847));
+      r = fma(r, x2, RV(+0.057569335614537634720962389105));
+      r = fma(r, x2, RV(-0.066469674694325315726074277265));
+      r = fma(r, x2, RV(+0.076901807118525604168645555045));
+      r = fma(r, x2, RV(-0.090907534052423738503603248332));
+      r = fma(r, x2, RV(+0.111111036293577807846564325197));
+      r = fma(r, x2, RV(-0.142857140628324608456323319753));
+      r = fma(r, x2, RV(+0.199999999962771461194546102341));
+      r = fma(r, x2, RV(-0.333333333333044876533973016233));
+      r = fma(r, x2, RV(+0.9999999999999993386168118967));
+#else
+      // double, error=2.55716065822130171460427941931e-14
+      r = RV(-0.0181544668501977245345114956236);
+      r = fma(r, x2, RV(+0.0437292245148812058302877081114));
+      r = fma(r, x2, RV(-0.062544339168176953821092935889));
+      r = fma(r, x2, RV(+0.076201106915857900897507167054));
+      r = fma(r, x2, RV(-0.090827503061359848291718661563));
+      r = fma(r, x2, RV(+0.11110526662726539375601075137));
+      r = fma(r, x2, RV(-0.142856889699649116820344831251));
+      r = fma(r, x2, RV(+0.199999993955745494607716573019));
+      r = fma(r, x2, RV(-0.333333333267116176139371545145));
+      r = fma(r, x2, RV(+0.99999999999978652742783656623));
+#endif
+      break;
+    default:
+      __builtin_unreachable();
+    }
+    r *= x;
     
     // Undo second range reduction
+    // TODO: put this into the coefficients
     r = RV(2.0) * r;
     
     // Undo range reduction
@@ -57,16 +114,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_acos(realvec_t x)
   {
-    // Handle negative values
-    boolvec_t is_negative = signbit(x);
-    x = fabs(x);
-    
-    realvec_t r = RV(2.0) * atan(sqrt(RV(1.0) - x*x) / (RV(1.0) + x));
-    
-    // Handle negative values
-    r = ifthen(is_negative, RV(M_PI) - r, r);
-    
-    return r;
+    return RV(M_PI_2) - asin(x);
   }
   
   
