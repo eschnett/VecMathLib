@@ -13,10 +13,16 @@
 #endif
 
 #undef VML_HAVE_DENORMALS
-#undef VML_HAVE_FP_CONTRACT     // can e.g. re-associate
+#undef VML_HAVE_FP_CONTRACT     // see below
 #undef VML_HAVE_INF
 #undef VML_HAVE_NAN
 #define VML_HAVE_SIGNED_ZERO
+
+// Possible effects of not having VML_HAVE_FP_CONTRACT:
+// - can re-associate
+// - can replace division by reciprocal
+// - can break ties differently when rounding (?)
+// - can evaluate functions with reduced precision (80% of significant digits)
 
 
 
