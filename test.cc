@@ -44,8 +44,13 @@ struct vecmathlib_test {
   
   // Test each function with this many random values
   static const int imax = 10000;
-  // Require (arbitrarily) that 3/4 of the digits are correct
+#ifdef VML_HAVE_FP_CONTRACT     // see below
+  // Require that 95% of the digits are correct
+  static real_t accuracy() { return pow(realvec_t::epsilon(), R(0.95)); }
+#else
+  // Require that 75% of the digits are correct
   static real_t accuracy() { return pow(realvec_t::epsilon(), R(0.75)); }
+#endif
   
   
   
