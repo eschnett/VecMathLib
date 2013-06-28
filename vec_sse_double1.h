@@ -421,6 +421,7 @@ namespace vecmathlib {
       return to_double(_mm_min_sd(from_double(v), from_double(y.v)));
     }
     realvec fmod(realvec y) const { return std::fmod(v, y.v); }
+    realvec frexp(intvec_t& r) const { return MF::vml_frexp(*this, r); }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const
     {

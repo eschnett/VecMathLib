@@ -746,6 +746,19 @@ namespace vecmathlib {
     realpseudovec fmax(realpseudovec y) const { return map(std::fmax, y); }
     realpseudovec fmin(realpseudovec y) const { return map(std::fmin, y); }
     realpseudovec fmod(realpseudovec y) const { return map(std::fmod, y); }
+    realpseudovec frexp(intvec_t& ires) const
+    {
+      realvec_t res;
+      for (int d=0; d<size; ++d) {
+        int ir;
+        real_t r = std::frexp(v[d], &ir);
+        if (ir == FP_ILOGB0) ir = std::numeric_limits<int_t>::min();
+        else if (ir == FP_ILOGBNAN) ir = std::numeric_limits<int_t>::max();
+        res.v[d] = r;
+        ires.v[d] = ir;
+      }
+      return res;
+    }
     realpseudovec hypot(realpseudovec y) const { return map(std::hypot, y); }
     intvec_t ilogb() const
     {
@@ -1200,6 +1213,13 @@ namespace vecmathlib {
                                           realpseudovec<real_t, size> y)
   {
     return x.fmod(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realpseudovec<real_t, size> frexp(realpseudovec<real_t, size> x,
+                                           intpseudovec<real_t, size>& r)
+  {
+    return x.frexp(r);
   }
   
   template<typename real_t, int size>

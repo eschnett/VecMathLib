@@ -1024,6 +1024,30 @@ struct vecmathlib_test {
   }
   
   // Change signature: "int" -> "int_t"
+  static real_t local_frexp0(real_t x)
+  {
+    int r;
+    return std::frexp(x, &r);
+  }
+  static int_t local_frexp1(real_t x)
+  {
+    int r;
+    std::frexp(x, &r);
+    if (r==FP_ILOGB0) r=std::numeric_limits<int_t>::min();
+    if (r==FP_ILOGBNAN) r=std::numeric_limits<int_t>::max();
+    return r;
+  }
+  static realvec_t local_vfrexp0(realvec_t x)
+  {
+    intvec_t r;
+    return vecmathlib::frexp(x, r);
+  }
+  static intvec_t local_vfrexp1(realvec_t x)
+  {
+    intvec_t r;
+    vecmathlib::frexp(x, r);
+    return r;
+  }
   static int_t local_ilogb(real_t x)
   {
     int r = std::ilogb(x);
@@ -1034,7 +1058,7 @@ struct vecmathlib_test {
   static real_t local_ldexp(real_t x, int_t n) { return ldexp(x, n); }
   static void test_fabs()
   {
-    cout << "   testing + - + - * == != < <= > >= copysign fabs fdim fma fmax fmin ilogb isfinite isinf isnan isnormal ldexp nextafter signbit...\n" << flush;
+    cout << "   testing + - + - * == != < <= > >= copysign fabs fdim fma fmax fmin frexp ilogb isfinite isinf isnan isnormal ldexp nextafter signbit...\n" << flush;
     
     const real_t eps = FP::epsilon();
     const real_t int_min = R(std::numeric_limits<int_t>::min());
@@ -1126,6 +1150,8 @@ struct vecmathlib_test {
                            x, y, z, R(2.0)*accuracy());
       check_real<RV,RV>("fmax", std::fmax, vecmathlib::fmax, x, y, 0.0);
       check_real<RV,RV>("fmin", std::fmin, vecmathlib::fmin, x, y, 0.0);
+      check_real<RV>("frexp0", local_frexp0, local_vfrexp0, x, 0.0);
+      check_int<RV>("frexp1", local_frexp1, local_vfrexp1, x);
       check_int<RV>("ilogb",
                     local_ilogb, (intvec_t(*)(realvec_t))vecmathlib::ilogb, x);
 #if defined VML_HAVE_INF && defined VML_HAVE_NAN

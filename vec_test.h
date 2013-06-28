@@ -688,6 +688,7 @@ namespace vecmathlib {
     realtestvec fmax(realtestvec y) const { return MF::vml_fmax(*this, y); }
     realtestvec fmin(realtestvec y) const { return MF::vml_fmin(*this, y); }
     realtestvec fmod(realtestvec y) const { return MF::vml_fmod(*this, y); }
+    realtestvec frexp(intvec_t& r) const { return MF::vml_frexp(*this, r); }
     realtestvec hypot(realtestvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const { return MF::vml_ilogb(*this); }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
@@ -1115,6 +1116,13 @@ namespace vecmathlib {
                                         realtestvec<real_t, size> y)
   {
     return x.fmod(y);
+  }
+  
+  template<typename real_t, int size>
+  inline realtestvec<real_t, size> frexp(realtestvec<real_t, size> x,
+                                         inttestvec<real_t, size>& r)
+  {
+    return x.frexp(r);
   }
   
   template<typename real_t, int size>

@@ -46,6 +46,7 @@ namespace std {
   float fma(float x, float y, float z) { return ::fmaf(x, y, z); }
   float fmax(float x, float y) { return ::fmaxf(x, y); }
   float fmin(float x, float y) { return ::fminf(x, y); }
+  float frexp(float x, int* r) { return ::frexp(x, r); }
   float hypot(float x, float y) { return ::hypotf(x, y); }
   int ilogb(float x) { return ::ilogbf(x); }
   float log1p(float x) { return ::log1pf(x); }
@@ -70,6 +71,7 @@ namespace std {
   double fma(double x, double y, double z) { return ::fma(x, y, z); }
   double fmax(double x, double y) { return ::fmax(x, y); }
   double fmin(double x, double y) { return ::fmin(x, y); }
+  double frexp(double x, int* r) { return ::frexp(x, r); }
   double hypot(double x, double y) { return ::hypot(x, y); }
   int ilogb(double x) { return ::ilogb(x); }
   double log1p(double x) { return ::log1p(x); }
