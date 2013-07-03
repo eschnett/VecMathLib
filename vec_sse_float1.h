@@ -73,8 +73,6 @@ namespace vecmathlib {
     // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     boolvec(bvector_t x): v(x) {}
     boolvec(bool a): v(a) {}
-    // TODO: remove this
-    boolvec(int x): v(x) {}
     boolvec(bool const* as): v(as[0]) {}
     
     operator bvector_t() const { return v; }
