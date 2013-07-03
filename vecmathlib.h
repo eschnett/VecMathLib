@@ -23,7 +23,7 @@
 // - can evaluate functions with reduced precision (80% of significant digits)
 
 // default settings
-#define VML_HAVE_DENORMALS
+#undef VML_HAVE_DENORMALS       // TODO
 #define VML_HAVE_FP_CONTRACT
 #define VML_HAVE_INF
 #define VML_HAVE_NAN
