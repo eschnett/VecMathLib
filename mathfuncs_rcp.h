@@ -97,19 +97,17 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_remainder(realvec_t x, realvec_t y)
   {
-    // return x - rint(x / y) * y;
-    realvec_t r = x / y;
-    return y * (r - rint(r));
+    return x - rint(x / y) * y;
+    // realvec_t r = x / y;
+    // return y * (r - rint(r));
   }
   
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_fmod(realvec_t x, realvec_t y)
   {
-    // realvec_t r = fabs(x);
-    // y = fabs(y);
-    // return copysign(r - floor(r / y) * y, x);
-    realvec_t r = x / y;
-    return y * (r - trunc(r));
+    return x - y * trunc(x / y);
+    // realvec_t r = x / y;
+    // return y * (r - trunc(r));
   }
   
 }; // namespace vecmathlib
