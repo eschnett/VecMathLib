@@ -752,8 +752,9 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) {
         int ir;
         real_t r = std::frexp(v[d], &ir);
-        if (ir == FP_ILOGB0) ir = std::numeric_limits<int_t>::min();
-        else if (ir == FP_ILOGBNAN) ir = std::numeric_limits<int_t>::max();
+        typedef std::numeric_limits<int_t> NL;
+        if (FP_ILOGB0 != NL::min() and ir == FP_ILOGB0) ir = NL::min();
+        else if (FP_ILOGBNAN != NL::max() and ir == FP_ILOGBNAN) ir = NL::max();
         res.v[d] = r;
         ires.v[d] = ir;
       }
@@ -765,8 +766,9 @@ namespace vecmathlib {
       intvec_t res;
       for (int d=0; d<size; ++d) {
         int_t r = std::ilogb(v[d]);
-        if (r == FP_ILOGB0) r = std::numeric_limits<int_t>::min();
-        else if (r == FP_ILOGBNAN) r = std::numeric_limits<int_t>::max();
+        typedef std::numeric_limits<int_t> NL;
+        if (FP_ILOGB0 != NL::min() and r == FP_ILOGB0) r = NL::min();
+        else if (FP_ILOGBNAN != NL::max() and r == FP_ILOGBNAN) r = NL::max();
         res.v[d] = r;
       }
       return res;
