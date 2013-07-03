@@ -1031,10 +1031,10 @@ struct vecmathlib_test {
   }
   static int_t local_frexp1(real_t x)
   {
+    if (isinf(x)) return std::numeric_limits<int_t>::max();
+    if (isnan(x)) return std::numeric_limits<int_t>::max();
     int r;
     std::frexp(x, &r);
-    if (r==FP_ILOGB0) r=std::numeric_limits<int_t>::min();
-    if (r==FP_ILOGBNAN) r=std::numeric_limits<int_t>::max();
     return r;
   }
   static realvec_t local_vfrexp0(realvec_t x)
@@ -1050,10 +1050,9 @@ struct vecmathlib_test {
   }
   static int_t local_ilogb(real_t x)
   {
-    int r = std::ilogb(x);
-    if (r==FP_ILOGB0) return std::numeric_limits<int_t>::min();
-    if (r==FP_ILOGBNAN) return std::numeric_limits<int_t>::max();
-    return r;
+    if (x==R(0.0)) return std::numeric_limits<int_t>::min();
+    if (isnan(x)) return std::numeric_limits<int_t>::max();
+    return std::ilogb(x);
   }
   static real_t local_ldexp(real_t x, int_t n) { return ldexp(x, n); }
   static void test_fabs()
