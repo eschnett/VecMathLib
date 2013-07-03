@@ -5,6 +5,7 @@
 
 #include "floattypes.h"
 
+#include <cassert>
 #include <cmath>
 #include <cstring>
 #include <iostream>
@@ -260,6 +261,28 @@ namespace vecmathlib {
   };
   
   
+  
+  // We are adding the (unused) type RV here to avoid name mangling
+  // problems. On some systems, the vector size does not enter into
+  // the mangled name (!), leading to duplicate function definitions.
+  template<typename RV, typename V, typename E>
+  E get_elt(const V& v, const int n)
+  {
+    const size_t s = sizeof(E);
+    E e;
+    // assert(n>=0 and s*n<sizeof(V));
+    std::memcpy(&e, &((const char*)&v)[s*n], s);
+    return e;
+  }
+  
+  template<typename RV, typename V, typename E>
+  V& set_elt(V& v, const int n, const E e)
+  {
+    const size_t s = sizeof(E);
+    // assert(n>=0 and s*n<sizeof(V));
+    std::memcpy(&((char*)&v)[s*n], &e, s);
+    return v;
+  }
   
 } // namespace vecmathlib
 
