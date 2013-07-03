@@ -434,7 +434,14 @@ namespace vecmathlib {
     boolvec_t isinf() const { return std::isinf(v); }
     boolvec_t isnan() const
     {
-      return _mm_ucomineq_sd(from_double(v), from_double(v));
+      // This is wrong:
+      // return _mm_ucomineq_sd(from_double(v), from_double(v));
+      // This works:
+      // char r;
+      // __asm__("ucomisd %[v],%[v]; setp %[r]": [r]"=q"(r): [v]"x"(v));
+      // return boolvec_t::scalar_t(r);
+      // This works as well:
+      return std::isnan(v);
     }
     boolvec_t isnormal() const { return std::isnormal(v); }
     realvec ldexp(int_t n) const { return std::ldexp(v, n); }

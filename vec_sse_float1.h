@@ -426,15 +426,27 @@ namespace vecmathlib {
     intvec_t ilogb() const
     {
       int_t r = std::ilogb(v);
-      if (r == FP_ILOGB0) r = std::numeric_limits<int_t>::min();
-      else if (r == FP_ILOGBNAN) r = std::numeric_limits<int_t>::max();
+      typedef std::numeric_limits<int_t> NL;
+      if (FP_ILOGB0 == NL::min() and r == FP_ILOGB0) r = NL::min();
+      else if (FP_ILOGBNAN == NL::max() and r == FP_ILOGBNAN) r = NL::max();
       return r;
     }
     boolvec_t isfinite() const { return std::isfinite(v); }
     boolvec_t isinf() const { return std::isinf(v); }
     boolvec_t isnan() const
     {
-      return _mm_ucomineq_ss(from_float(v), from_float(v));
+#if defined VML_HAVE_NAN
+      // This is wrong:
+      // return _mm_ucomineq_ss(from_float(v), from_float(v));
+      // This works:
+      // char r;
+      // __asm__("ucomiss %[v],%[v]; setp %[r]": [r]"=q"(r): [v]"x"(v));
+      // return boolvec_t::scalar_t(r);
+      // This works as well:
+      return std::isnan(v);
+#else
+      return BV(false);
+#endif
     }
     boolvec_t isnormal() const { return std::isnormal(v); }
     realvec ldexp(int_t n) const { return std::ldexp(v, n); }

@@ -574,7 +574,14 @@ namespace vecmathlib {
     }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
     boolvec_t isinf() const { return MF::vml_isinf(*this); }
-    boolvec_t isnan() const { return vec_tstnan(v, v); }
+    boolvec_t isnan() const
+    {
+#ifdef VML_HAVE_NAN
+      return vec_tstnan(v, v);
+#else
+      return BV(false);
+#endif
+    }
     boolvec_t isnormal() const { return MF::vml_isnormal(*this); }
     realvec ldexp(int_t n) const { return ldexp(intvec_t(n)); }
     realvec ldexp(intvec_t n) const
