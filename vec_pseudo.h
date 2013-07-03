@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <climits>
 #include <string>
 #include <sstream>
 
@@ -750,13 +751,14 @@ namespace vecmathlib {
     {
       realvec_t res;
       for (int d=0; d<size; ++d) {
-        int ir;
-        real_t r = std::frexp(v[d], &ir);
+        int iri;
+        real_t r = std::frexp(v[d], &iri);
+        int_t ir = iri;
 #if defined VML_HAVE_INF
         if (std::isinf(v[d])) ir = std::numeric_limits<int_t>::max();
 #endif
 #if defined VML_HAVE_NAN
-        if (std::isnan(v[d])) ir = std::numeric_limits<int_t>::max();
+        if (std::isnan(v[d])) ir = std::numeric_limits<int_t>::min();
 #endif
         res.v[d] = r;
         ires.v[d] = ir;
@@ -772,9 +774,13 @@ namespace vecmathlib {
         typedef std::numeric_limits<int_t> NL;
         if (FP_ILOGB0 != NL::min() and v[d] == R(0.0)) {
           r = NL::min();
-#if defined VML_HAVE_NAN
-        } else if (FP_ILOGBNAN != NL::max() and std::isnan(v[d])) {
+#if defined VML_HAVE_INF
+        } else if (INT_MAX != NL::max() and std::isinf(v[d])) {
           r = NL::max();
+#endif
+#if defined VML_HAVE_NAN
+        } else if (FP_ILOGBNAN != NL::min() and std::isnan(v[d])) {
+          r = NL::min();
 #endif
         }
         res.v[d] = r;

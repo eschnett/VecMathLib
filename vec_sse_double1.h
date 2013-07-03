@@ -8,6 +8,7 @@
 #include "vec_base.h"
 
 #include <cmath>
+#include <climits>
 
 // SSE2 intrinsics
 #include <emmintrin.h>
@@ -425,7 +426,7 @@ namespace vecmathlib {
       realvec r = std::frexp(v, &iri);
       ir.v = iri;
       if (isinf()) ir.v = std::numeric_limits<int_t>::max();
-      if (isnan()) ir.v = std::numeric_limits<int_t>::max();
+      if (isnan()) ir.v = std::numeric_limits<int_t>::min();
       return r;
     }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
@@ -435,9 +436,13 @@ namespace vecmathlib {
       typedef std::numeric_limits<int_t> NL;
       if (FP_ILOGB0 != NL::min() and v == R(0.0)) {
         r = NL::min();
-#if defined VML_HAVE_NAN
-      } else if (FP_ILOGBNAN != NL::max() and std::isnan(v)) {
+#if defined VML_HAVE_INF
+      } else if (INT_MAX != NL::max() and std::isinf(v)) {
         r = NL::max();
+#endif
+#if defined VML_HAVE_NAN
+      } else if (FP_ILOGBNAN != NL::min() and std::isnan(v)) {
+        r = NL::min();
 #endif
       }
       return r;
