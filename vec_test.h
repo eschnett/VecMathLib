@@ -423,24 +423,24 @@ namespace vecmathlib {
 #if defined __GNUC__ && !defined __clang__ && !defined __ICC
       // GCC crashes when +X is used as constraint
 #  if defined __SSE2__
-      for (int d=0; d<size; ++d) __asm__("": "+x" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+x"(v[d]));
 #  elif defined __PPC64__       // maybe also __PPC__
-      for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+f"(v[d]));
 #  elif defined __arm__
-      for (int d=0; d<size; ++d) __asm__("": "+w" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+w"(v[d]));
 #  else
 #    error "Floating point barrier undefined on this architecture"
 #  endif
 #elif defined __clang__
-      for (int d=0; d<size; ++d) __asm__("": "+X" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+X"(v[d]));
 #elif defined __ICC
       for (int d=0; d<size; ++d) {
         real_t tmp = v[d];
-        __asm__("": "+X" (tmp));
+        __asm__("": "+X"(tmp));
         v[d] = tmp;
       }
 #elif defined __IBMCPP__
-      for (int d=0; d<size; ++d) __asm__("": "+f" (v[d]));
+      for (int d=0; d<size; ++d) __asm__("": "+f"(v[d]));
 #else
 #  error "Floating point barrier undefined on this architecture"
 #endif

@@ -366,7 +366,7 @@ namespace vecmathlib {
     static int const alignment = sizeof(vector_t);
     
     static char const* name() { return "<VSX:2*double>"; }
-    void barrier() { __asm__("": "+v" (v)); }
+    void barrier() { __asm__("": "+v"(v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");

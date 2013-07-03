@@ -225,7 +225,7 @@ namespace vecmathlib {
     static int const alignment = sizeof(vector_t);
     
     static char const* name() { return "<SSE2:1*float>"; }
-    void barrier() { __asm__("": "+x" (v)); }
+    void barrier() { __asm__("": "+x"(v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
