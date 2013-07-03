@@ -114,7 +114,7 @@ namespace vecmathlib {
   inline
   realvec_t mathfuncs<realvec_t>::vml_exp10(realvec_t x)
   {
-    return exp(RV(M_LN10) * x);
+    return exp2(RV(M_LOG2E * M_LN10) * x);
   }
 
   template<typename realvec_t>
