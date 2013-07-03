@@ -1,7 +1,7 @@
 // -*-C++-*-
 
-#ifndef VEC_SSE2_FLOAT1_H
-#define VEC_SSE2_FLOAT1_H
+#ifndef VEC_SSE_FLOAT1_H
+#define VEC_SSE_FLOAT1_H
 
 #include "floatprops.h"
 #include "mathfuncs.h"
@@ -542,4 +542,4 @@ namespace vecmathlib {
   
 } // namespace vecmathlib
 
-#endif  // #ifndef VEC_SSE2_FLOAT1_H
+#endif  // #ifndef VEC_SSE_FLOAT1_H
