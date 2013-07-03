@@ -98,7 +98,7 @@ namespace vecmathlib {
   typename realvec_t::boolvec_t
   mathfuncs<realvec_t>::vml_ieee_isinf(realvec_t x)
   {
-    return (as_int(x) & IV(~FP::signbit_mask)) == IV(FP::exponent_mask);
+    return (as_int(x) & IV(I(~FP::signbit_mask))) == IV(FP::exponent_mask);
   }
   
   template<typename realvec_t>
