@@ -467,7 +467,11 @@ struct vecmathlib_test {
                          const real_t accuracy)
   {
     const real_t dr = rstd - rvml;
-    const real_t scale = fabs(rstd) + fabs(rvml) + R(1.0);
+    real_t maxabs = 0.0;
+    for (int i=0; i<realvec_t::size; ++i) {
+      maxabs = fmax(maxabs, fabs(x[i]));
+    }
+    const real_t scale = fabs(rstd) + fabs(rvml) + fabs(maxabs) + R(1.0);
     const bool isbad = fabs(dr) > accuracy * scale;
     if (isbad) {
       ++ num_errors;
