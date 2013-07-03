@@ -520,7 +520,7 @@ namespace vecmathlib {
     }
     boolvec_t operator!=(realvec const& x) const
     {
-      return _mm256_cmp_pd(v, x.v, _CMP_NEQ_OQ);
+      return _mm256_cmp_pd(v, x.v, _CMP_NEQ_UQ); // Note: _UQ here
     }
     boolvec_t operator<(realvec const& x) const
     {
