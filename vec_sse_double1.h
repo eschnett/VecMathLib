@@ -419,14 +419,27 @@ namespace vecmathlib {
       return to_double(_mm_min_sd(from_double(v), from_double(y.v)));
     }
     realvec fmod(realvec y) const { return std::fmod(v, y.v); }
-    realvec frexp(intvec_t& r) const { return MF::vml_frexp(*this, r); }
+    realvec frexp(intvec_t& ir) const
+    {
+      int iri;
+      realvec r = std::frexp(v, &iri);
+      ir.v = iri;
+      if (isinf()) ir.v = std::numeric_limits<int_t>::max();
+      if (isnan()) ir.v = std::numeric_limits<int_t>::max();
+      return r;
+    }
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const
     {
       int_t r = std::ilogb(v);
       typedef std::numeric_limits<int_t> NL;
-      if (FP_ILOGB0 == NL::min() and r == FP_ILOGB0) r = NL::min();
-      else if (FP_ILOGBNAN == NL::max() and r == FP_ILOGBNAN) r = NL::max();
+      if (FP_ILOGB0 != NL::min() and v == R(0.0)) {
+        r = NL::min();
+#if defined VML_HAVE_NAN
+      } else if (FP_ILOGBNAN != NL::max() and std::isnan(v)) {
+        r = NL::max();
+#endif
+      }
       return r;
     }
     boolvec_t isfinite() const { return std::isfinite(v); }

@@ -752,9 +752,12 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) {
         int ir;
         real_t r = std::frexp(v[d], &ir);
-        typedef std::numeric_limits<int_t> NL;
-        if (FP_ILOGB0 != NL::min() and ir == FP_ILOGB0) ir = NL::min();
-        else if (FP_ILOGBNAN != NL::max() and ir == FP_ILOGBNAN) ir = NL::max();
+#if defined VML_HAVE_INF
+        if (std::isinf(v[d])) ir = std::numeric_limits<int_t>::max();
+#endif
+#if defined VML_HAVE_NAN
+        if (std::isnan(v[d])) ir = std::numeric_limits<int_t>::max();
+#endif
         res.v[d] = r;
         ires.v[d] = ir;
       }
@@ -767,8 +770,13 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) {
         int_t r = std::ilogb(v[d]);
         typedef std::numeric_limits<int_t> NL;
-        if (FP_ILOGB0 != NL::min() and r == FP_ILOGB0) r = NL::min();
-        else if (FP_ILOGBNAN != NL::max() and r == FP_ILOGBNAN) r = NL::max();
+        if (FP_ILOGB0 != NL::min() and v[d] == R(0.0)) {
+          r = NL::min();
+#if defined VML_HAVE_NAN
+        } else if (FP_ILOGBNAN != NL::max() and std::isnan(v[d])) {
+          r = NL::max();
+#endif
+        }
         res.v[d] = r;
       }
       return res;
