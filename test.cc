@@ -1089,7 +1089,7 @@ struct vecmathlib_test {
       -R(1.0/0.0),              // -FP::infinity()
 #endif
 #ifdef VML_HAVE_NAN
-      R(0.0/0.0),               // FP::quite_NaN()
+      R(0.0/0.0),               // FP::quiet_NaN()
 #endif
       +int_min, +int_max, +uint_min, +uint_max,
       -int_min, -int_max, -uint_min, -uint_max,
@@ -1212,7 +1212,7 @@ struct vecmathlib_test {
       -R(1.0/0.0),              // -FP::infinity()
 #endif
 #ifdef VML_HAVE_NAN
-      R(0.0/0.0),               // FP::quite_NaN()
+      R(0.0/0.0),               // FP::quiet_NaN()
 #endif
       +int_min, +int_max, +uint_min, +uint_max,
       -int_min, -int_max, -uint_min, -uint_max,
