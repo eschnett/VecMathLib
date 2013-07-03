@@ -1297,15 +1297,15 @@ struct vecmathlib_test {
     cout << "   testing asin acos atan atan2...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1.0), R(+1.0));
-      check_real<RV>("asin", std::asin, vecmathlib::asin, x, accuracy());
-      check_real<RV>("acos", std::acos, vecmathlib::acos, x, accuracy());
+      check_real<RV>("asin", std::asin, vecmathlib::asin, x, accuracy(4));
+      check_real<RV>("acos", std::acos, vecmathlib::acos, x, accuracy(4));
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
       const realvec_t y = random(R(-100.0), R(+100.0));
-      check_real<RV>("atan", std::atan, vecmathlib::atan, x, accuracy());
+      check_real<RV>("atan", std::atan, vecmathlib::atan, x, accuracy(5));
       check_real<RV,RV>("atan2",
-                        std::atan2, vecmathlib::atan2, x, y, accuracy());
+                        std::atan2, vecmathlib::atan2, x, y, accuracy(6));
     }
   }
   
@@ -1314,15 +1314,15 @@ struct vecmathlib_test {
     cout << "   testing asinh acosh atanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1000.0), R(+1000.0));
-      check_real<RV>("asinh", std::asinh, vecmathlib::asinh, x, accuracy());
+      check_real<RV>("asinh", std::asinh, vecmathlib::asinh, x, accuracy(4));
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(1.0), R(1000.0));
-      check_real<RV>("acosh", std::acosh, vecmathlib::acosh, x, accuracy());
+      check_real<RV>("acosh", std::acosh, vecmathlib::acosh, x, accuracy(4));
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-1.0), R(+1.0));
-      check_real<RV>("atanh", std::atanh, vecmathlib::atanh, x, accuracy());
+      check_real<RV>("atanh", std::atanh, vecmathlib::atanh, x, accuracy(5));
     }
   }
   
@@ -1332,10 +1332,10 @@ struct vecmathlib_test {
     cout << "   testing exp exp10 exp2 expm1...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-100.0), R(+100.0));
-      check_real<RV>("exp", std::exp, vecmathlib::exp, x, accuracy());
-      check_real<RV>("exp10", local_exp10, vecmathlib::exp10, x, accuracy());
-      check_real<RV>("exp2", std::exp2, vecmathlib::exp2, x, accuracy());
-      check_real<RV>("expm1", std::expm1, vecmathlib::expm1, x, accuracy());
+      check_real<RV>("exp", std::exp, vecmathlib::exp, x, accuracy(3));
+      check_real<RV>("exp10", local_exp10, vecmathlib::exp10, x, accuracy(3));
+      check_real<RV>("exp2", std::exp2, vecmathlib::exp2, x, accuracy(3));
+      check_real<RV>("expm1", std::expm1, vecmathlib::expm1, x, accuracy(3));
     }
   }
   
@@ -1344,10 +1344,10 @@ struct vecmathlib_test {
     cout << "   testing log log10 log1p log2...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(1.0e-10), R(1.0e+10));
-      check_real<RV>("log", std::log, vecmathlib::log, x, accuracy());
-      check_real<RV>("log10", std::log10, vecmathlib::log10, x, accuracy());
-      check_real<RV>("log1p", std::log1p, vecmathlib::log1p, x, accuracy());
-      check_real<RV>("log2", std::log2, vecmathlib::log2, x, accuracy());
+      check_real<RV>("log", std::log, vecmathlib::log, x, accuracy(3));
+      check_real<RV>("log10", std::log10, vecmathlib::log10, x, accuracy(3));
+      check_real<RV>("log1p", std::log1p, vecmathlib::log1p, x, accuracy(2));
+      check_real<RV>("log2", std::log2, vecmathlib::log2, x, accuracy(3));
     }
   }
   
@@ -1361,15 +1361,15 @@ struct vecmathlib_test {
       const intvec_t n = random(I(-10), I(+10));
       const realvec_t fn = vecmathlib::convert_float(n);
       check_real<RV,RV>("pow(0,y)",
-                        std::pow, vecmathlib::pow, RV(0.0), ya, accuracy());
+                        std::pow, vecmathlib::pow, RV(0.0), ya, accuracy(16));
       check_real<RV,RV>("pow(x,0)",
-                        std::pow, vecmathlib::pow, x, RV(0.0), accuracy());
+                        std::pow, vecmathlib::pow, x, RV(0.0), accuracy(16));
       // just to check
-      check_real<RV>("log(x)", std::log, vecmathlib::log, x, accuracy());
+      check_real<RV>("log(x)", std::log, vecmathlib::log, x, accuracy(3));
       check_real<RV,RV>("pow(x,y)",
-                        std::pow, vecmathlib::pow, x, y, accuracy());
+                        std::pow, vecmathlib::pow, x, y, accuracy(16));
       check_real<RV,RV>("pow(-x,n)",
-                        std::pow, vecmathlib::pow, -x, fn, accuracy());
+                        std::pow, vecmathlib::pow, -x, fn, accuracy(16));
     }
   }
   
@@ -1410,8 +1410,8 @@ struct vecmathlib_test {
     cout << "   testing cos sin tan...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-10.0), R(+10.0));
-      check_real<RV>("sin", std::sin, vecmathlib::sin, x, accuracy());
-      check_real<RV>("cos", std::cos, vecmathlib::cos, x, accuracy());
+      check_real<RV>("sin", std::sin, vecmathlib::sin, x, accuracy(4));
+      check_real<RV>("cos", std::cos, vecmathlib::cos, x, accuracy(4));
     }
     for (int i=0; i<imax; ++i) {
       const realvec_t x0 = random(R(-1.55), R(+1.55));
@@ -1419,7 +1419,7 @@ struct vecmathlib_test {
       const realvec_t x = x0 + vecmathlib::convert_float(n) * RV(M_PI);
       // tan loses accuracy near pi/2
       // (by definition, not by implementation?)
-      check_real<RV>("tan", std::tan, vecmathlib::tan, x, R(100.0)*accuracy());
+      check_real<RV>("tan", std::tan, vecmathlib::tan, x, R(20.0)*accuracy(5));
     }
   }
   
@@ -1428,9 +1428,9 @@ struct vecmathlib_test {
     cout << "   testing cosh sinh tanh...\n" << flush;
     for (int i=0; i<imax; ++i) {
       const realvec_t x = random(R(-10.0), R(+10.0));
-      check_real<RV>("sinh", std::sinh, vecmathlib::sinh, x, accuracy());
-      check_real<RV>("cosh", std::cosh, vecmathlib::cosh, x, accuracy());
-      check_real<RV>("tanh", std::tanh, vecmathlib::tanh, x, accuracy());
+      check_real<RV>("sinh", std::sinh, vecmathlib::sinh, x, accuracy(4));
+      check_real<RV>("cosh", std::cosh, vecmathlib::cosh, x, accuracy(4));
+      check_real<RV>("tanh", std::tanh, vecmathlib::tanh, x, accuracy(5));
     }
   }
   
