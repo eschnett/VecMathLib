@@ -17,7 +17,7 @@ namespace vecmathlib {
     // Rescale
     realvec_t x0 = x;
     
-    // realvec_t round_x = round(x);
+    // realvec_t round_x = rint(x);
     // intvec_t iround_x = convert_int(round_x);
     // r = ldexp(r, iround_x);
     
