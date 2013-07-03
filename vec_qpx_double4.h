@@ -81,12 +81,10 @@ namespace vecmathlib {
     operator bvector_t() const { return v; }
     bool operator[](int n) const
     {
-      // return to_bool(((real_t const*)&v)[n]);
       return to_bool(v[n]);
     }
     boolvec& set_elt(int n, bool a)
     {
-      // return ((real_t*)&v)[n]=from_bool(a), *this;
       return v[n]=from_bool(a), *this;
     }
     
@@ -171,12 +169,10 @@ namespace vecmathlib {
     operator ivector_t() const { return v; }
     int_t operator[](int n) const
     {
-      // return ((int_t const*)&v)[n];
       return FP::as_int(v[n]);
     }
     intvec& set_elt(int n, int_t a)
     {
-      // return ((int_t*)&v)[n]=a, *this;
       return v[n]=FP::as_float(a), *this;
     }
     
@@ -384,12 +380,10 @@ namespace vecmathlib {
     operator vector_t() const { return v; }
     real_t operator[](int n) const
     {
-      // return ((real_t const*)&v)[n];
       return v[n];
     }
     realvec& set_elt(int n, real_t a)
     {
-      // return ((real_t*)&v)[n]=a, *this;
       return v[n]=a, *this;
     }
     

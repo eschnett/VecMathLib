@@ -85,10 +85,14 @@ namespace vecmathlib {
                                      from_bool(as[0])))) {}
     
     operator bvector_t() const { return v; }
-    bool operator[](int n) const { return to_bool(((uint_t const*)&v)[n]); }
+    bool operator[](int n) const
+    {
+      return to_bool(vecmathlib::get_elt<BV,bvector_t,uint_t>(v, n));
+    }
     boolvec& set_elt(int n, bool a)
     {
-      return ((uint_t*)&v)[n]=from_bool(a), *this;
+      return
+        vecmathlib::set_elt<BV,bvector_t,uint_t>(v, n, from_bool(a)), *this;
     }
     
     
@@ -179,8 +183,14 @@ namespace vecmathlib {
     static intvec iota() { return _mm_set_epi32(3, 2, 1, 0); }
     
     operator ivector_t() const { return v; }
-    int_t operator[](int n) const { return ((int_t const*)&v)[n]; }
-    intvec& set_elt(int n, int_t a) { return ((int_t*)&v)[n]=a, *this; }
+    int_t operator[](int n) const
+    {
+      return vecmathlib::get_elt<IV,ivector_t,int_t>(v, n);
+    }
+    intvec_t& set_elt(int n, int_t a)
+    {
+      return vecmathlib::set_elt<IV,ivector_t,int_t>(v, n, a), *this;
+    }
     
     
     
@@ -347,8 +357,14 @@ namespace vecmathlib {
     realvec(real_t const* as): v(_mm_set_ps(as[3], as[2], as[1], as[0])) {}
     
     operator vector_t() const { return v; }
-    real_t operator[](int n) const { return ((real_t const*)&v)[n]; }
-    realvec& set_elt(int n, real_t a) { return ((real_t*)&v)[n]=a, *this; }
+    real_t operator[](int n) const
+    {
+      return vecmathlib::get_elt<RV,vector_t,real_t>(v, n);
+    }
+    realvec_t& set_elt(int n, real_t a)
+    {
+      return vecmathlib::set_elt<RV,vector_t,real_t>(v, n, a), *this;
+    }
     
     
     
