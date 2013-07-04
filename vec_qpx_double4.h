@@ -626,7 +626,7 @@ namespace vecmathlib {
       // #ifdef VML_HAVE_FP_CONTRACT
       //       return MF::vml_rint(*this);
       // #else
-      //       return vec_round(v);      // round
+      //       return vec_round(v);      // use round instead of rint
       // #endif
     }
     realvec round() const { return vec_round(v); }
