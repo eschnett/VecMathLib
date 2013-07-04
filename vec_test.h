@@ -605,6 +605,18 @@ namespace vecmathlib {
       return res /= x;
     }
     
+    real_t maxval() const
+    {
+      real_t res = v[0];
+      for (int d=1; d<size; ++d) res = std::fmax(res, v[d]);
+      return res;
+    }
+    real_t minval() const
+    {
+      real_t res = v[0];
+      for (int d=1; d<size; ++d) res = std::fmin(res, v[d]);
+      return res;
+    }
     real_t prod() const
     {
       real_t res = R(1.0);
@@ -956,6 +968,18 @@ namespace vecmathlib {
   inline inttestvec<real_t, size> convert_int(realtestvec<real_t, size> x)
   {
     return x.convert_int();
+  }
+  
+  template<typename real_t, int size>
+  inline real_t maxval(realtestvec<real_t, size> x)
+  {
+    return x.maxval();
+  }
+  
+  template<typename real_t, int size>
+  inline real_t minval(realtestvec<real_t, size> x)
+  {
+    return x.minval();
   }
   
   template<typename real_t, int size>

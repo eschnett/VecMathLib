@@ -363,8 +363,10 @@ namespace vecmathlib {
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
-    real_t prod() const { return v; }
-    real_t sum() const { return v; }
+    real_t maxval() const { return *this; }
+    real_t minval() const { return *this; }
+    real_t prod() const { return *this; }
+    real_t sum() const { return *this; }
     
     
     

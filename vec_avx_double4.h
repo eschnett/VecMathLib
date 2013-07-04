@@ -513,6 +513,24 @@ namespace vecmathlib {
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
+    real_t maxval() const
+    {
+      // return std::fmax(std::fmax((*this)[0], (*this)[1]),
+      //                  std::fmax((*this)[2], (*this)[3]));
+      realvec_t x0123 = *this;
+      realvec_t x1032 = _mm256_shuffle_pd(x0123, x0123, 0b0101);
+      realvec_t y0022 = x0123.fmax(x1032);
+      return std::fmax(y0022[0], y0022[2]);
+    }
+    real_t minval() const
+    {
+      // return std::fmin(std::fmin((*this)[0], (*this)[1]),
+      //                  std::fmin((*this)[2], (*this)[3]));
+      realvec_t x0123 = *this;
+      realvec_t x1032 = _mm256_shuffle_pd(x0123, x0123, 0b0101);
+      realvec_t y0022 = x0123.fmin(x1032);
+      return std::fmin(y0022[0], y0022[2]);
+    }
     real_t prod() const
     {
       return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];

@@ -40,7 +40,6 @@
 // TODO: introduce mad, as fast version of fma (check FP_FAST_FMA)
 // TODO: introduce ieee_isnan and friends
 // TODO: switch between isnan and ieee_isnan at an outside level
-// TODO: add minval, maxval intrinsics
 
 
 

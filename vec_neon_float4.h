@@ -428,6 +428,20 @@ namespace vecmathlib {
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
+    real_t maxval() const
+    {
+      float32x2_t x = vpmax_f32(vget_low_f32(v), vget_high_f32(v));
+      float32x2_t y = vpmax_f32(x, x);
+      float32_t z = vget_lane_f32(y, 0);
+      return z;
+    }
+    real_t minval() const
+    {
+      float32x2_t x = vpmin_f32(vget_low_f32(v), vget_high_f32(v));
+      float32x2_t y = vpmin_f32(x, x);
+      float32_t z = vget_lane_f32(y, 0);
+      return z;
+    }
     real_t prod() const
     {
       return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];

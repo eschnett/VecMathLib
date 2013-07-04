@@ -197,6 +197,20 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline
+  typename realvec<real_t, size>::real_t maxval(realvec<real_t, size> x)
+  {
+    return x.maxval();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  typename realvec<real_t, size>::real_t minval(realvec<real_t, size> x)
+  {
+    return x.minval();
+  }
+  
+  template<typename real_t, int size>
+  inline
   typename realvec<real_t, size>::real_t prod(realvec<real_t, size> x)
   {
     return x.prod();

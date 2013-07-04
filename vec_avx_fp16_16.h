@@ -524,6 +524,8 @@ namespace vecmathlib {
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
+    real_t maxval() const { __builtin_unreachable(); }
+    real_t minval() const { __builtin_unreachable(); }
     real_t prod() const { __builtin_unreachable(); }
     real_t sum() const { __builtin_unreachable(); }
     

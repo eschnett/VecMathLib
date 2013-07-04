@@ -498,6 +498,32 @@ namespace vecmathlib {
     realvec& operator*=(realvec const& x) { return *this=*this*x; }
     realvec& operator/=(realvec const& x) { return *this=*this/x; }
     
+    real_t maxval() const
+    {
+      // return std::fmax(std::fmax(std::fmax((*this)[0], (*this)[1]),
+      //                            std::fmax((*this)[2], (*this)[3])),
+      //                  std::fmax(std::fmax((*this)[4], (*this)[5]),
+      //                            std::fmax((*this)[6], (*this)[7])));
+      realvec_t x01234567 = *this;
+      realvec_t x10325476 = _mm256_shuffle_ps(x01234567, x01234567, 0b10110001);
+      realvec_t y00224466 = x01234567.fmax(x10325476);
+      realvec_t y22006644 = _mm256_shuffle_ps(y00224466, y00224466, 0b01001110);
+      realvec_t z00004444 = y00224466.fmax(y22006644);
+      return std::fmax(z00004444[0], z00004444[4]);
+    }
+    real_t minval() const
+    {
+      // return std::fmin(std::fmin(std::fmin((*this)[0], (*this)[1]),
+      //                            std::fmin((*this)[2], (*this)[3])),
+      //                  std::fmin(std::fmin((*this)[4], (*this)[5]),
+      //                            std::fmin((*this)[6], (*this)[7])));
+      realvec_t x01234567 = *this;
+      realvec_t x10325476 = _mm256_shuffle_ps(x01234567, x01234567, 0b10110001);
+      realvec_t y00224466 = x01234567.fmin(x10325476);
+      realvec_t y22006644 = _mm256_shuffle_ps(y00224466, y00224466, 0b01001110);
+      realvec_t z00004444 = y00224466.fmin(y22006644);
+      return std::fmin(z00004444[0], z00004444[4]);
+    }
     real_t prod() const
     {
       return
