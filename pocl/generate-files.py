@@ -87,7 +87,7 @@ directfuncs = [
     ("cospi"         , [VF         ], VF, "cos((scalar_t)M_PI*x0)"),
     ("fmax"          , [VF, SF     ], VF, "fmax(x0,(vector_t)x1)"),
     ("fmin"          , [VF, SF     ], VF, "fmin(x0,(vector_t)x1)"),
-    ("fract"         , [VF, PVF    ], VF, "*x1=floor(x0), fmin(x0-floor(x0), sizeof(scalar_t)==sizeof(float) ? (scalar_t)0x1.fffffep-1f : (scalar_t)0x1.fffffffffffffp-1)"),
+    ("fract"         , [VF, PVF    ], VF, "*x1=floor(x0), fmin(x0-floor(x0), sizeof(scalar_t)==sizeof(float) ? (scalar_t)M_FRACT_MIN_F : (scalar_t)M_FRACT_MIN)"),
     ("frexp"         , [VF, PVK    ], VF, "*x1=ilogb(x0), ldexp(x0,-ilogb(x0))"),
     ("ilogb"         , [VF         ], VK, "convert_kvector_t(({ __attribute__((__overloadable__)) jvector_t ilogb_(vector_t); jvector_t jmin=sizeof(jvector_t)==sizeof(int)?INT_MIN:LONG_MIN; jvector_t r=ilogb_(x0); select(r, (jvector_t)FP_ILOGB0, r==jmin); }))"),
     ("ldexp"         , [VF, VK     ], VF, "({ __attribute__((__overloadable__)) vector_t ldexp_(vector_t,jvector_t); ldexp_(x0,convert_ivector_t(x1)); })"),
