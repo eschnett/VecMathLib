@@ -593,13 +593,6 @@ def output_directfunc(func):
     if is_first_open:
         out("// Note: This file has been automatically generated. Do not modify.")
         out("")
-        out("// Define dummy values")
-        out("#ifndef cl_khr_fp64")
-        out("#  define M_PI M_PI_F")
-        out("#  define M_PI_2 M_PI_2_F")
-        out("#  define LONG_MIN INT_MIN")
-        out("#endif") 
-        out("")
     else:
         out("")
         out("")
