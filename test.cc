@@ -1181,7 +1181,7 @@ struct vecmathlib_test {
       check_int<RV>("frexp1", local_frexp1, local_vfrexp1, x);
       check_int<RV>("ilogb",
                     local_ilogb, (intvec_t(*)(realvec_t))vecmathlib::ilogb, x);
-#if defined VML_HAVE_INF && defined VML_HAVE_NAN
+#if defined VML_HAVE_INF || defined VML_HAVE_NAN
       check_bool<RV>("isfinite", std::isfinite, vecmathlib::isfinite, x);
 #endif
 #ifdef VML_HAVE_INF
