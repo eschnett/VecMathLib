@@ -1129,16 +1129,16 @@ struct vecmathlib_test {
       check_real<RV,RV>("*", local_mul, local_mul, x, y, R(0.0));
       
       {
-        real_t rstd = 0.0;
-        for (int i=0; i<realvec_t::size; ++i) {
+        real_t rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
           rstd += x[i];
         }
         real_t rvml = sum(x);
         check_real("sum", rstd, rvml, x, accuracy());
       }
       {
-        real_t rstd = 1.0;
-        for (int i=0; i<realvec_t::size; ++i) {
+        real_t rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
           rstd *= x[i];
         }
         real_t rvml = prod(x);

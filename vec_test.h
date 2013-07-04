@@ -619,14 +619,14 @@ namespace vecmathlib {
     }
     real_t prod() const
     {
-      real_t res = R(1.0);
-      for (int d=0; d<size; ++d) res *= v[d];
+      real_t res = v[0];
+      for (int d=1; d<size; ++d) res *= v[d];
       return res;
     }
     real_t sum() const
     {
-      real_t res = R(0.0);
-      for (int d=0; d<size; ++d) res += v[d];
+      real_t res = v[0];
+      for (int d=1; d<size; ++d) res += v[d];
       return res;
     }
     
