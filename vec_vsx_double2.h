@@ -543,11 +543,11 @@ namespace vecmathlib {
     }
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      return (*this)[0] * (*this)[1];
     }
     real_t sum() const
     {
-      return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      return (*this)[0] + (*this)[1];
     }
     
     
