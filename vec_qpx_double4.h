@@ -598,7 +598,7 @@ namespace vecmathlib {
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
     realvec rint() const
     {
-      return vec_round(v);      // round
+      return MF::vml_rint(*this);
       // This is tempting, but seems too invasive
       // #ifdef VML_HAVE_FP_CONTRACT
       //       return MF::vml_rint(*this);
