@@ -418,7 +418,7 @@ namespace vecmathlib {
       }
       return name_.c_str();
     }
-    inline void barrier()
+    void barrier()
     {
 #if defined __GNUC__ && !defined __clang__ && !defined __ICC
       // GCC crashes when +X is used as constraint
