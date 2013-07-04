@@ -499,7 +499,11 @@ namespace vecmathlib {
     }
     real_t prod() const
     {
-      return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      // return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
+      realvec_t x0123 = *this;
+      realvec_t x1032 = _mm_shuffle_ps(x0123, x0123, 0b10110001);
+      realvec_t y0022 = x0123 * x1032;
+      return y0022[0] * y0022[2];
     }
     real_t sum() const
     {
@@ -509,7 +513,11 @@ namespace vecmathlib {
       x = _mm_hadd_ps(x.v, x.v);
       return x[0];
 #else
-      return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      // return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
+      realvec_t x0123 = *this;
+      realvec_t x1032 = _mm_shuffle_ps(x0123, x0123, 0b10110001);
+      realvec_t y0022 = x0123 + x1032;
+      return y0022[0] + y0022[2];
 #endif
     }
     
