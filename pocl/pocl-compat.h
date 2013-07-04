@@ -18,20 +18,12 @@
 
 #define pocl_static_assert(b) typedef char _static_assert[(b)?+1:-1]
 
-// Needed for fract()
-#define M_FRACT_MIN   0x1.fffffffffffffp-1
-#define M_FRACT_MIN_F 0x1.fffffep-1f
-
 // If double precision is not supported, then define single-precision
 // (dummy) values to avoid compiler warnings for double precision
 // values
 #ifndef cl_khr_fp64
 #  undef M_PI
 #  define M_PI M_PI_F
-// #  define M_PI_2 M_PI_2_F
-// #  define LONG_MIN INT_MIN
-#  undef M_FRACT_MIN
-#  define M_FRACT_MIN M_FRACT_MIN_F
 #endif
 
 // Define vector types
