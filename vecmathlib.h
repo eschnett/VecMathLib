@@ -19,7 +19,7 @@
 // Possible effects of not having VML_HAVE_FP_CONTRACT:
 // - can re-associate
 // - can replace division by reciprocal
-// - can break ties differently when rounding (?)
+// - (can break ties differently when rounding) no, this seems too invasive
 // - can evaluate functions with reduced precision (80% of significant digits)
 
 // default settings
