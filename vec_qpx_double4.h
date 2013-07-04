@@ -596,7 +596,16 @@ namespace vecmathlib {
     realvec pow(realvec y) const { return powd4(v, y.v); }
     realvec rcp() const { return recip_fastd4(v); }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec rint() const { return MF::vml_rint(*this); }
+    realvec rint() const
+    {
+      return vec_round(v);      // round
+      // This is tempting, but seems too invasive
+      // #ifdef VML_HAVE_FP_CONTRACT
+      //       return MF::vml_rint(*this);
+      // #else
+      //       return vec_round(v);      // round
+      // #endif
+    }
     realvec round() const { return vec_round(v); }
     realvec rsqrt() const
     {
