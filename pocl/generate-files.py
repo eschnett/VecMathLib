@@ -87,7 +87,7 @@ directfuncs = [
     ("cospi"         , [VF         ], VF, "cos((scalar_t)M_PI*x0)"),
     ("fmax"          , [VF, SF     ], VF, "fmax(x0,(vector_t)x1)"),
     ("fmin"          , [VF, SF     ], VF, "fmin(x0,(vector_t)x1)"),
-    ("fract"         , [VF, PVF    ], VF, "*x1=floor(x0), fmin(x0-floor(x0), sizeof(scalar_t)==sizeof(float) ? (scalar_t)M_FRACT_MIN_F : (scalar_t)M_FRACT_MIN)"),
+    ("fract"         , [VF, PVF    ], VF, "*x1=floor(x0), fmin(x0-floor(x0), sizeof(scalar_t)==sizeof(float) ? (scalar_t)POCL_FRACT_MIN_F : (scalar_t)POCL_FRACT_MIN)"),
     ("frexp"         , [VF, PVK    ], VF, "*x1=ilogb(x0), ldexp(x0,-ilogb(x0))"),
     ("ilogb"         , [VF         ], VK, "convert_kvector_t(({ __attribute__((__overloadable__)) jvector_t ilogb_(vector_t); jvector_t jmin=sizeof(jvector_t)==sizeof(int)?INT_MIN:LONG_MIN; jvector_t r=ilogb_(x0); select(r, (jvector_t)FP_ILOGB0, r==jmin); }))"),
     ("ldexp"         , [VF, VK     ], VF, "({ __attribute__((__overloadable__)) vector_t ldexp_(vector_t,jvector_t); ldexp_(x0,convert_ivector_t(x1)); })"),
@@ -592,6 +592,26 @@ def output_directfunc(func):
     is_first_open = out_open("%s.cl" % name)
     if is_first_open:
         out("// Note: This file has been automatically generated. Do not modify.")
+        out("")
+        out("// Needed for fract()")
+        out("#define POCL_FRACT_MIN   0x1.fffffffffffffp-1")
+        out("#define POCL_FRACT_MIN_F 0x1.fffffep-1f")
+        out("")
+        out("// If double precision is not supported, then define")
+        out("// single-precision (dummy) values to avoid compiler warnings")
+        out("// for double precision values")
+        out("#ifndef khr_fp64")
+        out("#  undef M_PI")
+        out("#  define M_PI M_PI_F")
+        out("#  undef M_PI_2")
+        out("#  define M_PI_2 M_PI_2_F")
+        out("#  undef LONG_MAX")
+        out("#  define LONG_MAX INT_MAX")
+        out("#  undef LONG_MIN")
+        out("#  define LONG_MIN INT_MIN")
+        out("#  undef POCL_FRACT_MIN")
+        out("#  define POCL_FRACT_MIN POCL_FRACT_MIN_F")
+        out("#endif")
         out("")
     else:
         out("")
