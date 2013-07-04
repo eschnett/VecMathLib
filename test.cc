@@ -1144,6 +1144,22 @@ struct vecmathlib_test {
         real_t rvml = prod(x);
         check_real("prod", rstd, rvml, x, accuracy());
       }
+      {
+        real_t rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
+          rstd = std::fmax(rstd, x[i]);
+        }
+        real_t rvml = vecmathlib::maxval(x);
+        check_real("maxval", rstd, rvml, x, R(0.0));
+      }
+      {
+        real_t rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
+          rstd = std::fmin(rstd, x[i]);
+        }
+        real_t rvml = vecmathlib::minval(x);
+        check_real("minval", rstd, rvml, x, R(0.0));
+      }
       
       check_bool<RV,RV>("==", local_eq, local_veq, x, y);
       check_bool<RV,RV>("!=", local_ne, local_vne, x, y);
