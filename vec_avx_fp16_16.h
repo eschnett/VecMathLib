@@ -122,14 +122,14 @@ namespace vecmathlib {
     
     bool all() const
     {
-      bool r = true;
-      for (int n=0; n<size; ++n) r = r && (*this)[n];
+      bool r = (*this)[0];
+      for (int n=1; n<size; ++n) r = r && (*this)[n];
       return r;
     }
     bool any() const
     {
-      bool r = false;
-      for (int n=0; n<size; ++n) r = r || (*this)[n];
+      bool r = (*this)[0];;
+      for (int n=1; n<size; ++n) r = r || (*this)[n];
       return r;
     }
     

@@ -102,14 +102,14 @@ namespace vecmathlib {
     
     bool all() const
     {
-      bool res = true;
-      for (int d=0; d<size; ++d) res = res && v[d];
+      bool res = v[0];
+      for (int d=1; d<size; ++d) res = res && v[d];
       return res;
     }
     bool any() const
     {
-      bool res = false;
-      for (int d=0; d<size; ++d) res = res || v[d];
+      bool res = v[0];
+      for (int d=1; d<size; ++d) res = res || v[d];
       return res;
     }
     

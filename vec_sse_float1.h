@@ -94,8 +94,8 @@ namespace vecmathlib {
     boolvec operator==(boolvec x) const { return bool(v) == bool(x.v); }
     boolvec operator!=(boolvec x) const { return bool(v) != bool(x.v); }
     
-    bool all() const { return v; }
-    bool any() const { return v; }
+    bool all() const { return *this; }
+    bool any() const { return *this; }
     
     
     
