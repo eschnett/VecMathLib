@@ -805,16 +805,16 @@ struct vecmathlib_test {
         check_bool("!", rstd, rvml, x);
       }
       {
-        bool rstd = true;
-        for (int i=0; i<realvec_t::size; ++i) {
+        bool rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
           rstd &= x[i];
         }
         bool rvml = all(x);
         check_bool("all", rstd, rvml, x);
       }
       {
-        bool rstd = false;
-        for (int i=0; i<realvec_t::size; ++i) {
+        bool rstd = x[0];
+        for (int i=1; i<realvec_t::size; ++i) {
           rstd |= x[i];
         }
         bool rvml = any(x);
