@@ -106,6 +106,14 @@ void init(typename realvec_t::real_t *restrict xptr,
 // Evolution loop: Simple stencil example (Gaussian smoothing)
 ////////////////////////////////////////////////////////////////////////////////
 
+// Introduce a delay, so that cache access is not so important
+template<typename T>
+static T delay(const T x)
+{
+  return x;
+  // return log(exp(x));
+}
+
 // Original version, unvectorized
 template<typename realvec_t>
 void smooth_scalar(typename realvec_t::real_t const *restrict xptr,
@@ -123,7 +131,39 @@ void smooth_scalar(typename realvec_t::real_t const *restrict xptr,
       const real_t xjr = xptr[ij+ldm];
       const real_t y =
         real_t(0.5) * x + real_t(0.125) * (xil + xir + xjl + xjr);
-      yptr[ij] = y;
+      yptr[ij] = delay(y);
+    }
+  }
+}
+
+
+
+// Assuming no particular alignment
+template<typename realvec_t>
+void smooth_unaligned(typename realvec_t::real_t const *restrict xptr,
+                      typename realvec_t::real_t *restrict yptr,
+                      ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+{
+  typedef typename realvec_t::real_t real_t;
+  typedef typename realvec_t::mask_t mask_t;
+  for (ptrdiff_t j=1; j<n-1; ++j) {
+    // Desired loop bounds
+    const ptrdiff_t imin = 1;
+    const ptrdiff_t imax = m-1;
+    // Align actual loop iterations with vector size
+    const ptrdiff_t ioff = ldm*j;
+    for (mask_t mask(imin, imax, ioff); mask; ++mask) {
+      const ptrdiff_t i = mask.index();
+      const ptrdiff_t ij = ioff + i;
+      const realvec_t x   = realvec_t::loadu(xptr+ij);
+      const realvec_t xil = realvec_t::loadu(xptr+ij, -1);
+      const realvec_t xir = realvec_t::loadu(xptr+ij, +1);
+      const realvec_t xjl = realvec_t::loadu(xptr+ij-ldm);
+      const realvec_t xjr = realvec_t::loadu(xptr+ij+ldm);
+      const realvec_t y =
+        realvec_t(real_t(0.5)) * x +
+        realvec_t(real_t(0.125)) * (xil + xir + xjl + xjr);
+      storeu(delay(y), yptr+ij, mask);
     }
   }
 }
@@ -132,9 +172,9 @@ void smooth_scalar(typename realvec_t::real_t const *restrict xptr,
 
 // Assuming that xptr and yptr are aligned, but ldm can be arbitrary
 template<typename realvec_t>
-void smooth_unaligned(typename realvec_t::real_t const *restrict xptr,
-                      typename realvec_t::real_t *restrict yptr,
-                      ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+void smooth_aligned(typename realvec_t::real_t const *restrict xptr,
+                    typename realvec_t::real_t *restrict yptr,
+                    ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
   typedef typename realvec_t::real_t real_t;
   typedef typename realvec_t::mask_t mask_t;
@@ -155,7 +195,7 @@ void smooth_unaligned(typename realvec_t::real_t const *restrict xptr,
       const realvec_t y =
         realvec_t(real_t(0.5)) * x +
         realvec_t(real_t(0.125)) * (xil + xir + xjl + xjr);
-      y.storea(yptr+ij, mask);
+      storea(delay(y), yptr+ij, mask);
     }
   }
 }
@@ -165,9 +205,9 @@ void smooth_unaligned(typename realvec_t::real_t const *restrict xptr,
 // Assuming that xptr and yptr are aligned, and ldm is a multiple of
 // the vector size
 template<typename realvec_t>
-void smooth_aligned(typename realvec_t::real_t const *restrict xptr,
-                    typename realvec_t::real_t *restrict yptr,
-                    ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
+void smooth_padded(typename realvec_t::real_t const *restrict xptr,
+                   typename realvec_t::real_t *restrict yptr,
+                   ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
 {
   typedef typename realvec_t::real_t real_t;
   typedef typename realvec_t::mask_t mask_t;
@@ -189,7 +229,7 @@ void smooth_aligned(typename realvec_t::real_t const *restrict xptr,
       const realvec_t y =
         realvec_t(real_t(0.5)) * x +
         realvec_t(real_t(0.125)) * (xil + xir + xjl + xjr);
-      y.storea(yptr+ij, mask);
+      storea(delay(y), yptr+ij, mask);
     }
   }
 }
@@ -206,8 +246,8 @@ int main(int argc, char** argv)
   const int niters = 100;
   
   // Grid size
-  const ptrdiff_t m = 1000;
-  const ptrdiff_t n = 1000;
+  const ptrdiff_t m = 100;
+  const ptrdiff_t n = 100;
   
   // Choose a vector size
 #if defined VECMATHLIB_HAVE_VEC_DOUBLE_4
@@ -255,6 +295,14 @@ int main(int argc, char** argv)
   t1 = getticks();
   cycles = cycles_per_tick * elapsed(t1,t0) / (1.0 * (n-1) * (m-1) * niters);
   cout << "smooth_aligned:   " << cycles << " cycles/point\n";
+  
+  t0 = getticks();
+  for (int iter=0; iter<niters; ++iter) {
+    smooth_padded<realvec_t>(&x[0], &y[0], m, ldm, n);
+  }
+  t1 = getticks();
+  cycles = cycles_per_tick * elapsed(t1,t0) / (1.0 * (n-1) * (m-1) * niters);
+  cout << "smooth_padded:    " << cycles << " cycles/point\n";
   
   return 0;
 }
