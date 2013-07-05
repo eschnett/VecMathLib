@@ -16,11 +16,25 @@ using namespace vecmathlib;
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Helpers
+////////////////////////////////////////////////////////////////////////////////
+
 #ifndef __has_builtin
 #  define __has_builtin(x) 0 // Compatibility with non-clang compilers
 #endif
 
+// align upwards
+static size_t align_up(size_t i, size_t size)
+{
+  return (i + size - 1) / size * size;
+}
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// High-resolution timer
+////////////////////////////////////////////////////////////////////////////////
 
 typedef unsigned long long ticks;
 inline ticks getticks()
@@ -70,6 +84,10 @@ double measure_tick()
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Initialize the grid
+////////////////////////////////////////////////////////////////////////////////
+
 template<typename realvec_t>
 void init(typename realvec_t::real_t *restrict xptr,
           ptrdiff_t m, ptrdiff_t ldm, ptrdiff_t n)
@@ -83,6 +101,10 @@ void init(typename realvec_t::real_t *restrict xptr,
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Evolution loop: Simple stencil example (Gaussian smoothing)
+////////////////////////////////////////////////////////////////////////////////
 
 // Original version, unvectorized
 template<typename realvec_t>
@@ -174,18 +196,20 @@ void smooth_aligned(typename realvec_t::real_t const *restrict xptr,
 
 
 
-static size_t align_up(size_t i, size_t size)
-{
-  return (i + size - 1) / size * size;
-}
+////////////////////////////////////////////////////////////////////////////////
+// Main routine
+////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv)
 {
+  // Number of iterations
   const int niters = 100;
   
+  // Grid size
   const ptrdiff_t m = 1000;
   const ptrdiff_t n = 1000;
   
+  // Choose a vector size
 #if defined VECMATHLIB_HAVE_VEC_DOUBLE_4
   typedef realvec<double,4> realvec_t;
 #elif defined VECMATHLIB_HAVE_VEC_DOUBLE_2
@@ -194,16 +218,20 @@ int main(int argc, char** argv)
   typedef realpseudovec<double,1> realvec_t;
 #endif
   
+  // Ensure the grid size is aligned
   const ptrdiff_t ldm = align_up(m, realvec_t::size);
   typedef realvec_t::real_t real_t;
   vector<real_t> x(ldm*n), y(ldm*n, 0.0);
   
+  // Initialize
   init<realvec_t>(&x[0], m, ldm, n);
   
+  // Timers
   ticks t0, t1;
   double const cycles_per_tick = 1.0; // measure_tick();
   double cycles;
   
+  // Run the different evolution loop versions
   t0 = getticks();
   for (int iter=0; iter<niters; ++iter) {
     smooth_scalar<realvec_t>(&x[0], &y[0], m, ldm, n);
