@@ -108,24 +108,18 @@ namespace vecmathlib {
     
     bool all() const
     {
-      // return (*this)[0] && (*this)[1];
 #if defined __AVX__
       return ! (! *this).any();
 #else
-      boolvec x = *this;
-      x = x && _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
-      return x[0];
+      return (*this)[0] && (*this)[1];
 #endif
     }
     bool any() const
     {
-      // return (*this)[0] || (*this)[1];
 #if defined __AVX__
       return ! _mm_testz_pd(v, v);
 #else
-      boolvec x = *this;
-      x = x || _mm_shuffle_pd(x.v, x.v, _MM_SHUFFLE2(0,1));
-      return x[0];
+      return (*this)[0] || (*this)[1];
 #endif
     }
     
