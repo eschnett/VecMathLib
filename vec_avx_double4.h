@@ -496,7 +496,19 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return _mm256_castpd_si256(v); }
-    intvec_t convert_int() const { return MF::vml_convert_int(*this); }
+    intvec_t convert_int() const
+    {
+#ifdef __x86_64__
+      intvec_t r;
+      r.set_elt(0, _mm_cvttsd_si64(_mm_set_sd((*this)[0])));
+      r.set_elt(1, _mm_cvttsd_si64(_mm_set_sd((*this)[1])));
+      r.set_elt(2, _mm_cvttsd_si64(_mm_set_sd((*this)[2])));
+      r.set_elt(3, _mm_cvttsd_si64(_mm_set_sd((*this)[3])));
+      return r;
+#else
+      return floatprops::convert_int(v);
+#endif
+    }
     
     
     
