@@ -556,26 +556,26 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline
-  auto boolvec<fp16,16>::as_int() const -> intvec_t
+  inline boolvec<fp16,16>::intvec_t boolvec<fp16,16>::as_int() const
   {
     return v;
   }
   
-  inline
-  auto boolvec<fp16,16>::convert_int() const -> intvec_t
+  inline boolvec<fp16,16>::intvec_t boolvec<fp16,16>::convert_int() const
   {
     return lsr(as_int(), bits-1);
   }
   
   inline
-  auto boolvec<fp16,16>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  boolvec<fp16,16>::intvec_t boolvec<fp16,16>::ifthen(intvec_t x, intvec_t y)
+    const
   {
     return ifthen(x.as_float(), y.as_float()).as_int();
   }
   
   inline
-  auto boolvec<fp16,16>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  boolvec<fp16,16>::realvec_t boolvec<fp16,16>::ifthen(realvec_t x, realvec_t y)
+    const
   {
     return (( -convert_int() & x.as_int()) |
             (~-convert_int() & y.as_int())).as_float();
@@ -585,12 +585,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline auto intvec<fp16,16>::as_float() const -> realvec_t
+  inline intvec<fp16,16>::realvec_t intvec<fp16,16>::as_float() const
   {
     return v;
   }
   
-  inline auto intvec<fp16,16>::convert_float() const -> realvec_t
+  inline intvec<fp16,16>::realvec_t intvec<fp16,16>::convert_float() const
   {
     __builtin_unreachable();
   }

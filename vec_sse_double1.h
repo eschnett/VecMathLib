@@ -508,26 +508,27 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline
-  auto boolvec<double,1>::as_int() const -> intvec_t
+  inline boolvec<double,1>::intvec_t boolvec<double,1>::as_int() const
   {
     return I(v);
   }
   
-  inline
-  auto boolvec<double,1>::convert_int() const -> intvec_t
+  inline boolvec<double,1>::intvec_t boolvec<double,1>::convert_int() const
   {
     return v;
   }
   
   inline
-  auto boolvec<double,1>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  boolvec<double,1>::intvec_t boolvec<double,1>::ifthen(intvec_t x, intvec_t y)
+    const
   {
     return v ? x : y;
   }
   
   inline
-  auto boolvec<double,1>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  boolvec<double,1>::realvec_t boolvec<double,1>::ifthen(realvec_t x,
+                                                         realvec_t y)
+    const
   {
     return v ? x : y;
   }
@@ -536,12 +537,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline auto intvec<double,1>::as_float() const -> realvec_t
+  inline intvec<double,1>::realvec_t intvec<double,1>::as_float() const
   {
     return FP::as_float(v);
   }
   
-  inline auto intvec<double,1>::convert_float() const -> realvec_t
+  inline intvec<double,1>::realvec_t intvec<double,1>::convert_float() const
   {
 #ifdef __x86_64__
     return _mm_cvtsd_f64(_mm_cvtsi64_sd(_mm_setzero_pd(), v));

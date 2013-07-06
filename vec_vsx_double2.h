@@ -637,26 +637,27 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline
-  auto boolvec<double,2>::as_int() const -> intvec_t
+  inline boolvec<double,2>::intvec_t boolvec<double,2>::as_int() const
   {
     return (__vector long long) v;
   }
   
-  inline
-  auto boolvec<double,2>::convert_int() const -> intvec_t
+  inline boolvec<double,2>::intvec_t boolvec<double,2>::convert_int() const
   {
     return -(__vector long long)v;
   }
   
   inline
-  auto boolvec<double,2>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  boolvec<double,2>::intvec_t boolvec<double,2>::ifthen(intvec_t x, intvec_t y)
+    const
   {
     return vec_sel(y.v, x.v, v);
   }
   
   inline
-  auto boolvec<double,2>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  boolvec<double,2>::realvec_t boolvec<double,2>::ifthen(realvec_t x,
+                                                         realvec_t y)
+    const
   {
     return vec_sel(y.v, x.v, v);
   }
@@ -665,12 +666,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline auto intvec<double,2>::as_float() const -> realvec_t
+  inline intvec<double,2>::realvec_t intvec<double,2>::as_float() const
   {
     return (__vector double)v;
   }
   
-  inline auto intvec<double,2>::convert_float() const -> realvec_t
+  inline intvec<double,2>::realvec_t intvec<double,2>::convert_float() const
   {
     // return vec_ctd(v, 0);
     return MF::vml_convert_float(*this);

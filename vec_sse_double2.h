@@ -633,27 +633,28 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline
-  auto boolvec<double,2>::as_int() const -> intvec_t
+  inline boolvec<double,2>::intvec_t boolvec<double,2>::as_int() const
   {
     return _mm_castpd_si128(v);
   }
   
-  inline
-  auto boolvec<double,2>::convert_int() const -> intvec_t
+  inline boolvec<double,2>::intvec_t boolvec<double,2>::convert_int() const
   {
     //return ifthen(v, U(1), U(0));
     return lsr(as_int(), bits-1);
   }
   
   inline
-  auto boolvec<double,2>::ifthen(intvec_t x, intvec_t y) const -> intvec_t
+  boolvec<double,2>::intvec_t boolvec<double,2>::ifthen(intvec_t x, intvec_t y)
+    const
   {
     return ifthen(x.as_float(), y.as_float()).as_int();
   }
   
   inline
-  auto boolvec<double,2>::ifthen(realvec_t x, realvec_t y) const -> realvec_t
+  boolvec<double,2>::realvec_t boolvec<double,2>::ifthen(realvec_t x,
+                                                         realvec_t y)
+    const
   {
 #ifdef __SSE4_1__
     return _mm_blendv_pd(y.v, x.v, v);
@@ -667,12 +668,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline auto intvec<double,2>::as_float() const -> realvec_t
+  inline intvec<double,2>::realvec_t intvec<double,2>::as_float() const
   {
     return _mm_castsi128_pd(v);
   }
   
-  inline auto intvec<double,2>::convert_float() const -> realvec_t
+  inline intvec<double,2>::realvec_t intvec<double,2>::convert_float() const
   {
     return MF::vml_convert_float(*this);
   }
