@@ -17,3 +17,4 @@ build.ninja
 loop
 instantiations
 .ninja_deps
+interp
