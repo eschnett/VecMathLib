@@ -162,7 +162,7 @@ namespace vecmathlib {
     }
     static intvec iota()
     {
-      const int_t iota_[] = {0, 1, 2, 4};
+      const int_t iota_[] = {0, 1, 2, 3};
       return intvec(iota_);
     }
     
