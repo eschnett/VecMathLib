@@ -5,18 +5,22 @@
 
 
 
-#include <cmath>
 #include <cstdlib>
 
 // We expect either 199711L or 201103L
 #if __cplusplus >= 201103L
 // C++11 is supported, use it
 
+#include <cmath>
 #include <cstdint>
 
 #else
 // C++11 is not supported, work around the missing pieces
 
+// <cmath> does not work witha all compilers; e.g. IBM's xlC on a Blue
+// Gene/Q then does not provide macros for isnan, but provides
+// functions instead.
+#include <math.h>
 #include <stdint.h>
 
 
