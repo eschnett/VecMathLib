@@ -103,8 +103,6 @@ const int vecsize = realV::size;
 
 
 
-#define restrict __restrict__
-
 #ifdef __clang__
 #  define __builtin_assume_aligned(exp, align) (exp)
 #endif
