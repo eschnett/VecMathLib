@@ -47,6 +47,21 @@ namespace std {
 // Make some math functions from math.h available in std
 namespace std {
   // Capture macros into functions, then undefine the macros
+#ifndef isfinite
+#  error "isfinite is not a macro"
+#endif
+#ifndef isinf
+#  error "isinf is not a macro"
+#endif
+#ifndef isnan
+#  error "isnan is not a macro"
+#endif
+#ifndef isnormal
+#  error "isnormal is not a macro"
+#endif
+#ifndef signbit
+#  error "signbit is not a macro"
+#endif
   namespace {
     template<typename T> int libc_isfinite(T x) { return isfinite(x); }
     template<typename T> int libc_isinf(T x) { return isinf(x); }
