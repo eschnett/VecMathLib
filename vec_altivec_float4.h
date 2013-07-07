@@ -11,9 +11,15 @@
 
 // Altivec intrinsics
 #include <altivec.h>
-#undef vector
-#undef pixel
-#undef bool
+#ifdef __clang__
+#  define __vector vector
+#  define __pixel pixel
+#  define __bool bool
+#else
+#  undef vector
+#  undef pixel
+#  undef bool
+#endif
 
 
 
