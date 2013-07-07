@@ -795,6 +795,11 @@ struct vecmathlib_test {
       for (int i=0; i<realvec_t::size; ++i) {
         x.set_elt(i, n & (1<<i));
       }
+      for (int i=0; i<realvec_t::size; ++i) {
+        bool rstd = n & (1<<i);
+        bool rvml = x[i];
+        check_bool("[]", rstd, rvml, x);
+      }
       
       {
         boolvec_t rstd;
