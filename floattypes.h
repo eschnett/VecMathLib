@@ -56,8 +56,8 @@ namespace std {
 #undef isnormal
 #undef signbit
   
-  inline float asinh(float x) { return ::asinh(x); }
-  inline float acosh(float x) { return ::acosh(x); }
+  inline float asinh(float x) { return ::asinhf(x); }
+  inline float acosh(float x) { return ::acoshf(x); }
   inline float atanh(float x) { return ::atanh(x); }
   inline float cbrt(float x) { return ::cbrtf(x); }
   // inline float ceil(float x) { return ::ceilf(x); }
@@ -69,7 +69,7 @@ namespace std {
   inline float fma(float x, float y, float z) { return ::fmaf(x, y, z); }
   inline float fmax(float x, float y) { return ::fmaxf(x, y); }
   inline float fmin(float x, float y) { return ::fminf(x, y); }
-  // inline float frexp(float x, int* r) { return ::frexp(x, r); }
+  // inline float frexp(float x, int* r) { return ::frexpf(x, r); }
   inline float hypot(float x, float y) { return ::hypotf(x, y); }
   inline int ilogb(float x) { return ::ilogbf(x); }
   inline bool isfinite(float x) { return libc_isfinite(x); }
