@@ -537,18 +537,17 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline boolvec<float,4>::intvec_t boolvec<float,4>::as_int() const
+  inline intvec<float,4> boolvec<float,4>::as_int() const
   {
     return (__vector int) v;
   }
   
-  inline boolvec<float,4>::intvec_t boolvec<float,4>::convert_int() const
+  inline intvec<float,4> boolvec<float,4>::convert_int() const
   {
     return -(__vector int)v;
   }
   
-  inline
-  boolvec<float,4>::boolvec_t boolvec<float,4>::operator==(boolvec x) const
+  inline boolvec<float,4> boolvec<float,4>::operator==(boolvec_t x) const
   {
     return as_int() == x.as_int();
   }
@@ -571,12 +570,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline intvec<float,4>::realvec_t intvec<float,4>::as_float() const
+  inline realvec<float,4> intvec<float,4>::as_float() const
   {
     return (__vector float)v;
   }
   
-  inline intvec<float,4>::realvec_t intvec<float,4>::convert_float() const
+  inline realvec<float,4> intvec<float,4>::convert_float() const
   {
     return vec_ctf(v, 0);
   }

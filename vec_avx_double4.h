@@ -657,12 +657,12 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline boolvec<double,4>::intvec_t boolvec<double,4>::as_int() const
+  inline intvec<double,4> boolvec<double,4>::as_int() const
   {
     return _mm256_castpd_si256(v);
   }
   
-  inline boolvec<double,4>::intvec_t boolvec<double,4>::convert_int() const
+  inline intvec<double,4> boolvec<double,4>::convert_int() const
   {
     //return ifthen(v, U(1), U(0));
     return lsr(as_int(), bits-1);
@@ -687,12 +687,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline boolvec<double,4>::realvec_t intvec<double,4>::as_float() const
+  inline realvec<double,4> intvec<double,4>::as_float() const
   {
     return _mm256_castsi256_pd(v);
   }
   
-  inline boolvec<double,4>::realvec_t intvec<double,4>::convert_float() const
+  inline realvec<double,4> intvec<double,4>::convert_float() const
   {
     return MF::vml_convert_float(*this);
   }

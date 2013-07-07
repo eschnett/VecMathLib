@@ -560,12 +560,12 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline boolvec<float,4>::intvec_t boolvec<float,4>::as_int() const
+  inline intvec<float,4> boolvec<float,4>::as_int() const
   {
     return vreinterpretq_s32_u32(v);
   }
   
-  inline boolvec<float,4>::intvec_t boolvec<float,4>::convert_int() const
+  inline intvec<float,4> boolvec<float,4>::convert_int() const
   {
     return - as_int();
   }
@@ -588,12 +588,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline intvec<float,4>::realvec_t intvec<float,4>::as_float() const
+  inline realvec<float,4> intvec<float,4>::as_float() const
   {
     return vreinterpretq_f32_s32(v);
   }
   
-  inline intvec<float,4>::realvec_t intvec<float,4>::convert_float() const
+  inline realvec<float,4> intvec<float,4>::convert_float() const
   {
     return vcvtq_f32_s32(v);
   }

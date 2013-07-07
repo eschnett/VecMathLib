@@ -508,12 +508,12 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline boolvec<double,1>::intvec_t boolvec<double,1>::as_int() const
+  inline intvec<double,1> boolvec<double,1>::as_int() const
   {
     return I(v);
   }
   
-  inline boolvec<double,1>::intvec_t boolvec<double,1>::convert_int() const
+  inline intvec<double,1> boolvec<double,1>::convert_int() const
   {
     return v;
   }
@@ -537,12 +537,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline intvec<double,1>::realvec_t intvec<double,1>::as_float() const
+  inline realvec<double,1> intvec<double,1>::as_float() const
   {
     return FP::as_float(v);
   }
   
-  inline intvec<double,1>::realvec_t intvec<double,1>::convert_float() const
+  inline realvec<double,1> intvec<double,1>::convert_float() const
   {
 #ifdef __x86_64__
     return _mm_cvtsd_f64(_mm_cvtsi64_sd(_mm_setzero_pd(), v));

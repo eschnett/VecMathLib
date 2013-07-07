@@ -556,12 +556,12 @@ namespace vecmathlib {
   
   // boolvec definitions
   
-  inline boolvec<fp16,16>::intvec_t boolvec<fp16,16>::as_int() const
+  inline intvec<fp16,16> boolvec<fp16,16>::as_int() const
   {
     return v;
   }
   
-  inline boolvec<fp16,16>::intvec_t boolvec<fp16,16>::convert_int() const
+  inline intvec<fp16,16> boolvec<fp16,16>::convert_int() const
   {
     return lsr(as_int(), bits-1);
   }
@@ -585,12 +585,12 @@ namespace vecmathlib {
   
   // intvec definitions
   
-  inline intvec<fp16,16>::realvec_t intvec<fp16,16>::as_float() const
+  inline realvec<fp16,16> intvec<fp16,16>::as_float() const
   {
     return v;
   }
   
-  inline intvec<fp16,16>::realvec_t intvec<fp16,16>::convert_float() const
+  inline realvec<fp16,16> intvec<fp16,16>::convert_float() const
   {
     __builtin_unreachable();
   }
