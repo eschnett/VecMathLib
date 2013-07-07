@@ -135,6 +135,7 @@ namespace vecmathlib {
     
     
     // ifthen(condition, then-value, else-value)
+    boolvec_t ifthen(boolvec_t x, boolvec_t y) const;
     intvec_t ifthen(intvec_t x, intvec_t y) const; // defined after intvec
     realvec_t ifthen(realvec_t x, realvec_t y) const; // defined after realvec
   };
@@ -648,16 +649,19 @@ namespace vecmathlib {
   }
   
   inline
-  boolvec<double,2>::intvec_t boolvec<double,2>::ifthen(intvec_t x, intvec_t y)
-    const
+  boolvec<double,2> boolvec<double,2>::ifthen(boolvec_t x, boolvec_t y) const
   {
     return vec_sel(y.v, x.v, v);
   }
   
   inline
-  boolvec<double,2>::realvec_t boolvec<double,2>::ifthen(realvec_t x,
-                                                         realvec_t y)
-    const
+  intvec<double,2> boolvec<double,2>::ifthen(intvec_t x, intvec_t y) const
+  {
+    return vec_sel(y.v, x.v, v);
+  }
+  
+  inline
+  realvec<double,2> boolvec<double,2>::ifthen(realvec_t x, realvec_t y) const
   {
     return vec_sel(y.v, x.v, v);
   }

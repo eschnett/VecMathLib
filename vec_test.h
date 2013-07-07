@@ -116,6 +116,7 @@ namespace vecmathlib {
     
     
     // ifthen(condition, then-value, else-value)
+    boolvec_t ifthen(boolvec_t x, boolvec_t y) const;
     intvec_t ifthen(intvec_t x, intvec_t y) const; // defined after inttestvec
     realvec_t ifthen(realvec_t x, realvec_t y) const; // defined after realtestvec
   };
@@ -757,6 +758,16 @@ namespace vecmathlib {
   
   template<typename T, int N>
   inline
+  typename booltestvec<T,N>::boolvec_t
+  booltestvec<T,N>::ifthen(boolvec_t x, boolvec_t y) const
+  {
+    boolvec_t res;
+    for (int d=0; d<size; ++d) res.v[d] = v[d] ? x.v[d] : y.v[d];
+    return res;
+  }
+  
+  template<typename T, int N>
+  inline
   typename booltestvec<T,N>::intvec_t
   booltestvec<T,N>::ifthen(intvec_t x, intvec_t y) const
   {
@@ -818,6 +829,15 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline bool any(booltestvec<real_t, size> x) { return x.any(); }
+  
+  template<typename real_t, int size>
+  inline
+  booltestvec<real_t, size> ifthen(booltestvec<real_t, size> c,
+                                   booltestvec<real_t, size> x,
+                                   booltestvec<real_t, size> y)
+  {
+    return c.ifthen(x, y);
+  }
   
   template<typename real_t, int size>
   inline

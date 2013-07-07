@@ -320,6 +320,36 @@ struct vecmathlib_test {
     }
   }
   
+  template<typename A, typename B, typename C>
+  static void check_bool(const char* const func,
+                         bool fstd(typename A::scalar_t x,
+                                   typename B::scalar_t y,
+                                   typename C::scalar_t z),
+                         boolvec_t fvml(A x, B y, C z),
+                         const A x, const B y, const C z)
+  {
+    boolvec_t rstd;
+    for (int i=0; i<boolvec_t::size; ++i) {
+      rstd.set_elt(i, fstd(x[i], y[i], z[i]));
+    }
+    const boolvec_t rvml = fvml(x, y, z);
+    const boolvec_t dr = rstd != rvml;
+    const boolvec_t isbad = supported(x) && supported(rstd) && dr;
+    if (any(isbad)) {
+      ++ num_errors;
+      cout << setprecision(realvec_t::digits10+2)
+           << "Error in " << func << ":\n"
+           << "   x=" << x << " [" << hex(x) << "]\n"
+           << "   y=" << y << " [" << hex(y) << "]\n"
+           << "   z=" << z << " [" << hex(z) << "]\n"
+           << "   fstd(x,y,z)=" << rstd << " [" << hex(rstd) << "]\n"
+           << "   fvml(x,y,z)=" << rvml << " [" << hex(rvml) << "]\n"
+	   << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
+           << "   isbad(x,y,z)=" << isbad << "\n"
+           << flush;
+    }
+  }
+  
   static void check_int(const char* const func,
                         const int_t rstd, const int_t rvml)
   {
@@ -825,6 +855,11 @@ struct vecmathlib_test {
         bool rvml = any(x);
         check_bool("any", rstd, rvml, x);
       }
+      check_bool
+        ("ifthen(bool)",
+         local_ifthen<bool>,
+         (boolvec_t(*)(boolvec_t,boolvec_t,boolvec_t))vecmathlib::ifthen,
+         x, BV(false), BV(true));
       check_int("ifthen(int)",
                 local_ifthen<int_t>,
                 (intvec_t(*)(boolvec_t,intvec_t,intvec_t))vecmathlib::ifthen,

@@ -47,6 +47,15 @@ namespace vecmathlib {
   
   template<typename real_t, int size>
   inline
+  boolvec<real_t, size> ifthen(boolvec<real_t, size> c,
+                               boolvec<real_t, size> x,
+                               boolvec<real_t, size> y)
+  {
+    return c.ifthen(x, y);
+  }
+  
+  template<typename real_t, int size>
+  inline
   intvec<real_t, size> ifthen(boolvec<real_t, size> c,
                               intvec<real_t, size> x,
                               intvec<real_t, size> y)
