@@ -538,7 +538,7 @@ namespace vecmathlib {
     real_t sum() const
     {
       // return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
-      realvec_t c1 = vec_logical(v, v, 0b1111);
+      realvec_t c1 = vec_logical(v, v, 0xf);
       realvec_t x = vec_xxmadd(v, c1, v);
       return x[0] + x[2];
     }
