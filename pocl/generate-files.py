@@ -380,7 +380,7 @@ def output_vmlfunc_libm(func, vectype):
     # callretstr = othertype if ret==VF else otherinttype
     callretstr = mkvmltype(vmlret, othertype)
     name1 = name[:-1] if name.endswith("_") else name
-    out("  %s r = vecmathlib::%s(%s);" % (callretstr, name1, callargstr))
+    out("  %s r = %s(%s);" % (callretstr, name1, callargstr))
     # We may need to convert from the VML type to the OpenCL type
     # before bitcasting. This may be a real conversion, e.g. bool to
     # int. This may also involve a change in size (e.g. long to int),
