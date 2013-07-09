@@ -181,7 +181,7 @@ directfuncs = [
 
 
 # This is always prepended to the generated function names.
-func_prefix = ""
+func_prefix = "_cl_"
 
 # Some of the functions need prefixes to avoid using the C standard
 # library ones.
@@ -212,7 +212,7 @@ masked_functions = [
 ]
 
 # This is prepended to masked function names.
-mask_prefix = "_cl_"
+mask_prefix = ""
 
 def prefixed(name):
     if name in masked_functions: name = mask_prefix + name
