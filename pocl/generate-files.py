@@ -315,7 +315,7 @@ def output_vmlfunc_vml(func, vectype):
     out("%s %s(%s)" % (funcretstr, prefixed(name), funcargstr))
     out("{")
     for (n, arg, vmlarg) in zip(range(0, 100), args, vmlargs):
-        out("  %s y%d = bitcast<%s,%s>(x%d);" %
+        out("  %s y%d = bitcast<%s,%s >(x%d);" %
             (mkvmltype(vmlarg, vmltype), n,
              mktype(arg, vectype), mkvmltype(vmlarg, vmltype), n))
     callargstr = ", ".join(map(lambda (n, arg): "y%d" % n,
