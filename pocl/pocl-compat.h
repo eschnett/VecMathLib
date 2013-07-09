@@ -7,13 +7,7 @@
 #define VML_NODEBUG
 #include "../vecmathlib.h"
 
-// This must come after including vecmathlib.h
-#ifdef VML_AVOID_LIBM
-#  define realpseudovec realtestvec
-#endif
-
 #include <algorithm>
-#include <cstdint>
 #include <cstring>
 
 #define pocl_static_assert(b) typedef char _static_assert[(b)?+1:-1]
@@ -28,16 +22,14 @@
 
 // Define vector types
 
-using std::int32_t;
-#define int int32_t
+#define int std::int32_t
 typedef int int2  __attribute__((__ext_vector_type__( 2)));
 typedef int int3  __attribute__((__ext_vector_type__( 3)));
 typedef int int4  __attribute__((__ext_vector_type__( 4)));
 typedef int int8  __attribute__((__ext_vector_type__( 8)));
 typedef int int16 __attribute__((__ext_vector_type__(16)));
 
-using std::uint32_t;
-#define uint uint32_t
+#define uint std::uint32_t
 typedef uint uint2  __attribute__((__ext_vector_type__( 2)));
 typedef uint uint3  __attribute__((__ext_vector_type__( 3)));
 typedef uint uint4  __attribute__((__ext_vector_type__( 4)));
@@ -45,16 +37,14 @@ typedef uint uint8  __attribute__((__ext_vector_type__( 8)));
 typedef uint uint16 __attribute__((__ext_vector_type__(16)));
 
 #ifdef cles_khr_int64
-using std::int64_t;
-#define long int64_t
+#define long std::int64_t
 typedef long long2  __attribute__((__ext_vector_type__( 2)));
 typedef long long3  __attribute__((__ext_vector_type__( 3)));
 typedef long long4  __attribute__((__ext_vector_type__( 4)));
 typedef long long8  __attribute__((__ext_vector_type__( 8)));
 typedef long long16 __attribute__((__ext_vector_type__(16)));
 
-using std::uint64_t;
-#define ulong uint64_t
+#define ulong std::uint64_t
 typedef ulong ulong2  __attribute__((__ext_vector_type__( 2)));
 typedef ulong ulong3  __attribute__((__ext_vector_type__( 3)));
 typedef ulong ulong4  __attribute__((__ext_vector_type__( 4)));
