@@ -20,6 +20,8 @@
 #  define M_PI M_PI_F
 #endif
 
+
+
 // Define vector types
 
 #define int std::int32_t
@@ -68,6 +70,42 @@ typedef double double16 __attribute__((__ext_vector_type__(16)));
 
 
 
+// Declare pair types for assembling/disassembling vectors
+struct pair_int   { int   lo, hi; };
+struct pair_int2  { int2  lo, hi; };
+struct pair_int3  { int3  lo, hi; };
+struct pair_int4  { int4  lo, hi; };
+struct pair_int8  { int8  lo, hi; };
+struct pair_int16 { int16 lo, hi; };
+
+#ifdef cles_khr_int64
+struct pair_long   { long   lo, hi; };
+struct pair_long2  { long2  lo, hi; };
+struct pair_long3  { long3  lo, hi; };
+struct pair_long4  { long4  lo, hi; };
+struct pair_long8  { long8  lo, hi; };
+struct pair_long16 { long16 lo, hi; };
+#endif
+
+struct pair_float   { float   lo, hi; };
+struct pair_float2  { float2  lo, hi; };
+struct pair_float3  { float3  lo, hi; };
+struct pair_float4  { float4  lo, hi; };
+struct pair_float8  { float8  lo, hi; };
+struct pair_float16 { float16 lo, hi; };
+
+#ifdef cl_khr_fp64
+struct pair_double   { double   lo, hi; };
+struct pair_double2  { double2  lo, hi; };
+struct pair_double3  { double3  lo, hi; };
+struct pair_double4  { double4  lo, hi; };
+struct pair_double8  { double8  lo, hi; };
+struct pair_double16 { double16 lo, hi; };
+#endif
+
+
+
+// Define default implementations
 #define _cl_fma _cl_std_fma
 #define _cl_fmax _cl_std_fmax
 #define _cl_fmin _cl_std_fmin

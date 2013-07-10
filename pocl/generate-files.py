@@ -464,19 +464,11 @@ def output_vmlfunc_split(func, vectype):
         split_ret = VF
     else:
         raise "missing"
-    # LLVM has a bug, which makes it combine pair types for different
-    # vector sizes. Therefore we need to ensure that pairs for
-    # difference types and sizes have different names.
-    out("  struct pair_%s_ret { %s lo, hi; };" %
-        (mktype(split_ret, othertype), mktype(split_ret, othertype)))
     for (n, arg) in zip(range(0, 100), args):
-        out("  struct pair_%s_arg%d { %s lo, hi; };" %
-            (mktype(arg, othertype), n, mktype(arg, othertype)))
-    for (n, arg) in zip(range(0, 100), args):
-        out("  pair_%s_arg%d y%d = bitcast<%s,pair_%s_arg%d>(x%d);" %
-            (mktype(arg, othertype), n, n,
-             mktype(arg, vectype), mktype(arg, othertype), n, n))
-    out("  pair_%s_ret r;" % mktype(split_ret, othertype))
+        out("  pair_%s y%d = bitcast<%s,pair_%s>(x%d);" %
+            (mktype(arg, othertype), n,
+             mktype(arg, vectype), mktype(arg, othertype), n))
+    out("  pair_%s r;" % mktype(split_ret, othertype))
     # in OpenCL: for scalars, true==+1, but for vectors, true==-1
     conv = ""
     if vmlret==VB:
@@ -489,9 +481,9 @@ def output_vmlfunc_split(func, vectype):
         callargstr = ", ".join(map(lambda (n, arg): "y%d.%s" % (n, suffix),
                                    zip(range(0, 100), args)))
         out("  r.%s = %s%s(%s);" % (suffix, conv, prefixed(name), callargstr))
-    out("  pocl_static_assert(sizeof(pair_%s_ret) == sizeof(%s));" %
+    out("  pocl_static_assert(sizeof(pair_%s) == sizeof(%s));" %
         (mktype(split_ret, othertype), mktype(ret, vectype)))
-    out("  return bitcast<pair_%s_ret,%s>(r);" %
+    out("  return bitcast<pair_%s,%s>(r);" %
         (mktype(split_ret, othertype), mktype(ret, vectype)))
     out("}")
 
