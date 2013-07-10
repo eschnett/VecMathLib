@@ -63,11 +63,11 @@ namespace std {
 #  error "signbit is not a macro"
 #endif
   namespace {
-    template<typename T> int libc_isfinite(T x) { return isfinite(x); }
-    template<typename T> int libc_isinf(T x) { return isinf(x); }
-    template<typename T> int libc_isnan(T x) { return isnan(x); }
-    template<typename T> int libc_isnormal(T x) { return isnormal(x); }
-    template<typename T> int libc_signbit(T x) { return signbit(x); }
+    template<typename T> inline int libc_isfinite(T x) { return isfinite(x); }
+    template<typename T> inline int libc_isinf(T x) { return isinf(x); }
+    template<typename T> inline int libc_isnan(T x) { return isnan(x); }
+    template<typename T> inline int libc_isnormal(T x) { return isnormal(x); }
+    template<typename T> inline int libc_signbit(T x) { return signbit(x); }
   }
 #undef isfinite
 #undef isinf
