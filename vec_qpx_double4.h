@@ -670,7 +670,7 @@ namespace vecmathlib {
   inline
   boolvec<double,4> boolvec<double,4>::ifthen(boolvec_t x, boolvec_t y) const
   {
-    return ifthen(x.as_float(), y.as_float()).as_int();
+    return ifthen(x.as_int(), y.as_int()).as_bool();
   }
   
   inline
