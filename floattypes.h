@@ -5,6 +5,7 @@
 
 
 
+#include <cassert>
 #include <cstdlib>
 
 // We expect either 199711L or 201103L
@@ -25,7 +26,7 @@
 
 
 
-#define static_assert(x,y)
+#define static_assert(cond, msg)
 #define __builtin_unreachable() (assert(0))
 
 
