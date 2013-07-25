@@ -76,8 +76,8 @@ namespace std {
 #undef isnormal
 #undef signbit
   
-  inline float asinh(float x) { return ::asinhf(x); }
   inline float acosh(float x) { return ::acoshf(x); }
+  inline float asinh(float x) { return ::asinhf(x); }
   inline float atanh(float x) { return ::atanh(x); }
   inline float cbrt(float x) { return ::cbrtf(x); }
   // inline float ceil(float x) { return ::ceilf(x); }
@@ -105,8 +105,8 @@ namespace std {
   inline bool signbit(float x) { return libc_signbit(x); }
   inline float trunc(float x) { return ::truncf(x); }
   
-  inline double asinh(double x) { return ::asinh(x); }
   inline double acosh(double x) { return ::acosh(x); }
+  inline double asinh(double x) { return ::asinh(x); }
   inline double atanh(double x) { return ::atanh(x); }
   inline double cbrt(double x) { return ::cbrt(x); }
   // inline double ceil(double x) { return ::ceil(x); }
