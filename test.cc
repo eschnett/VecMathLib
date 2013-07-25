@@ -158,6 +158,7 @@ struct vecmathlib_test {
            << "Error in " << func << ":\n"
            << "   found=" << x << " [" << hex(x) << "]\n"
            << "   expected=" << xwant << " [" << hex(xwant) << "]\n"
+           << "   mval=" << mval << " [" << hex(mval) << "]\n"
            << "   isbad=" << isbad << "\n"
            << flush;
     }
