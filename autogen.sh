@@ -8,5 +8,5 @@ rm -f CMakeCache.txt
 cmake -G 'Unix Makefiles'
 
 # Ninja (build with "ninja")
-# Note: Ninja is ofteh faster than make, but may not always be available
 #cmake -G Ninja
+# Note: Ninja is often faster than make, but may not always be available
