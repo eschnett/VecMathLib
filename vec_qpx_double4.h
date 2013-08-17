@@ -570,7 +570,7 @@ namespace vecmathlib {
     realvec atanh() const { return atanhd4(v); }
     realvec cbrt() const { return cbrtd4(v); }
     realvec ceil() const { return vec_ceil(v); }
-    realvec copysign(realvec y) const { return vec_cpsgn(v, y.v); }
+    realvec copysign(realvec y) const { return vec_cpsgn(y.v, v); }
     realvec cos() const { return cosd4(v); }
     realvec cosh() const { return coshd4(v); }
     realvec exp() const { return expd4(v); }
