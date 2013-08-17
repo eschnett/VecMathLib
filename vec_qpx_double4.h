@@ -498,7 +498,7 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return v; }
-    intvec_t convert_int() const { return vec_ctid(v); }
+    intvec_t convert_int() const { return vec_ctidz(v); }
     
     
     
@@ -556,9 +556,23 @@ namespace vecmathlib {
     boolvec_t operator==(const realvec& x) const { return vec_cmpeq(v, x.v); }
     boolvec_t operator!=(const realvec& x) const { return ! (*this == x); }
     boolvec_t operator<(const realvec& x) const { return vec_cmplt(v, x.v); }
-    boolvec_t operator<=(const realvec& x) const { return ! (*this > x); }
+    boolvec_t operator<=(const realvec& x) const
+    {
+#ifdef VML_HAVE_NAN
+      return *this < x || *this == x;
+#else
+      return ! (*this > x);
+#endif
+    }
     boolvec_t operator>(const realvec& x) const { return vec_cmpgt(v, x.v); }
-    boolvec_t operator>=(const realvec& x) const { return ! (*this < x); }
+    boolvec_t operator>=(const realvec& x) const
+    {
+#ifdef VML_HAVE_NAN
+      return *this > x || *this == x;
+#else
+      return ! (*this < x);
+#endif
+    }
     
     
     
@@ -592,13 +606,14 @@ namespace vecmathlib {
     realvec hypot(const realvec& y) const { return hypotd4(v, y.v); }
     intvec_t ilogb() const
     {
-      int_t ilogb_[] = {
-        ::ilogb((*this)[0]),
-        ::ilogb((*this)[1]),
-        ::ilogb((*this)[2]),
-        ::ilogb((*this)[3])
-      };
-      return intvec_t(ilogb_);
+      // int_t ilogb_[] = {
+      //   ::ilogb((*this)[0]),
+      //   ::ilogb((*this)[1]),
+      //   ::ilogb((*this)[2]),
+      //   ::ilogb((*this)[3])
+      // };
+      // return intvec_t(ilogb_);
+      return MF::vml_ilogb(v);
     }
     boolvec_t isfinite() const { return MF::vml_isfinite(*this); }
     boolvec_t isinf() const { return MF::vml_isinf(*this); }
@@ -652,11 +667,15 @@ namespace vecmathlib {
       realvec x = *this;
       realvec r = vec_rsqrte(x.v); // this is only an approximation
       // TODO: use fma
-      // one Newton iteration (see vml_rsqrt)
+      // two Newton iterations (see vml_rsqrt)
+      r += RV(0.5)*r * (RV(1.0) - x * r*r);
       r += RV(0.5)*r * (RV(1.0) - x * r*r);
       return r;
     }
-    boolvec_t signbit() const { return !copysign(RV(1.0)).as_int().as_bool(); }
+    boolvec_t signbit() const
+    {
+      return !RV(1.0).copysign(*this).as_int().as_bool();
+    }
     realvec sin() const { return sind4(v); }
     realvec sinh() const { return sinhd4(v); }
     realvec sqrt() const
