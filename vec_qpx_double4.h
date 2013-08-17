@@ -8,8 +8,6 @@
 #include "vec_base.h"
 
 #include <cmath>
-#warning "TODO"
-#include <iostream>
 
 // QPX intrinsics
 #ifdef __clang__
