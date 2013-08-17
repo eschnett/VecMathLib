@@ -103,17 +103,17 @@ namespace vecmathlib {
     bool all() const
     {
       // return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
-      realvec_t x0123 = *this;
-      realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
-      realvec_t y0022 = x0123 && x1032;
+      boolvec x0123 = *this;
+      boolvec x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
+      boolvec y0022 = x0123 && x1032;
       return y0022[0] && y0022[2];
     }
     bool any() const
     {
       // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
-      realvec_t x0123 = *this;
-      realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
-      realvec_t y0022 = x0123 || x1032;
+      boolvec x0123 = *this;
+      boolvec x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
+      boolvec y0022 = x0123 || x1032;
       return y0022[0] || y0022[2];
     }
     
