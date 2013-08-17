@@ -104,11 +104,19 @@ namespace vecmathlib {
     
     bool all() const
     {
-      return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
+      // return (*this)[0] && (*this)[1] && (*this)[2] && (*this)[3];
+      realvec_t x0123 = *this;
+      realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
+      realvec_t y0022 = x0123 && x1032;
+      return y0022[0] && y0022[2];
     }
     bool any() const
     {
-      return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
+      // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
+      realvec_t x0123 = *this;
+      realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
+      realvec_t y0022 = x0123 || x1032;
+      return y0022[0] || y0022[2];
     }
     
     
@@ -537,7 +545,7 @@ namespace vecmathlib {
     real_t sum() const
     {
       // return (*this)[0] + (*this)[1] + (*this)[2] + (*this)[3];
-      realvec_t c1 = vec_logical(v, v, 0xf);
+      realvec_t c1 = vec_logical(v, v, 0xf); // +1.0
       realvec_t x = vec_xxmadd(v, c1, v);
       return x[0] + x[2];
     }
