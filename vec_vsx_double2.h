@@ -95,32 +95,32 @@ namespace vecmathlib {
     boolvec operator!() const
     {
       return
-	(__vector __bool long long)(__vector long long)
-	vec_nor((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)v);
+        (__vector __bool long long)(__vector long long)
+        vec_nor((__vector double)(__vector long long)v,
+                (__vector double)(__vector long long)v);
     }
     
     boolvec operator&&(boolvec x) const
     {
       return
-	(__vector __bool long long)(__vector long long)
-	vec_and((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)x.v);
+        (__vector __bool long long)(__vector long long)
+        vec_and((__vector double)(__vector long long)v,
+                (__vector double)(__vector long long)x.v);
     }
     boolvec operator||(boolvec x) const
     {
       return
-	(__vector __bool long long)(__vector long long)
-	vec_or((__vector double)(__vector long long)v,
-	       (__vector double)(__vector long long)x.v);
+        (__vector __bool long long)(__vector long long)
+        vec_or((__vector double)(__vector long long)v,
+               (__vector double)(__vector long long)x.v);
     }
     boolvec operator==(boolvec x) const { return !(*this!=x); }
     boolvec operator!=(boolvec x) const
     {
       return
-	(__vector __bool long long)(__vector long long)
-	vec_xor((__vector double)(__vector long long)v,
-		(__vector double)(__vector long long)x.v);
+        (__vector __bool long long)(__vector long long)
+        vec_xor((__vector double)(__vector long long)v,
+                (__vector double)(__vector long long)x.v);
     }
     
     bool all() const
@@ -211,16 +211,16 @@ namespace vecmathlib {
     static __vector unsigned char perm_int_swap()
     {
       return
-	(__vector unsigned char)
-	{4,5,6,7, 16,17,18,19, 12,13,14,15, 24,25,26,27};
+        (__vector unsigned char)
+        {4,5,6,7, 16,17,18,19, 12,13,14,15, 24,25,26,27};
     }
     // 0123 4567 -> 0426
     // broadcast high elements of pairs
     static __vector unsigned char perm_int_bchi()
     {
       return
-	(__vector unsigned char)
-	{0,1,2,3, 16,17,18,19, 8,9,10,11, 24,25,26,27};
+        (__vector unsigned char)
+        {0,1,2,3, 16,17,18,19, 8,9,10,11, 24,25,26,27};
     }
   public:
     
@@ -492,7 +492,7 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storea(p);
       } else {
-	// Use vec_ste?
+        // Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
       }
@@ -502,7 +502,7 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storeu(p);
       } else {
-	// Use vec_ste?
+        // Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
       }

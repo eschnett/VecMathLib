@@ -367,7 +367,7 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storea(p);
       } else {
-	// Use vec_ste?
+        // Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
         if (m.m[2]) p[2] = (*this)[2];
@@ -379,7 +379,7 @@ namespace vecmathlib {
       if (__builtin_expect(m.all_m, true)) {
         storeu(p);
       } else {
-	// Use vec_ste?
+        // Use vec_ste?
         if (m.m[0]) p[0] = (*this)[0];
         if (m.m[1]) p[1] = (*this)[1];
         if (m.m[2]) p[2] = (*this)[2];

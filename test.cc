@@ -287,7 +287,7 @@ struct vecmathlib_test {
            << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
@@ -315,7 +315,7 @@ struct vecmathlib_test {
            << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
@@ -345,7 +345,7 @@ struct vecmathlib_test {
            << "   z=" << z << " [" << hex(z) << "]\n"
            << "   fstd(x,y,z)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y,z)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y,z)=" << isbad << "\n"
            << flush;
     }
@@ -362,7 +362,7 @@ struct vecmathlib_test {
            << "Error in " << func << ":\n"
            << "   fstd()=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml()=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error()=" << dr << " [" << hex(dr) << "]\n"
+           << "   error()=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad()=" << isbad << "\n"
            << flush;
     }
@@ -388,7 +388,7 @@ struct vecmathlib_test {
            << "   x=" << x << " [" << hex(x) << "]\n"
            << "   fstd(x)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x)=" << isbad << "\n"
            << flush;
     }
@@ -415,7 +415,7 @@ struct vecmathlib_test {
            << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
@@ -444,7 +444,7 @@ struct vecmathlib_test {
            << "   y=" << y << " [" << hex(y) << "]\n"
            << "   fstd(x,y)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x,y)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y)=" << isbad << "\n"
            << flush;
     }
@@ -476,7 +476,7 @@ struct vecmathlib_test {
            << "   z=" << z << " [" << hex(z) << "]\n"
            << "   fstd(x,y,z)=" << rstd << " [" << hex(rstd) << "]\n"
            << "   fvml(x,y,z)=" << rvml << " [" << hex(rvml) << "]\n"
-	   << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
+           << "   error(x,y,z)=" << dr << " [" << hex(dr) << "]\n"
            << "   isbad(x,y,z)=" << isbad << "\n"
            << flush;
     }
@@ -766,7 +766,7 @@ struct vecmathlib_test {
       
       // storea
       {
-	memcpy(xnew, x, nbytes);
+        memcpy(xnew, x, nbytes);
         real_t *p = &xnew[sz];
         storea(z, p, mask);
         check_mem("storea(mask)", p, z, &x[sz], mval);
@@ -774,7 +774,7 @@ struct vecmathlib_test {
       
       // storeu
       for (ptrdiff_t i=0; i<realvec_t::size; ++i) {
-	memcpy(xnew, x, nbytes);
+        memcpy(xnew, x, nbytes);
         real_t *p = &xnew[sz];
         storeu(z, p+i, mask);
         check_mem("storeu(mask)", p+i, z, &x[sz+i], mval);
@@ -782,7 +782,7 @@ struct vecmathlib_test {
       
       // storeu
       for (ptrdiff_t ioff=0; ioff<realvec_t::size; ++ioff) {
-	memcpy(xnew, x, nbytes);
+        memcpy(xnew, x, nbytes);
         real_t *p = &xnew[sz];
         storeu(z, p, ioff, mask);
         check_mem("storeu(ioff,mask)", p+ioff, z, &x[sz+ioff], mval);
