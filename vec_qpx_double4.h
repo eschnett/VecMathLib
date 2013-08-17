@@ -684,19 +684,22 @@ namespace vecmathlib {
   }
   
   inline
-  boolvec<double,4> boolvec<double,4>::ifthen(boolvec_t x, boolvec_t y) const
+  boolvec<double,4>
+  boolvec<double,4>::ifthen(const boolvec_t& x, const boolvec_t& y) const
   {
     return ifthen(x.as_int(), y.as_int()).as_bool();
   }
   
   inline
-  intvec<double,4> boolvec<double,4>::ifthen(intvec_t x, intvec_t y) const
+  intvec<double,4>
+  boolvec<double,4>::ifthen(const intvec_t& x, const intvec_t& y) const
   {
     return ifthen(x.as_float(), y.as_float()).as_int();
   }
   
   inline
-  realvec<double,4> boolvec<double,4>::ifthen(realvec_t x, realvec_t y) const
+  realvec<double,4>
+  boolvec<double,4>::ifthen(const realvec_t& x, const realvec_t& y) const
   {
     return vec_sel(y.v, x.v, v);
   }
