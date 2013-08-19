@@ -97,7 +97,7 @@ namespace vecmathlib {
     boolvec operator!=(boolvec x) const { return _mm512_kxor(v, x.v); }
     
     bool all() const { return _mm512_kortestc(v, v); }
-    bool any() const { return ! _mm512_kortestz(v, v); }
+    bool any() const { return ! bool(_mm512_kortestz(v, v)); }
     
     
     

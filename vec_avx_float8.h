@@ -113,7 +113,7 @@ namespace vecmathlib {
       // return
       //   (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3] ||
       //   (*this)[4] || (*this)[5] || (*this)[6] || (*this)[7];
-      return ! _mm256_testz_ps(v, v);
+      return ! bool(_mm256_testz_ps(v, v));
     }
     
     

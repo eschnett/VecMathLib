@@ -124,7 +124,7 @@ namespace vecmathlib {
     {
       // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
 #if defined __AVX__
-      return ! _mm_testz_ps(v, v);
+      return ! bool(_mm_testz_ps(v, v));
 #else
       boolvec x = *this;
       x = x || _mm_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));

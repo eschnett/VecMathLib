@@ -117,7 +117,7 @@ namespace vecmathlib {
     bool any() const
     {
 #if defined __AVX__
-      return ! _mm_testz_pd(v, v);
+      return ! bool(_mm_testz_pd(v, v));
 #else
       return (*this)[0] || (*this)[1];
 #endif

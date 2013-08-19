@@ -105,7 +105,7 @@ namespace vecmathlib {
     bool any() const
     {
       // return (*this)[0] || (*this)[1] || (*this)[2] || (*this)[3];
-      return ! _mm256_testz_pd(v, v);
+      return ! bool(_mm256_testz_pd(v, v));
     }
     
     
