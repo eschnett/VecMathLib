@@ -261,7 +261,12 @@ int main(int argc, char** argv)
   // Ensure the grid size is aligned
   const ptrdiff_t ldm = align_up(m, realvec_t::size);
   typedef realvec_t::real_t real_t;
-  vector<real_t> x(ldm*n), y(ldm*n, 0.0);
+  vector<real_t> x0(ldm*n + realvec_t::size-1), y0(ldm*n + realvec_t::size-1);
+  real_t* restrict const x =
+    (real_t*)align_up(intptr_t(&x0[0]), sizeof(realvec_t));
+  real_t* restrict const y =
+    (real_t*)align_up(intptr_t(&y0[0]), sizeof(realvec_t));
+  for (ptrdiff_t i=0; i<ldm*n; ++i) y[i] = 0.0;
   
   // Initialize
   init<realvec_t>(&x[0], m, ldm, n);
