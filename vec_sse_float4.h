@@ -116,7 +116,7 @@ namespace vecmathlib {
       return ! (! *this).any();
 #else
       boolvec x = *this;
-      x = x && _mm_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
+      x = x && _mm_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
       return x[0] && x[2];
 #endif
     }
@@ -127,7 +127,7 @@ namespace vecmathlib {
       return ! _mm_testz_ps(v, v);
 #else
       boolvec x = *this;
-      x = x || _mm_shuffle_ps(x.v, x.v, _MM_SHUFFLE(1,0,3,2));
+      x = x || _mm_shuffle_ps(x.v, x.v, _MM_SHUFFLE(2,3,0,1));
       return x[0] || x[2];
 #endif
     }
