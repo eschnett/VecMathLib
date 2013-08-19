@@ -1574,6 +1574,9 @@ int main(int argc, char** argv)
 #ifdef __AVX__
     "-AVX"
 #endif
+#ifdef __MIC__
+    "-MIC"
+#endif
     "]\n";
   
   vecmathlib_test<realpseudovec<float,1> >::test();
@@ -1600,6 +1603,12 @@ int main(int argc, char** argv)
   vecmathlib_test<realtestvec<float,8> >::test();
   vecmathlib_test<realvec<float,8> >::test();
 #endif
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_16
+  vecmathlib_test<realpseudovec<float,16> >::test();
+  // vecmathlib_test<realbuiltinvec<float,16> >::test();
+  vecmathlib_test<realtestvec<float,16> >::test();
+  vecmathlib_test<realvec<float,16> >::test();
+#endif
   
   vecmathlib_test<realpseudovec<double,1> >::test();
   // vecmathlib_test<realbuiltinvec<double,1> >::test();
@@ -1618,6 +1627,12 @@ int main(int argc, char** argv)
   // vecmathlib_test<realbuiltinvec<double,4> >::test();
   vecmathlib_test<realtestvec<double,4> >::test();
   vecmathlib_test<realvec<double,4> >::test();
+#endif
+#ifdef VECMATHLIB_HAVE_VEC_DOUBLE_8
+  vecmathlib_test<realpseudovec<double,8> >::test();
+  // vecmathlib_test<realbuiltinvec<double,8> >::test();
+  vecmathlib_test<realtestvec<double,8> >::test();
+  vecmathlib_test<realvec<double,8> >::test();
 #endif
   
   cout << "\n";

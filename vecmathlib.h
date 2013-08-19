@@ -96,7 +96,10 @@ namespace std { class type_info; }
 #  include "vec_avx_double4.h"
 #endif
 
-// TODO: MIC
+#if defined __MIC__             // Intel MIC
+// TODO: single precision?
+#  include "vec_mic_double8.h"
+#endif
 
 #if defined __ALTIVEC__         // IBM Altivec
 #  include "vec_altivec_float4.h"
