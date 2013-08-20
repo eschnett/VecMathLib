@@ -76,10 +76,10 @@ namespace std { class type_info; }
 // Vecmathlib's functions (mostly useful for testing Vecmathlib)
 #include "vec_test.h"
 
-#if defined __ARM_PCS_VFP       // ARM NEON
-// TODO: VFP
+#if defined __ARM_NEON__        // ARM NEON
 #  include "vec_neon_float2.h"
 #  include "vec_neon_float4.h"
+// #elif defined __ARM_PCS_VFP     // ARM VFP
 #endif
 
 #if defined __SSE2__            // Intel SSE 2
