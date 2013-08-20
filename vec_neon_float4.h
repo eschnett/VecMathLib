@@ -321,7 +321,12 @@ namespace vecmathlib {
 #if defined __ARM_FEATURE_UNALIGNED
       return vld1q_f32(p);
 #else
-#  error "unaligned NEON loads not implemented"
+      realvec_t r;
+      r.set_elt(0, p[0]);
+      r.set_elt(1, p[1]);
+      r.set_elt(2, p[2]);
+      r.set_elt(3, p[3]);
+      return r;
 #endif
     }
     static realvec_t loadu(real_t const* p, std::ptrdiff_t ioff)
@@ -363,14 +368,13 @@ namespace vecmathlib {
     {
       // Vector stores would require vector loads, which would need to
       // be atomic
-      // p[0] = (*this)[0];
-      // p[1] = (*this)[1];
-      // p[2] = (*this)[2];
-      // p[3] = (*this)[3];
 #if defined __ARM_FEATURE_UNALIGNED
       vst1q_f32(p, v);
 #else
-#  error "unaligned NEON stores not implemented"
+      p[0] = (*this)[0];
+      p[1] = (*this)[1];
+      p[2] = (*this)[2];
+      p[3] = (*this)[3];
 #endif
     }
     void storeu(real_t* p, std::ptrdiff_t ioff) const
