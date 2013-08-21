@@ -602,7 +602,7 @@ namespace vecmathlib {
     realvec fmax(realvec y) const { return MF::vml_fmax(v, y.v); }
     realvec fmin(realvec y) const { return MF::vml_fmin(v, y.v); }
     realvec fmod(realvec y) const { return MF::vml_fmod(*this, y); }
-    realvec frexp(intvec_t& r) const { return MF::vml_frexp(*this, r); }
+    realvec frexp(intvec_t* r) const { return MF::vml_frexp(*this, r); }
     realvec hypot(realvec y) const { return hypotd4(v, y.v); }
     intvec_t ilogb() const
     {

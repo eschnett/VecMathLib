@@ -1092,12 +1092,12 @@ struct vecmathlib_test {
   static realvec_t local_vfrexp0(realvec_t x)
   {
     intvec_t r;
-    return vecmathlib::frexp(x, r);
+    return vecmathlib::frexp(x, &r);
   }
   static intvec_t local_vfrexp1(realvec_t x)
   {
     intvec_t r;
-    vecmathlib::frexp(x, r);
+    vecmathlib::frexp(x, &r);
     return r;
   }
   static int_t local_ilogb(real_t x)
