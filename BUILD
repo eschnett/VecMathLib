@@ -25,6 +25,7 @@ Benchmark:
 rm -rf CMakeCache.txt CMakeFiles
 
 
+
 # Clang:
 # C++11: -std=c++11 -stdlib=libc++
 # fast math: -ffast-math
@@ -41,6 +42,11 @@ cmake -DCMAKE_CXX_COMPILER=g++-mp-4.8 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__r
 cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.2 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
 cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.3 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
 
+# Stampede:
+module swap intel gcc/4.7.1
+cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -Ofast'
+cmake -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS='-Wall -g -restrict -xhost -Ofast'
+
 # Vesta (Power 7):
 #cmake -DCMAKE_CXX_COMPILER=xlC_r -DCMAKE_CXX_FLAGS='-O3' .
 #/soft/compilers/ibmcmp-may2013/vacpp/bg/12.1/bin/xlC_r -O3 -o test test.cc
@@ -52,3 +58,6 @@ cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.3 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict
 /soft/compilers/ibmcmp-may2013/vacpp/bg/12.1/bin/bgxlC_r -O3 -o test test.cc -lmass_simd
 #cmake -DCMAKE_CXX_COMPILER=/home/projects/llvm/bin/bgclang++ -DCMAKE_CXX_FLAGS='-O3 -I/soft/compilers/ibmcmp-may2013/xlmass/bg/7.3/include' .
 /home/projects/llvm/bin/bgclang++ -O3 -I/soft/compilers/ibmcmp-may2013/xlmass/bg/7.3/include -o test test.cc -L/soft/compilers/ibmcmp-may2013/xlmass/bg/7.3/bglib64 -lmass_simd
+
+# Water (Raspberry PI):
+cmake -DCMAKE_CXX_COMPILER=/home/pi/llvm-3.3/bin/clang++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -Ofast'
