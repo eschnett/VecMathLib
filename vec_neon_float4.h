@@ -449,6 +449,7 @@ namespace vecmathlib {
     }
     real_t prod() const
     {
+      // TODO: multiply pairwise with 2-vectors
       return (*this)[0] * (*this)[1] * (*this)[2] * (*this)[3];
     }
     real_t sum() const
