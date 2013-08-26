@@ -1541,43 +1541,9 @@ int main(int argc, char** argv)
 {
   using namespace vecmathlib;
 
-  cout << "Testing math functions:\n" << flush;
-  
-  cout << "Vecmathlib configuration: [conf"
-#ifdef VML_DEBUG
-    "-DEBUG"
-#endif
-#ifdef __ALTIVEC__
-    "-Altivec"
-#endif
-#ifdef __VSX__
-    "-VSX"
-#endif
-#ifdef __ARM_PCS_VFP
-    "-NEON"
-#endif
-#if defined __bgq__ && defined __VECTOR4DOUBLE__
-    "-QPX"
-#endif
-#ifdef __SSE2__
-    "-SSE2"
-#endif
-#ifdef __SSE3__
-    "-SSE3"
-#endif
-#ifdef __SSE4_1__
-    "-SSE4.1"
-#endif
-#ifdef __SSE4a__
-    "-SSE4a"
-#endif
-#ifdef __AVX__
-    "-AVX"
-#endif
-#ifdef __MIC__
-    "-MIC"
-#endif
-    "]\n";
+  cout << "Testing math functions:\n"
+       << "[" VECMATHLIB_CONFIGURATION "]\n"
+       << flush;
   
   vecmathlib_test<realpseudovec<float,1> >::test();
   // vecmathlib_test<realbuiltinvec<float,1>>::test();

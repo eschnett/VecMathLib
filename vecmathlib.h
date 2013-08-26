@@ -37,6 +37,32 @@
 #  undef VML_HAVE_NAN
 #endif
 
+#ifdef VML_DEBUG
+#  define VML_CONFIG_DEBUG " debug"
+#else
+#  define VML_CONFIG_DEBUG " no-debug"
+#endif
+#ifdef VML_DENORMALS
+#  define VML_CONFIG_DENORMALS " denormals"
+#else
+#  define VML_CONFIG_DENORMALS " no-denormals"
+#endif
+#ifdef VML_FP_CONTRACT
+#  define VML_CONFIG_FP_CONTRACT " fp-contract"
+#else
+#  define VML_CONFIG_FP_CONTRACT " no-fp-contract"
+#endif
+#ifdef VML_INF
+#  define VML_CONFIG_INF " inf"
+#else
+#  define VML_CONFIG_INF " no-inf"
+#endif
+#ifdef VML_NAN
+#  define VML_CONFIG_NAN " nan"
+#else
+#  define VML_CONFIG_NAN " no-nan"
+#endif
+
 // TODO: introduce mad, as fast version of fma (check FP_FAST_FMA)
 // TODO: introduce ieee_isnan and friends
 // TODO: switch between isnan and ieee_isnan at an outside level
@@ -79,7 +105,9 @@ namespace std { class type_info; }
 #if defined __ARM_NEON__        // ARM NEON
 #  include "vec_neon_float2.h"
 #  include "vec_neon_float4.h"
-// #elif defined __ARM_PCS_VFP     // ARM VFP
+#  define VML_CONFIG_NEON " NEON"
+#else
+#  define VML_CONFIG_NEON
 #endif
 
 #if defined __SSE2__            // Intel SSE 2
@@ -87,6 +115,24 @@ namespace std { class type_info; }
 #  include "vec_sse_float4.h"
 #  include "vec_sse_double1.h"
 #  include "vec_sse_double2.h"
+#  if defined __SSE3__
+#    define VML_CONFIG_SSE3 " SSE3"
+#  else
+#    define VML_CONFIG_SSE3
+#  endif
+#  if defined __SSE4_1__
+#    define VML_CONFIG_SSE4_1 " SSE4.1"
+#  else
+#    define VML_CONFIG_SSE4_1
+#  endif
+#  if defined __SSE4a__
+#    define VML_CONFIG_SSE4a " SSE4a"
+#  else
+#    define VML_CONFIG_SSE4a
+#  endif
+#  define VML_CONFIG_SSE2 " SSE2" VML_CONFIG_SSE3 VML_CONFIG_SSE4_1 VML_CONFIG_SSE4a
+#else
+#  define VML_CONFIG_SSE2
 #endif
 
 #if defined __AVX__             // Intel AVX
@@ -94,18 +140,30 @@ namespace std { class type_info; }
 #  include "vec_avx_fp16_16.h"
 #  include "vec_avx_float8.h"
 #  include "vec_avx_double4.h"
+#  define VML_CONFIG_AVX " AVX"
+#else
+#  define VML_CONFIG_AVX
 #endif
 
 #if defined __MIC__             // Intel MIC
 // TODO: single precision?
 #  include "vec_mic_double8.h"
+#  define VML_CONFIG_MIC " MIC"
+#else
+#  define VML_CONFIG_MIC
 #endif
 
 #if defined __ALTIVEC__         // IBM Altivec
 #  include "vec_altivec_float4.h"
+#  define VML_CONFIG_ALTIVEC " Altivec"
+#else
+#  define VML_CONFIG_ALTIVEC
 #endif
 #if defined __VSX__             // IBM VSX
 #  include "vec_vsx_double2.h"
+#  define VML_CONFIG_VSX " VSX"
+#else
+#  define VML_CONFIG_VSX
 #endif
 
 // TODO: IBM Blue Gene/P DoubleHummer
@@ -113,7 +171,19 @@ namespace std { class type_info; }
 #if defined __bgq__ && defined __VECTOR4DOUBLE__ // IBM Blue Gene/Q QPX
 // TODO: vec_qpx_float4
 #  include "vec_qpx_double4.h"
+#  define VML_CONFIG_QPX " QPX"
+#else
+#  define VML_CONFIG_QPX
 #endif
+
+#define VECMATHLIB_CONFIGURATION                                        \
+  "VecmathlibConfiguration"                                             \
+  VML_CONFIG_DEBUG                                                      \
+  VML_CONFIG_DENORMALS VML_CONFIG_FP_CONTRACT VML_CONFIG_INF VML_CONFIG_NAN \
+  VML_CONFIG_NEON                                                       \
+  VML_CONFIG_SSE2 VML_CONFIG_AVX VML_CONFIG_MIC                         \
+  VML_CONFIG_ALTIVEC VML_CONFIG_VSX                                     \
+  VML_CONFIG_QPX
 
 
 
