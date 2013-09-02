@@ -67,7 +67,7 @@ struct vecmathlib_test {
     realvec_t x;
     for (int i=0; i<realvec_t::size; ++i) {
       const real_t r =
-        (xmax - xmin) *FP::convert_float(rand()) / FP::convert_float(RAND_MAX);
+        (xmax - xmin) * FP::convert_float(rand()) / FP::convert_float(RAND_MAX);
       x.set_elt(i, xmin + r);
     }
     return x;
@@ -78,8 +78,7 @@ struct vecmathlib_test {
     intvec_t n;
     for (int i=0; i<intvec_t::size; ++i) {
       const real_t r =
-        R(nmax - nmin + 1) *
-        R(rand()) / (R(RAND_MAX) + R(1.0));
+        R(nmax - nmin + 1) * R(rand()) / (R(RAND_MAX) + R(1.0));
       n.set_elt(i, nmin + FP::convert_int(floor(r)));
     }
     return n;
