@@ -11,14 +11,19 @@
 
 // Altivec intrinsics
 #include <altivec.h>
-#ifdef __clang__
+
+#if defined __clang__
 #  define __vector vector
 #  define __pixel pixel
 #  define __bool bool
-#else
+#elif defined __gcc__
 #  undef vector
 #  undef pixel
 #  undef bool
+#elif defined __xlC__
+#  define __bool bool
+#else
+#  error "Unknown compiler"
 #endif
 
 
@@ -73,7 +78,7 @@ namespace vecmathlib {
     // boolvec(boolvec const& x): v(x.v) {}
     // boolvec& operator=(boolvec const& x) { return v=x.v, *this; }
     boolvec(bvector_t x): v(x) {}
-    boolvec(bool a): v(vec_splats(from_bool(a))) {}
+    boolvec(bool a): v((bvector_t)vec_splats(from_bool(a))) {}
     boolvec(bool const* as)
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
@@ -123,7 +128,7 @@ namespace vecmathlib {
   {
     static int const size = 4;
     typedef int_t scalar_t;
-    typedef __vector int ivector_t;
+    typedef __vector signed int ivector_t;
     static int const alignment = sizeof(ivector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(ivector_t),
@@ -158,7 +163,7 @@ namespace vecmathlib {
     {
       for (int d=0; d<size; ++d) set_elt(d, as[d]);
     }
-    static intvec iota() { return (__vector int){0, 1, 2, 3}; }
+    static intvec iota() { return (__vector signed int){0, 1, 2, 3}; }
     
     operator ivector_t() const { return v; }
     int_t operator[](int n) const
@@ -181,7 +186,7 @@ namespace vecmathlib {
     
     
     intvec operator+() const { return *this; }
-    intvec operator-() const { return IV(0) - *this; }
+    intvec operator-() const { return vec_neg(v); }
     
     intvec operator+(intvec x) const { return vec_add(v, x.v); }
     intvec operator-(intvec x) const { return vec_sub(v, x.v); }
@@ -402,25 +407,25 @@ namespace vecmathlib {
     
     
     
-    intvec_t as_int() const { return (__vector int) v; }
+    intvec_t as_int() const { return (__vector signed int) v; }
     intvec_t convert_int() const { return vec_cts(v, 0); }
     
     
     
     realvec operator+() const { return *this; }
-    realvec operator-() const { return RV(0.0) - *this; }
+    realvec operator-() const { return vec_neg(v); }
     
     realvec operator+(realvec x) const { return vec_add(v, x.v); }
     realvec operator-(realvec x) const { return vec_sub(v, x.v); }
     realvec operator*(realvec x) const {
-#if defined __VSX__
+#if defined __xlC__
       return vec_mul(v, x.v);
 #else
       return vec_madd(v, x.v, RV(0.0).v);
 #endif
     }
     realvec operator/(realvec x) const {
-#if defined __VSX__
+#if defined __xlC__
       return vec_div(v, x.v);
 #else
       return *this * x.rcp();
@@ -511,26 +516,22 @@ namespace vecmathlib {
       return r;
     }
     realvec remainder(realvec y) const { return MF::vml_remainder(*this, y); }
-    realvec rint() const { return vec_round(v); }
+    realvec rint() const { return vec_round(v); /* sic! */ }
     realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const
     {
-#if defined __VSX__
-      return vec_rsqrt(v);
-#else
       realvec x = *this;
       realvec r = vec_rsqrte(x.v); // this is only an approximation
       // TODO: use fma
       // one Newton iteration (see vml_rsqrt)
       r += RV(0.5)*r * (RV(1.0) - x * r*r);
       return r;
-#endif
     }
     boolvec_t signbit() const { return MF::vml_signbit(*this); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
     realvec sqrt() const {
-#if defined __VSX__
+#if defined __xlC__
       return vec_sqrt(v);
 #else
       return *this * rsqrt();
@@ -547,12 +548,12 @@ namespace vecmathlib {
   
   inline intvec<float,4> boolvec<float,4>::as_int() const
   {
-    return (__vector int) v;
+    return (__vector signed int) v;
   }
   
   inline intvec<float,4> boolvec<float,4>::convert_int() const
   {
-    return -(__vector int)v;
+    return -(__vector signed int)v;
   }
   
   inline boolvec<float,4> boolvec<float,4>::operator==(boolvec_t x) const
