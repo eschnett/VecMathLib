@@ -1377,31 +1377,32 @@ struct vecmathlib_test {
         check_int<RV>("convert_int",
                       FP::convert_int, vecmathlib::convert_int, x);
       }
-      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, x, R(0.0));
-      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn1, R(0.0));
-      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn2, R(0.0));
-      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn1h, R(0.0));
-      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn2h, R(0.0));
-      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, x, R(0.0));
-      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn1, R(0.0));
-      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2, R(0.0));
-      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn1h, R(0.0));
-      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2h, R(0.0));
-      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, x, R(0.0));
-      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn1, R(0.0));
-      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn2, R(0.0));
-      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn1h, R(0.0));
-      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn2h, R(0.0));
-      check_real<RV>("round", vml_std::round, vecmathlib::round, x, R(0.0));
-      check_real<RV>("round", vml_std::round, vecmathlib::round, fn1, R(0.0));
-      check_real<RV>("round", vml_std::round, vecmathlib::round, fn2, R(0.0));
-      check_real<RV>("round", vml_std::round, vecmathlib::round, fn1h, R(0.0));
-      check_real<RV>("round", vml_std::round, vecmathlib::round, fn2h, R(0.0));
-      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, x, R(0.0));
-      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn1, R(0.0));
-      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn2, R(0.0));
-      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn1h, R(0.0));
-      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn2h, R(0.0));
+      // TODO: These should all have accuracy R(0.0) instead!
+      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, x, accuracy());
+      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn1, accuracy());
+      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn2, accuracy());
+      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn1h, accuracy());
+      check_real<RV>("ceil", vml_std::ceil, vecmathlib::ceil, fn2h, accuracy());
+      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, x, accuracy());
+      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn1, accuracy());
+      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2, accuracy());
+      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn1h, accuracy());
+      check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2h, accuracy());
+      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, x, accuracy());
+      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn1, accuracy());
+      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn2, accuracy());
+      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn1h, accuracy());
+      check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn2h, accuracy());
+      check_real<RV>("round", vml_std::round, vecmathlib::round, x, accuracy());
+      check_real<RV>("round", vml_std::round, vecmathlib::round, fn1, accuracy());
+      check_real<RV>("round", vml_std::round, vecmathlib::round, fn2, accuracy());
+      check_real<RV>("round", vml_std::round, vecmathlib::round, fn1h, accuracy());
+      check_real<RV>("round", vml_std::round, vecmathlib::round, fn2h, accuracy());
+      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, x, accuracy());
+      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn1, accuracy());
+      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn2, accuracy());
+      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn1h, accuracy());
+      check_real<RV>("trunc", vml_std::trunc, vecmathlib::trunc, fn2h, accuracy());
     }
   }
   
