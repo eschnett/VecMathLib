@@ -73,7 +73,7 @@ namespace vecmathlib {
   realvec_t mathfuncs<realvec_t>::vml_rsqrt(realvec_t x)
   {
     // Initial guess
-    VML_ASSERT(all(x > RV(0.0)));
+    // VML_ASSERT(all(x > RV(0.0)));
     intvec_t ilogb_x = ilogb(x);
     realvec_t s =
       ifthen(convert_bool(ilogb_x & IV(I(1))), RV(R(0.583)), RV(R(0.824)));
