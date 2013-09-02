@@ -159,7 +159,7 @@ namespace std { class type_info; }
 #else
 #  define VML_CONFIG_ALTIVEC
 #endif
-#if defined __VSX__             // IBM VSX
+#if defined __ALTIVEC__ && defined _ARCH_PWR7 // IBM VSX
 #  include "vec_vsx_double2.h"
 #  define VML_CONFIG_VSX " VSX"
 #else
