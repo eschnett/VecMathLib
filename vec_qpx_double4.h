@@ -65,10 +65,6 @@ namespace vecmathlib {
     bvector_t v;
     
     boolvec() {}
-    // TODO: pass arguments via const references; this is more
-    // efficient on PowerPC, which won't pass them in registers
-    // TODO: do this for all PowerPC vector architectures (Altivec,
-    // VSX)
     boolvec(bvector_t x): v(x) {}
     boolvec(bool a): v(vec_splats(from_bool(a))) {}
     boolvec(const bool* as)
