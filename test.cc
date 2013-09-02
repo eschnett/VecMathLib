@@ -1274,7 +1274,7 @@ struct vecmathlib_test {
       check_real<RV,RV>("fdim", std::fdim, vecmathlib::fdim, x, y, accuracy());
       check_real<RV,RV,RV>("fma",
                            std::fma, vecmathlib::fma,
-                           x, y, z, R(2.0)*accuracy());
+                           x, y, z, R(10.0)*accuracy());
       check_real<RV,RV>("fmax", std::fmax, vecmathlib::fmax, x, y, 0.0);
       check_real<RV,RV>("fmin", std::fmin, vecmathlib::fmin, x, y, 0.0);
       check_real<RV>("frexp0", local_frexp0, local_vfrexp0, x, 0.0);
