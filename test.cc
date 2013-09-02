@@ -1566,7 +1566,7 @@ struct vecmathlib_test {
   {
     cout << "   testing cbrt hypot rsqrt sqrt...\n" << flush;
     for (int i=0; i<imax; ++i) {
-      const realvec_t x = random(R(0.0), R(1.0e+3));
+      const realvec_t x = random(R(1.0e-3), R(1.0e+3));
       const realvec_t y = random(-R(1.0e+3), R(1.0e+3));
       const realvec_t z = random(-R(1.0e+3), R(1.0e+3));
       check_real<RV>("cbrt", vml_std::cbrt, vecmathlib::cbrt, x, accuracy());
