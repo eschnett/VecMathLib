@@ -36,6 +36,9 @@ rm -rf CMakeCache.txt CMakeFiles
 
 
 
+# Compute (x86_64):
+cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -Ofast' -G Ninja
+
 # Redshift (OS X):
 cmake -DCMAKE_CXX_COMPILER=g++-mp-4.7 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
 cmake -DCMAKE_CXX_COMPILER=g++-mp-4.8 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
