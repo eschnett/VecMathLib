@@ -282,9 +282,12 @@ namespace vecmathlib {
     intvec& operator|=(intvec const& x) { return *this=*this|x; }
     intvec& operator^=(intvec const& x) { return *this=*this^x; }
     
+    intvec_t bitifthen(intvec_t x, intvec_t y) const;
+    
     
     
     intvec lsr(int_t n) const { return lsr(IV(n)); }
+    intvec_t rotate(int_t n) const;
     intvec operator>>(int_t n) const { return *this >> IV(n); }
     intvec operator<<(int_t n) const { return *this << IV(n); }
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
@@ -299,6 +302,7 @@ namespace vecmathlib {
       }
       return r;
     }
+    intvec_t rotate(intvec_t n) const;
     intvec operator>>(intvec n) const
     {
       // return vec_sra(v, (__vector unsigned long long)n.v);
@@ -320,12 +324,10 @@ namespace vecmathlib {
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
     
+    intvec_t clz() const;
+    intvec_t popcount() const;
     
     
-    boolvec_t isignbit() const
-    {
-      return (*this >> (bits-1)).as_bool();
-    }
     
     boolvec_t operator==(intvec const& x) const
     {
@@ -364,6 +366,11 @@ namespace vecmathlib {
     {
       return ! (*this < x);
     }
+    
+    intvec_t abs() const { return vec_abs(v); }
+    boolvec_t isignbit() const { return (*this >> (bits-1)).as_bool(); }
+    intvec_t max(intvec_t x) const { return vec_max(v, x.v); }
+    intvec_t min(intvec_t x) const { return vec_min(v, x.v); }
   };
   
   
@@ -675,10 +682,36 @@ namespace vecmathlib {
     return (__vector double)v;
   }
   
+  inline intvec<float,4> intvec<float,4>::bitifthen(intvec_t x,
+                                                    intvec_t y) const
+  {
+    return MF::vml_bitifthen(*this, x, y);
+  }
+  
+  inline intvec<double,2> intvec<double,2>::clz() const
+  {
+    return MF::vml_clz(*this);
+  }
+  
   inline realvec<double,2> intvec<double,2>::convert_float() const
   {
     // return vec_ctd(v, 0);
     return MF::vml_convert_float(*this);
+  }
+  
+  inline intvec<double,2> intvec<double,2>::popcount() const
+  {
+    return MF::vml_popcount(*this);
+  }
+  
+  inline intvec<double,2> intvec<double,2>::rotate(int_t n) const
+  {
+    return MF::vml_rotate(*this, n);
+  }
+  
+  inline intvec<double,2> intvec<double,2>::rotate(intvec_t n) const
+  {
+    return MF::vml_rotate(*this, n);
   }
   
 } // namespace vecmathlib
