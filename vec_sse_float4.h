@@ -14,6 +14,9 @@
 #ifdef __SSE3__                 // Intel's SSE 3
 #  include <pmmintrin.h>
 #endif
+#ifdef __SSSE3__                // Intel's SSSE 3
+#  include <tmmintrin.h>
+#endif
 #if defined __SSE4_1__          // Intel's SSE 4.1
 #  include <smmintrin.h>
 #endif
@@ -313,10 +316,10 @@ namespace vecmathlib {
       return ! (*this < x);
     }
     
-    intvec_t abs() const { return _mm_abs_epi32(v); }
+    intvec_t abs() const;
     boolvec_t isignbit() const { return as_bool(); }
-    intvec_t max(intvec_t x) const { return _mm_max_epi32(v, x.v); }
-    intvec_t min(intvec_t x) const { return _mm_min_epi32(v, x.v); }
+    intvec_t max(intvec_t x) const;
+    intvec_t min(intvec_t x) const;
   };
   
   
@@ -695,6 +698,15 @@ namespace vecmathlib {
   
   // intvec definitions
   
+  inline intvec<float,4> intvec<float,4>::abs() const
+  {
+#ifdef __SSSE3__
+    return _mm_abs_epi32(v);
+#else
+    return MF::vml_abs(*this);
+#endif
+  }
+  
   inline realvec<float,4> intvec<float,4>::as_float() const
   {
     return _mm_castsi128_ps(v);
@@ -714,6 +726,24 @@ namespace vecmathlib {
   inline realvec<float,4> intvec<float,4>::convert_float() const
   {
     return _mm_cvtepi32_ps(v);
+  }
+  
+  inline intvec<float,4> intvec<float,4>::max(intvec_t x) const
+  {
+#ifdef __SSE4_1__
+      return _mm_max_epi32(v, x.v);
+#else
+      return MF::vml_max(*this, v);
+#endif
+  }
+  
+  inline intvec<float,4> intvec<float,4>::min(intvec_t x) const
+  {
+#ifdef __SSE4_1__
+      return _mm_min_epi32(v, x.v);
+#else
+      return MF::vml_min(*this, v);
+#endif
   }
   
   inline intvec<float,4> intvec<float,4>::popcount() const

@@ -120,6 +120,11 @@ namespace std { class type_info; }
 #  else
 #    define VML_CONFIG_SSE3
 #  endif
+#  if defined __SSSE3__
+#    define VML_CONFIG_SSSE3 " SSSE3"
+#  else
+#    define VML_CONFIG_SSSE3
+#  endif
 #  if defined __SSE4_1__
 #    define VML_CONFIG_SSE4_1 " SSE4.1"
 #  else
@@ -130,7 +135,7 @@ namespace std { class type_info; }
 #  else
 #    define VML_CONFIG_SSE4a
 #  endif
-#  define VML_CONFIG_SSE2 " SSE2" VML_CONFIG_SSE3 VML_CONFIG_SSE4_1 VML_CONFIG_SSE4a
+#  define VML_CONFIG_SSE2 " SSE2" VML_CONFIG_SSE3 VML_CONFIG_SSSE3 VML_CONFIG_SSE4_1 VML_CONFIG_SSE4a
 #else
 #  define VML_CONFIG_SSE2
 #endif
