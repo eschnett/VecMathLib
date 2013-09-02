@@ -617,13 +617,13 @@ namespace vecmathlib {
     real_t maxval() const
     {
       real_t res = v[0];
-      for (int d=1; d<size; ++d) res = std::fmax(res, v[d]);
+      for (int d=1; d<size; ++d) res = vml_std::fmax(res, v[d]);
       return res;
     }
     real_t minval() const
     {
       real_t res = v[0];
-      for (int d=1; d<size; ++d) res = std::fmin(res, v[d]);
+      for (int d=1; d<size; ++d) res = vml_std::fmin(res, v[d]);
       return res;
     }
     real_t prod() const

@@ -434,13 +434,13 @@ namespace vecmathlib {
     
     real_t maxval() const
     {
-      return std::fmax(std::fmax((*this)[0], (*this)[1]),
-                       std::fmax((*this)[2], (*this)[3]));
+      return vml_std::fmax(vml_std::fmax((*this)[0], (*this)[1]),
+                           vml_std::fmax((*this)[2], (*this)[3]));
     }
     real_t minval() const
     {
-      return std::fmin(std::fmin((*this)[0], (*this)[1]),
-                       std::fmin((*this)[2], (*this)[3]));
+      return vml_std::fmin(vml_std::fmin((*this)[0], (*this)[1]),
+                           vml_std::fmin((*this)[2], (*this)[3]));
     }
     real_t prod() const
     {

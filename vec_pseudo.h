@@ -717,13 +717,13 @@ namespace vecmathlib {
     real_t maxval() const
     {
       real_t res = v[0];
-      for (int d=1; d<size; ++d) res = std::fmax(res, v[d]);
+      for (int d=1; d<size; ++d) res = vml_std::fmax(res, v[d]);
       return res;
     }
     real_t minval() const
     {
       real_t res = v[0];
-      for (int d=1; d<size; ++d) res = std::fmin(res, v[d]);
+      for (int d=1; d<size; ++d) res = vml_std::fmin(res, v[d]);
       return res;
     }
     real_t prod() const
@@ -780,76 +780,76 @@ namespace vecmathlib {
     
     
     
-    realpseudovec acos() const { return map(std::acos); }
-    realpseudovec acosh() const { return map(std::acosh); }
-    realpseudovec asin() const { return map(std::asin); }
-    realpseudovec asinh() const { return map(std::asinh); }
-    realpseudovec atan() const { return map(std::atan); }
+    realpseudovec acos() const { return map(vml_std::acos); }
+    realpseudovec acosh() const { return map(vml_std::acosh); }
+    realpseudovec asin() const { return map(vml_std::asin); }
+    realpseudovec asinh() const { return map(vml_std::asinh); }
+    realpseudovec atan() const { return map(vml_std::atan); }
     realpseudovec atan2(realpseudovec y) const
     {
       return MF::vml_atan2(*this, y);
     }
-    realpseudovec atanh() const { return map(std::atanh); }
-    realpseudovec cbrt() const { return map(std::cbrt); }
-    realpseudovec ceil() const { return map(std::ceil); }
+    realpseudovec atanh() const { return map(vml_std::atanh); }
+    realpseudovec cbrt() const { return map(vml_std::cbrt); }
+    realpseudovec ceil() const { return map(vml_std::ceil); }
     realpseudovec copysign(realpseudovec y) const
     {
-      return map(std::copysign, y);
+      return map(vml_std::copysign, y);
     }
-    realpseudovec cos() const { return map(std::cos); }
-    realpseudovec cosh() const { return map(std::cosh); }
-    realpseudovec exp() const { return map(std::exp); }
+    realpseudovec cos() const { return map(vml_std::cos); }
+    realpseudovec cosh() const { return map(vml_std::cosh); }
+    realpseudovec exp() const { return map(vml_std::exp); }
     realpseudovec exp10() const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::exp(R(M_LN10) * v[d]);
+      for (int d=0; d<size; ++d) res.v[d] = vml_std::exp(R(M_LN10) * v[d]);
       return res;
     }
-    realpseudovec exp2() const { return map(std::exp2); }
-    realpseudovec expm1() const { return map(std::expm1); }
-    realpseudovec fabs() const { return map(std::fabs); }
-    realpseudovec fdim(realpseudovec y) const { return map(std::fdim, y); }
-    realpseudovec floor() const { return map(std::floor); }
+    realpseudovec exp2() const { return map(vml_std::exp2); }
+    realpseudovec expm1() const { return map(vml_std::expm1); }
+    realpseudovec fabs() const { return map(vml_std::fabs); }
+    realpseudovec fdim(realpseudovec y) const { return map(vml_std::fdim, y); }
+    realpseudovec floor() const { return map(vml_std::floor); }
     realpseudovec fma(realpseudovec y, realpseudovec z) const
     {
-      return map(std::fma, y, z);
+      return map(vml_std::fma, y, z);
     }
-    realpseudovec fmax(realpseudovec y) const { return map(std::fmax, y); }
-    realpseudovec fmin(realpseudovec y) const { return map(std::fmin, y); }
-    realpseudovec fmod(realpseudovec y) const { return map(std::fmod, y); }
+    realpseudovec fmax(realpseudovec y) const { return map(vml_std::fmax, y); }
+    realpseudovec fmin(realpseudovec y) const { return map(vml_std::fmin, y); }
+    realpseudovec fmod(realpseudovec y) const { return map(vml_std::fmod, y); }
     realpseudovec frexp(intvec_t* ires) const
     {
       realvec_t res;
       for (int d=0; d<size; ++d) {
         int iri;
-        real_t r = std::frexp(v[d], &iri);
+        real_t r = vml_std::frexp(v[d], &iri);
         int_t ir = iri;
 #if defined VML_HAVE_INF
-        if (std::isinf(v[d])) ir = std::numeric_limits<int_t>::max();
+        if (vml_std::isinf(v[d])) ir = std::numeric_limits<int_t>::max();
 #endif
 #if defined VML_HAVE_NAN
-        if (std::isnan(v[d])) ir = std::numeric_limits<int_t>::min();
+        if (vml_std::isnan(v[d])) ir = std::numeric_limits<int_t>::min();
 #endif
         res.v[d] = r;
         ires->v[d] = ir;
       }
       return res;
     }
-    realpseudovec hypot(realpseudovec y) const { return map(std::hypot, y); }
+    realpseudovec hypot(realpseudovec y) const { return map(vml_std::hypot, y); }
     intvec_t ilogb() const
     {
       intvec_t res;
       for (int d=0; d<size; ++d) {
-        int_t r = std::ilogb(v[d]);
+        int_t r = vml_std::ilogb(v[d]);
         typedef std::numeric_limits<int_t> NL;
         if (FP_ILOGB0 != NL::min() and v[d] == R(0.0)) {
           r = NL::min();
 #if defined VML_HAVE_INF
-        } else if (INT_MAX != NL::max() and std::isinf(v[d])) {
+        } else if (INT_MAX != NL::max() and vml_std::isinf(v[d])) {
           r = NL::max();
 #endif
 #if defined VML_HAVE_NAN
-        } else if (FP_ILOGBNAN != NL::min() and std::isnan(v[d])) {
+        } else if (FP_ILOGBNAN != NL::min() and vml_std::isnan(v[d])) {
           r = NL::min();
 #endif
         }
@@ -857,31 +857,31 @@ namespace vecmathlib {
       }
       return res;
     }
-    boolvec_t isfinite() const { return mapb(std::isfinite); }
-    boolvec_t isinf() const { return mapb(std::isinf); }
-    boolvec_t isnan() const { return mapb(std::isnan); }
-    boolvec_t isnormal() const { return mapb(std::isnormal); }
+    boolvec_t isfinite() const { return mapb(vml_std::isfinite); }
+    boolvec_t isinf() const { return mapb(vml_std::isinf); }
+    boolvec_t isnan() const { return mapb(vml_std::isnan); }
+    boolvec_t isnormal() const { return mapb(vml_std::isnormal); }
     realpseudovec ldexp(int_t n) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::ldexp(v[d], n);
+      for (int d=0; d<size; ++d) res.v[d] = vml_std::ldexp(v[d], n);
       return res;
     }
     realpseudovec ldexp(intvec_t n) const
     {
       realvec_t res;
-      for (int d=0; d<size; ++d) res.v[d] = std::ldexp(v[d], n.v[d]);
+      for (int d=0; d<size; ++d) res.v[d] = vml_std::ldexp(v[d], n.v[d]);
       return res;
     }
-    realpseudovec log() const { return map(std::log); }
-    realpseudovec log10() const { return map(std::log10); }
-    realpseudovec log1p() const { return map(std::log1p); }
-    realpseudovec log2() const { return map(std::log2); }
+    realpseudovec log() const { return map(vml_std::log); }
+    realpseudovec log10() const { return map(vml_std::log10); }
+    realpseudovec log1p() const { return map(vml_std::log1p); }
+    realpseudovec log2() const { return map(vml_std::log2); }
     realpseudovec nextafter(realpseudovec y) const
     {
-      return map(std::nextafter, y);
+      return map(vml_std::nextafter, y);
     }
-    realpseudovec pow(realpseudovec y) const { return map(std::pow, y); }
+    realpseudovec pow(realpseudovec y) const { return map(vml_std::pow, y); }
     realpseudovec rcp() const
     {
       realvec_t res;
@@ -890,18 +890,18 @@ namespace vecmathlib {
     }
     realpseudovec remainder(realpseudovec y) const
     {
-      return map(std::remainder, y);
+      return map(vml_std::remainder, y);
     }
-    realpseudovec rint() const { return map(std::rint); }
-    realpseudovec round() const { return map(std::round); }
+    realpseudovec rint() const { return map(vml_std::rint); }
+    realpseudovec round() const { return map(vml_std::round); }
     realpseudovec rsqrt() const { return sqrt().rcp(); }
-    boolvec_t signbit() const { return mapb(std::signbit); }
-    realpseudovec sin() const { return map(std::sin); }
-    realpseudovec sinh() const { return map(std::sinh); }
-    realpseudovec sqrt() const { return map(std::sqrt); }
-    realpseudovec tan() const { return map(std::tan); }
-    realpseudovec tanh() const { return map(std::tanh); }
-    realpseudovec trunc() const { return map(std::trunc); }
+    boolvec_t signbit() const { return mapb(vml_std::signbit); }
+    realpseudovec sin() const { return map(vml_std::sin); }
+    realpseudovec sinh() const { return map(vml_std::sinh); }
+    realpseudovec sqrt() const { return map(vml_std::sqrt); }
+    realpseudovec tan() const { return map(vml_std::tan); }
+    realpseudovec tanh() const { return map(vml_std::tanh); }
+    realpseudovec trunc() const { return map(vml_std::trunc); }
   };
   
   

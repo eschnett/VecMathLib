@@ -528,21 +528,21 @@ namespace vecmathlib {
     
     real_t maxval() const
     {
-      // return std::fmax(std::fmax((*this)[0], (*this)[1]),
-      //                  std::fmax((*this)[2], (*this)[3]));
+      // return vml_std::fmax(vml_std::fmax((*this)[0], (*this)[1]),
+      //                      vml_std::fmax((*this)[2], (*this)[3]));
       realvec_t x0123 = *this;
       realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
       realvec_t y0022 = x0123.fmax(x1032);
-      return std::fmax(y0022[0], y0022[2]);
+      return vml_std::fmax(y0022[0], y0022[2]);
     }
     real_t minval() const
     {
-      // return std::fmin(std::fmin((*this)[0], (*this)[1]),
-      //                  std::fmin((*this)[2], (*this)[3]));
+      // return vml_std::fmin(vml_std::fmin((*this)[0], (*this)[1]),
+      //                      vml_std::fmin((*this)[2], (*this)[3]));
       realvec_t x0123 = *this;
       realvec_t x1032 = vec_perm(x0123, x0123, vec_gpci(01032));
       realvec_t y0022 = x0123.fmin(x1032);
-      return std::fmin(y0022[0], y0022[2]);
+      return vml_std::fmin(y0022[0], y0022[2]);
     }
     real_t prod() const
     {
@@ -637,10 +637,10 @@ namespace vecmathlib {
     realvec ldexp(intvec_t n) const
     {
       real_t ldexp_[] = {
-        std::ldexp((*this)[0], n[0]),
-        std::ldexp((*this)[1], n[1]),
-        std::ldexp((*this)[2], n[2]),
-        std::ldexp((*this)[3], n[3])
+        vml_std::ldexp((*this)[0], n[0]),
+        vml_std::ldexp((*this)[1], n[1]),
+        vml_std::ldexp((*this)[2], n[2]),
+        vml_std::ldexp((*this)[3], n[3])
       };
       return realvec_t(ldexp_);
     }

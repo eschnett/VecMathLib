@@ -403,24 +403,24 @@ namespace vecmathlib {
 #ifdef __SSE4_1__
       return to_double(_mm_ceil_sd(from_double(v), from_double(v)));
 #else
-      return std::ceil(v);
+      return vml_std::ceil(v);
 #endif
     }
-    realvec copysign(realvec y) const { return std::copysign(v, y.v); }
+    realvec copysign(realvec y) const { return vml_std::copysign(v, y.v); }
     realvec cos() const { return MF::vml_cos(*this); }
     realvec cosh() const { return MF::vml_cosh(*this); }
     realvec exp() const { return MF::vml_exp(*this); }
     realvec exp10() const { return MF::vml_exp10(*this); }
     realvec exp2() const { return MF::vml_exp2(*this); }
     realvec expm1() const { return MF::vml_expm1(*this); }
-    realvec fabs() const { return std::fabs(v); }
+    realvec fabs() const { return vml_std::fabs(v); }
     realvec fdim(realvec y) const { return MF::vml_fdim(*this, y); }
     realvec floor() const
     {
 #ifdef __SSE4_1__
       return to_double(_mm_floor_sd(from_double(v), from_double(v)));
 #else
-      return std::floor(v);
+      return vml_std::floor(v);
 #endif
     }
     realvec fma(realvec y, realvec z) const { return MF::vml_fma(*this, y, z); }
@@ -432,11 +432,11 @@ namespace vecmathlib {
     {
       return to_double(_mm_min_sd(from_double(v), from_double(y.v)));
     }
-    realvec fmod(realvec y) const { return std::fmod(v, y.v); }
+    realvec fmod(realvec y) const { return vml_std::fmod(v, y.v); }
     realvec frexp(intvec_t* irp) const
     {
       int iri;
-      realvec r = std::frexp(v, &iri);
+      realvec r = vml_std::frexp(v, &iri);
       int_t ir = iri;
       if (isinf()) ir = std::numeric_limits<int_t>::max();
       if (isnan()) ir = std::numeric_limits<int_t>::min();
@@ -446,23 +446,23 @@ namespace vecmathlib {
     realvec hypot(realvec y) const { return MF::vml_hypot(*this, y); }
     intvec_t ilogb() const
     {
-      int_t r = std::ilogb(v);
+      int_t r = vml_std::ilogb(v);
       typedef std::numeric_limits<int_t> NL;
       if (FP_ILOGB0 != NL::min() and v == R(0.0)) {
         r = NL::min();
 #if defined VML_HAVE_INF
-      } else if (INT_MAX != NL::max() and std::isinf(v)) {
+      } else if (INT_MAX != NL::max() and vml_std::isinf(v)) {
         r = NL::max();
 #endif
 #if defined VML_HAVE_NAN
-      } else if (FP_ILOGBNAN != NL::min() and std::isnan(v)) {
+      } else if (FP_ILOGBNAN != NL::min() and vml_std::isnan(v)) {
         r = NL::min();
 #endif
       }
       return r;
     }
-    boolvec_t isfinite() const { return std::isfinite(v); }
-    boolvec_t isinf() const { return std::isinf(v); }
+    boolvec_t isfinite() const { return vml_std::isfinite(v); }
+    boolvec_t isinf() const { return vml_std::isinf(v); }
     boolvec_t isnan() const
     {
       // This is wrong:
@@ -472,11 +472,11 @@ namespace vecmathlib {
       // __asm__("ucomisd %[v],%[v]; setp %[r]": [r]"=q"(r): [v]"x"(v));
       // return boolvec_t::scalar_t(r);
       // This works as well:
-      return std::isnan(v);
+      return vml_std::isnan(v);
     }
-    boolvec_t isnormal() const { return std::isnormal(v); }
-    realvec ldexp(int_t n) const { return std::ldexp(v, n); }
-    realvec ldexp(intvec_t n) const { return std::ldexp(v, n); }
+    boolvec_t isnormal() const { return vml_std::isnormal(v); }
+    realvec ldexp(int_t n) const { return vml_std::ldexp(v, n); }
+    realvec ldexp(intvec_t n) const { return vml_std::ldexp(v, n); }
     realvec log() const { return MF::vml_log(*this); }
     realvec log10() const { return MF::vml_log10(*this); }
     realvec log1p() const { return MF::vml_log1p(*this); }
@@ -484,7 +484,7 @@ namespace vecmathlib {
     realvec nextafter(realvec y) const { return MF::vml_nextafter(*this, y); }
     realvec pow(realvec y) const { return MF::vml_pow(*this, y); }
     realvec rcp() const { return R(1.0)/v; }
-    realvec remainder(realvec y) const { return std::remainder(v, y.v); }
+    realvec remainder(realvec y) const { return vml_std::remainder(v, y.v); }
     realvec rint() const
     {
 #ifdef __SSE4_1__
@@ -496,7 +496,7 @@ namespace vecmathlib {
     }
     realvec round() const { return MF::vml_round(*this); }
     realvec rsqrt() const { return MF::vml_rsqrt(*this); }
-    boolvec_t signbit() const { return std::signbit(v); }
+    boolvec_t signbit() const { return vml_std::signbit(v); }
     realvec sin() const { return MF::vml_sin(*this); }
     realvec sinh() const { return MF::vml_sinh(*this); }
     realvec sqrt() const
