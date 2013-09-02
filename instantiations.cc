@@ -35,7 +35,7 @@ namespace vecmathlib {
   template realvec<float,1> round(realvec<float,1> x);
 #endif
   
-#ifdef VECMATHLIB_HAVE_VEC_FLOAT_1
+#ifdef VECMATHLIB_HAVE_VEC_FLOAT_8
   template intvec<float,8> popcount(intvec<float,8>);
 #endif
   
