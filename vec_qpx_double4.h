@@ -298,7 +298,7 @@ namespace vecmathlib {
     
     
     
-    boolvec_t signbit() const
+    boolvec_t isignbit() const
     {
       return *this < IV(I(0));
     }

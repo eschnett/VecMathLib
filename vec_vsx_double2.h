@@ -322,7 +322,7 @@ namespace vecmathlib {
     
     
     
-    boolvec_t signbit() const
+    boolvec_t isignbit() const
     {
       return (*this >> (bits-1)).as_bool();
     }

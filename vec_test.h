@@ -292,14 +292,20 @@ namespace vecmathlib {
       return res ^= x;
     }
     
-    
-    
-    inttestvec lsr(int_t n) const
+    intvec_t bitifthen(intvec_t x, intvec_t y) const
     {
-      inttestvec res;
+      return MF::vml_bitifthen(*this, x, y);
+    }
+    
+    
+    
+    intvec_t lsr(int_t n) const
+    {
+      intvec_t res;
       for (int d=0; d<size; ++d) res.v[d] = I(U(v[d]) >> U(n));
       return res;
     }
+    intvec_t rotate(int_t n) const { return MF::vml_rotate(*this, n); }
     inttestvec& operator>>=(int_t n)
     {
       for (int d=0; d<size; ++d) v[d] >>= n;
@@ -321,12 +327,13 @@ namespace vecmathlib {
       return res <<= n;
     }
     
-    inttestvec lsr(inttestvec n) const
+    intvec_t lsr(intvec_t n) const
     {
       inttestvec res;
       for (int d=0; d<size; ++d) res.v[d] = I(U(v[d]) >> U(n.v[d]));
       return res;
     }
+    intvec_t rotate(intvec_t n) const { return MF::vml_rotate(*this, n); }
     inttestvec& operator>>=(inttestvec n)
     {
       for (int d=0; d<size; ++d) v[d] >>= n.v[d];
@@ -348,14 +355,10 @@ namespace vecmathlib {
       return res <<= n;
     }
     
+    intvec_t clz() const { return MF::vml_clz(*this); }
+    intvec_t popcount() const { return MF::vml_popcount(*this); }
     
     
-    boolvec_t signbit() const
-    {
-      boolvec_t res;
-      for (int d=0; d<size; ++d) res.set_elt(d, v[d] < 0);
-      return res;
-    }
     
     boolvec_t operator==(inttestvec const& x) const
     {
@@ -393,6 +396,11 @@ namespace vecmathlib {
       for (int d=0; d<size; ++d) res.v[d] = v[d] >= x.v[d];
       return res;
     }
+    
+    intvec_t abs() const { return MF::vml_abs(*this); }
+    boolvec_t isignbit() const { return MF::vml_isignbit(*this); }
+    intvec_t max(intvec_t x) const { return MF::vml_max(*this, x); }
+    intvec_t min(intvec_t x) const { return MF::vml_min(*this, x); }
   };
   
   
@@ -862,15 +870,15 @@ namespace vecmathlib {
   // inttestvec wrappers
   
   template<typename real_t, int size>
-  inline booltestvec<real_t, size> as_bool(inttestvec<real_t, size> x)
+  inline inttestvec<real_t, size> abs(inttestvec<real_t, size> x)
   {
-    return x.as_bool();
+    return x.abs();
   }
   
   template<typename real_t, int size>
-  inline booltestvec<real_t, size> convert_bool(inttestvec<real_t, size> x)
+  inline booltestvec<real_t, size> as_bool(inttestvec<real_t, size> x)
   {
-    return x.convert_bool();
+    return x.as_bool();
   }
   
   template<typename real_t, int size>
@@ -880,9 +888,35 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline inttestvec<real_t, size> bitifthen(inttestvec<real_t, size> x,
+                                            inttestvec<real_t, size> y,
+                                            inttestvec<real_t, size> z)
+  {
+    return x.bitifthen(y, z);
+  }
+  
+  template<typename real_t, int size>
+  inline inttestvec<real_t, size> clz(inttestvec<real_t, size> x)
+  {
+    return x.clz();
+  }
+  
+  template<typename real_t, int size>
+  inline booltestvec<real_t, size> convert_bool(inttestvec<real_t, size> x)
+  {
+    return x.convert_bool();
+  }
+  
+  template<typename real_t, int size>
   inline realtestvec<real_t, size> convert_float(inttestvec<real_t, size> x)
   {
     return x.convert_float();
+  }
+  
+  template<typename real_t, int size>
+  inline booltestvec<real_t, size> isignbit(inttestvec<real_t, size> x)
+  {
+    return x.isignbit();
   }
   
   template<typename real_t, int size>
@@ -901,9 +935,38 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
-  inline booltestvec<real_t, size> signbit(inttestvec<real_t, size> x)
+  inline inttestvec<real_t, size> max(inttestvec<real_t, size> x,
+                                      inttestvec<real_t, size> y)
   {
-    return x.signbit();
+    return x.max(y);
+  }
+  
+  template<typename real_t, int size>
+  inline inttestvec<real_t, size> min(inttestvec<real_t, size> x,
+                                      inttestvec<real_t, size> y)
+  {
+    return x.min(y);
+  }
+  
+  template<typename real_t, int size>
+  inline inttestvec<real_t, size> popcount(inttestvec<real_t, size> x)
+  {
+    return x.popcount();
+  }
+  
+  template<typename real_t, int size>
+  inline
+  inttestvec<real_t, size> rotate(inttestvec<real_t, size> x,
+                                  typename inttestvec<real_t, size>::int_t n)
+  {
+    return x.rotate(n);
+  }
+  
+  template<typename real_t, int size>
+  inline inttestvec<real_t, size> rotate(inttestvec<real_t, size> x,
+                                         inttestvec<real_t, size> n)
+  {
+    return x.rotate(n);
   }
   
   

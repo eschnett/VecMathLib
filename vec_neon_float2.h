@@ -231,7 +231,7 @@ namespace vecmathlib {
     
     
     
-    boolvec_t signbit() const
+    boolvec_t isignbit() const
     {
       //return *this < IV(I(0));
       return intvec(vshr_n_s32(v, FP::bits-1)).as_bool();

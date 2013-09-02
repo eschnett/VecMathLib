@@ -84,6 +84,12 @@ namespace vecmathlib {
       std::memcpy(&res, &x, sizeof res);
       return res;
     }
+    static int_t replicate_byte(unsigned char byte)
+    {
+      int_t res;
+      std::memset(&res, byte, sizeof res);
+      return res;
+    }
     
     // Convert values (truncate)
     static real_t convert_float(int_t x) { __builtin_unreachable(); }
@@ -144,6 +150,12 @@ namespace vecmathlib {
       std::memcpy(&res, &x, sizeof res);
       return res;
     }
+    static int_t replicate_byte(unsigned char byte)
+    {
+      int_t res;
+      std::memset(&res, byte, sizeof res);
+      return res;
+    }
     
     // Convert values (truncate)
     static real_t convert_float(int_t x) { __builtin_unreachable(); }
@@ -199,6 +211,12 @@ namespace vecmathlib {
       std::memcpy(&res, &x, sizeof res);
       return res;
     }
+    static int_t replicate_byte(unsigned char byte)
+    {
+      int_t res;
+      std::memset(&res, byte, sizeof res);
+      return res;
+    }
     
     // Convert values (truncate)
     static real_t convert_float(int_t x) { return real_t(x); }
@@ -252,6 +270,12 @@ namespace vecmathlib {
     {
       int_t res;
       std::memcpy(&res, &x, sizeof res);
+      return res;
+    }
+    static int_t replicate_byte(unsigned char byte)
+    {
+      int_t res;
+      std::memset(&res, byte, sizeof res);
       return res;
     }
     

@@ -201,18 +201,25 @@ namespace vecmathlib {
     intvec& operator|=(intvec const& x) { return *this=*this|x; }
     intvec& operator^=(intvec const& x) { return *this=*this^x; }
     
+    intvec_t bitifthen(intvec_t x, intvec_t y) const
+    {
+      return MF::vml_bitifthen(*this, x, y);
+    }
     
     
-    intvec lsr(int_t n) const { return lsr(IV(n)); }
+    
+    intvec_t lsr(int_t n) const { return lsr(IV(n)); }
+    intvec_t rotate(int_t n) const { MF::vml_rotate(*this, n); }
     intvec operator>>(int_t n) const { return *this >> IV(n); }
     intvec operator<<(int_t n) const { return *this << IV(n); }
     intvec& operator>>=(int_t n) { return *this=*this>>n; }
     intvec& operator<<=(int_t n) { return *this=*this<<n; }
     
-    intvec lsr(intvec n) const
+    intvec_t lsr(intvec_t n) const
     {
       return vec_sr(v, (__vector unsigned int)n.v);
     }
+    intvec_t rotate(intvec_t n) const { MF::vml_rotate(*this, n); }
     intvec operator>>(intvec n) const
     {
       return vec_sra(v, (__vector unsigned int)n.v);
@@ -224,12 +231,10 @@ namespace vecmathlib {
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
     
+    intvec_t clz() const { return MF::vml_clz(*this); }
+    intvec_t popcount() const { return MF::vml_popcount(*this); }
     
     
-    boolvec_t signbit() const
-    {
-      return *this < IV(I(0));
-    }
     
     boolvec_t operator==(intvec const& x) const { return vec_cmpeq(v, x.v); }
     boolvec_t operator!=(intvec const& x) const { return !(*this == x); }
@@ -237,6 +242,11 @@ namespace vecmathlib {
     boolvec_t operator<=(intvec const& x) const { return !(*this > x); }
     boolvec_t operator>(intvec const& x) const { return vec_cmpgt(v, x.v); }
     boolvec_t operator>=(intvec const& x) const { return !(*this < x); }
+    
+    intvec_t abs() const { return vec_abs(v); }
+    intvec_t max(intvec_t x) const { return vec_max(v, x.v); }
+    intvec_t min(intvec_t x) const { return vec_min(v, x.v); }
+    boolvec_t isignbit() const { return MF::vml_isignbit(*this); }
   };
   
   

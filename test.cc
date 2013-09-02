@@ -2,6 +2,7 @@
 
 #include "vecmathlib.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -944,7 +945,7 @@ struct vecmathlib_test {
   template<typename T> static T local_sr(T x, T y) { return x>>y; }
   template<typename T> static T local_sl(T x, T y) { return x<<y; }
 
-  template<typename T> static bool local_signbit(T x) { return x<0; }
+  template<typename T> static bool local_isignbit(T x) { return x<0; }
   template<typename T> static bool local_eq(T x, T y) { return x==y; }
   template<typename T> static bool local_ne(T x, T y) { return x!=y; }
   template<typename T> static bool local_lt(T x, T y) { return x<y; }
@@ -1027,7 +1028,7 @@ struct vecmathlib_test {
       check_int<IV,IV>(">>", local_sr, local_sr, x, y & IV(bits-1));
       check_int<IV,IV>("<<", local_sl, local_sl, x, y & IV(bits-1));
       
-      check_bool<IV>("signbit", local_signbit, vecmathlib::signbit, x);
+      check_bool<IV>("isignbit", local_isignbit, vecmathlib::isignbit, x);
       check_bool<IV,IV>("==", local_eq, local_veq, x, y);
       check_bool<IV,IV>("!=", local_ne, local_vne, x, y);
       check_bool<IV,IV>("<", local_lt, local_vlt, x, y);
@@ -1073,6 +1074,64 @@ struct vecmathlib_test {
     rbase = RV(R(1.0) + FP::epsilon());
     rbase += RV(FP::epsilon()/2);
     check_real("flt_rounds", R(1.0) + 2*FP::epsilon(), rbase[0]);
+  }
+  
+  static int_t local_bitifthen(int_t x, int_t y, int_t z)
+  {
+    return (x & y) | (~x & z);
+  }
+  static int_t local_clz(int_t x)
+  {
+    int bits = CHAR_BIT * sizeof(x);
+    int res = 0;
+    for (; res<bits; ++res) {
+      if (x & (I(1) << (bits-res-1))) break;
+    }
+    return res;
+  }
+  static int_t local_max(int_t x, int_t y)
+  {
+    return std::max(x, y);
+  }
+  static int_t local_min(int_t x, int_t y)
+  {
+    return std::min(x, y);
+  }
+  static int_t local_popcount(int_t x)
+  {
+    int bits = CHAR_BIT * sizeof(x);
+    int res = 0;
+    for (int d=0; d<bits; ++d) {
+      if (x & (I(1) << d)) ++res;
+    }
+    return res;
+  }
+  static int_t local_rotate(int_t x, int_t n)
+  {
+    int_t mask = CHAR_BIT * sizeof(int_t) - 1;
+    int_t left = x << (n & mask);
+    int_t right = I(U(x) >> U(-n & mask));
+    return left | right;
+  }
+  static void test_abs()
+  {
+    cout << "   testing abs bitifthen clz isignbit max min popcount rotate...\n" << flush;
+        
+    for (int i=0; i<imax; ++i) {
+      const intvec_t x = random(I(-1000000), I(+1000000));
+      const intvec_t y = random(I(-1000000), I(+1000000));
+      const intvec_t z = random(I(-1000000), I(+1000000));
+      
+      check_int<IV>("abs", std::abs, vecmathlib::abs, x);
+      check_int<IV,IV,IV>("bitifthen",
+                          local_bitifthen, vecmathlib::bitifthen, x, y, z);
+      check_int<IV>("clz", local_clz, vecmathlib::clz, x);
+      check_int<IV,IV>("max", local_max, vecmathlib::max, x, y);
+      check_int<IV,IV>("min", local_min, vecmathlib::min, x, y);
+      check_int<IV>("popcount", local_popcount, vecmathlib::popcount, x);
+      check_int<IV,IV>("rotate", local_rotate, vecmathlib::rotate, x, y[0]);
+      check_int<IV,IV>("rotate", local_rotate, vecmathlib::rotate, x, y);
+    }
   }
   
   // Change signature: "int" -> "int_t"
@@ -1521,6 +1580,7 @@ struct vecmathlib_test {
     test_mem();
     
     // Test "basic" functions first
+    test_abs();
     test_fabs();
     test_convert();
     test_rcp();
