@@ -363,6 +363,7 @@ namespace vecmathlib {
     intvec_t clz() const
     {
       intvec_t res;
+#if defined __clang__ || defined __gcc__
       if (sizeof(int_t) == sizeof(long long)) {
         for (int d=0; d<size; ++d) res.v[d] = __builtin_clzll(v[d]);
       } else if (sizeof(int_t) == sizeof(long)) {
@@ -374,11 +375,15 @@ namespace vecmathlib {
       } else {
         __builtin_unreachable();
       }
+#else
+      res = MF::vml_clz(*this);
+#endif
       return res;
     }
     intvec_t popcount() const
     {
       intvec_t res;
+#if defined __clang__ || defined __gcc__
       if (sizeof(int_t) == sizeof(long long)) {
         for (int d=0; d<size; ++d) res.v[d] = __builtin_popcountll(v[d]);
       } else if (sizeof(int_t) == sizeof(long)) {
@@ -388,6 +393,9 @@ namespace vecmathlib {
       } else {
         __builtin_unreachable();
       }
+#else
+      res = MF::vml_popcount(*this);
+#endif
       return res;
     }
     
