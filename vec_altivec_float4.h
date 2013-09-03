@@ -186,7 +186,15 @@ namespace vecmathlib {
     
     
     intvec operator+() const { return *this; }
-    intvec operator-() const { return vec_neg(v); }
+    intvec operator-() const
+    {
+#if defined __xlC_
+      return vec_neg(v);
+#else
+      // vec_neg does not exist in clang
+      return IV(I(0)) - *this;
+#endif
+    }
     
     intvec operator+(intvec x) const { return vec_add(v, x.v); }
     intvec operator-(intvec x) const { return vec_sub(v, x.v); }
@@ -408,12 +416,28 @@ namespace vecmathlib {
     
     
     intvec_t as_int() const { return (__vector signed int) v; }
-    intvec_t convert_int() const { return vec_cts(v, 0); }
+    intvec_t convert_int() const
+    {
+#if defined __xlC__
+      return vec_cts(v, 0);
+#else
+      // vec_cts leads to an ICE in clang
+      return MF::vml_convert_int(*this);
+#endif
+    }
     
     
     
     realvec operator+() const { return *this; }
-    realvec operator-() const { return vec_neg(v); }
+    realvec operator-() const
+    {
+#if defined __xlC_
+      return vec_neg(v);
+#else
+      // vec_neg does not exist in clang
+      return RV(0.0) - *this;
+#endif
+    }
     
     realvec operator+(realvec x) const { return vec_add(v, x.v); }
     realvec operator-(realvec x) const { return vec_sub(v, x.v); }
@@ -421,6 +445,7 @@ namespace vecmathlib {
 #if defined __xlC__
       return vec_mul(v, x.v);
 #else
+      // vec_mul does not exist in clang
       return vec_madd(v, x.v, RV(0.0).v);
 #endif
     }
@@ -428,6 +453,7 @@ namespace vecmathlib {
 #if defined __xlC__
       return vec_div(v, x.v);
 #else
+      // vec_div does not exist in clang
       return *this * x.rcp();
 #endif
     }
@@ -601,7 +627,12 @@ namespace vecmathlib {
   
   inline realvec<float,4> intvec<float,4>::convert_float() const
   {
+#if defined __xlC__
     return vec_ctf(v, 0);
+#else
+      // vec_ctf leads to an ICE in clang
+    return MF::vml_convert_float(*this);
+#endif
   }
   
   inline intvec<float,4> intvec<float,4>::popcount() const
