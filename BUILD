@@ -39,6 +39,9 @@ rm -rf CMakeCache.txt CMakeFiles
 # Compute (x86_64):
 cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -Ofast' -G Ninja
 
+# Pandora (Power 7):
+xlC -qarch=pwr7 -qaltivec -O3 -o test test.cc
+
 # Redshift (OS X):
 cmake -DCMAKE_CXX_COMPILER=g++-mp-4.7 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
 cmake -DCMAKE_CXX_COMPILER=g++-mp-4.8 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
@@ -54,7 +57,7 @@ cmake -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS='-Wall -g -restrict -xhost -Of
 #cmake -DCMAKE_CXX_COMPILER=xlC_r -DCMAKE_CXX_FLAGS='-O3' .
 #/soft/compilers/ibmcmp-may2013/vacpp/bg/12.1/bin/xlC_r -O3 -o test test.cc
 /soft/compilers/ibmcmp-may2013/vacpp/bg/12.1/bin/xlC_r -O2 -o test test.cc
-#cmake -DCMAKE_CXX_COMPILER=/home/projects/llvm/bin/clang++ -DCMAKE_CXX_FLAGS='-O3 -faltivec' .
+#cmake -DCMAKE_CXX_COMPILER=/home/projects/llvm/bin/clang++ -DCMAKE_CXX_FLAGS='-O3 -Drestrict=__restrict__ -faltivec' .
 /home/projects/llvm/bin/clang++ -O3 -faltivec -o test test.cc
 
 # Vesta (Blue Gene/Q):
