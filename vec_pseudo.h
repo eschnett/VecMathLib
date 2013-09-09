@@ -368,10 +368,12 @@ namespace vecmathlib {
         for (int d=0; d<size; ++d) res.v[d] = __builtin_clzll(v[d]);
       } else if (sizeof(int_t) == sizeof(long)) {
         for (int d=0; d<size; ++d) res.v[d] = __builtin_clzl(v[d]);
-      } else if (sizeof(int_t) <= sizeof(int)) {
+      } else if (sizeof(int_t) == sizeof(int)) {
+        for (int d=0; d<size; ++d) res.v[d] = __builtin_clz(v[d]);
+      } else if (sizeof(int_t) <= sizeof(short)) {
         for (int d=0; d<size; ++d)
           res.v[d] =
-            CHAR_BIT * (sizeof(int) - sizeof(int_t)) + __builtin_clz(v[d]);
+            CHAR_BIT * (sizeof(short) - sizeof(int_t)) + __builtin_clzs(v[d]);
       } else {
         __builtin_unreachable();
       }
