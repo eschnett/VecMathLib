@@ -95,8 +95,7 @@ namespace std { class type_info; }
 #include "vec_pseudo.h"
 
 // Use compiler-provided vector types
-// Problem: How to determine which operations are available in hardware?
-// #include "vec_builtin.h"
+#include "vec_builtin.h"
 
 // Scalarise all vector operations; don't use libm, use only
 // Vecmathlib's functions (mostly useful for testing Vecmathlib)
