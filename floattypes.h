@@ -52,8 +52,16 @@ namespace vml_std {
   typedef ::int16_t int16_t;
   typedef ::uint32_t uint32_t;
   typedef ::int32_t int32_t;
+#if __SIZEOF_LONG__ == 8
+  // Even if both "long" and "long long" have the same size, they are
+  // still different types. In many cases, it is then preferable to
+  // use "long" instead of "long long" in this case.
+  typedef unsigned long uint64_t;
+  typedef long int64_t;
+#else
   typedef ::uint64_t uint64_t;
   typedef ::int64_t int64_t;
+#endif
   
   
   
