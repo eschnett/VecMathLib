@@ -32,6 +32,8 @@ namespace vecmathlib {
     template<typename realvec_t>
     realvec_t atan2k(realvec_t y, realvec_t x)
     {
+      // Algorithm taken from SLEEF 2.80
+      
       typedef typename realvec_t::real_t real_t;
       typedef typename realvec_t::boolvec_t boolvec_t;
       typedef realvec_t RV;
@@ -100,6 +102,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_asin(realvec_t d)
   {
+    // Algorithm taken from SLEEF 2.80
     return mulsign(atan2k(fabs(d), sqrt((RV(1.0)+d)*(RV(1.0)-d))), d);
   }
   
@@ -108,6 +111,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_acos(realvec_t d)
   {
+    // Algorithm taken from SLEEF 2.80
     return (mulsign(atan2k(sqrt((RV(1.0)+d)*(RV(1.0)-d)), fabs(d)), d) +
             ifthen(d < RV(0.0), RV(M_PI), RV(0.0)));
   }
@@ -117,6 +121,8 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_atan(realvec_t s)
   {
+    // Algorithm taken from SLEEF 2.80
+    
     realvec_t q1 = s;
     s = fabs(s);
     
