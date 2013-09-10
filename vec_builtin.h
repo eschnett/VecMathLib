@@ -686,6 +686,10 @@ namespace vecmathlib {
     realvec_t log10() const { return map(builtin_log10); }
     realvec_t log1p() const { return map(builtin_log1p); }
     realvec_t log2() const { return map(builtin_log2); }
+    realvec_t mad(realvec_t y, realvec_t z) const
+    {
+      return MF::vml_mad(*this, y, z);
+    }
     realvec_t nextafter(realvec_t y) const { return map(builtin_nextafter, y); }
     realvec_t pow(realvec_t y) const { return map(builtin_pow, y); }
     realvec_t rcp() const { return RV(1.0) / *this; }
@@ -1291,6 +1295,14 @@ namespace vecmathlib {
   inline realbuiltinvec<real_t, size> log2(realbuiltinvec<real_t, size> x)
   {
     return x.log2();
+  }
+  
+  template<typename real_t, int size>
+  inline realbuiltinvec<real_t, size> mad(realbuiltinvec<real_t, size> x,
+                                          realbuiltinvec<real_t, size> y,
+                                          realbuiltinvec<real_t, size> z)
+  {
+    return x.mad(y, z);
   }
   
   template<typename real_t, int size>

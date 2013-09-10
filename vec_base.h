@@ -519,6 +519,14 @@ namespace vecmathlib {
   }
   
   template<typename real_t, int size>
+  inline realvec<real_t, size> mad(realvec<real_t, size> x,
+                                   realvec<real_t, size> y,
+                                   realvec<real_t, size> z)
+  {
+    return x.mad(y, z);
+  }
+  
+  template<typename real_t, int size>
   inline realvec<real_t, size> nextafter(realvec<real_t, size> x,
                                          realvec<real_t, size> y)
   {
