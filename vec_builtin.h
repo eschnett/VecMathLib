@@ -18,6 +18,12 @@
 
 
 
+#ifndef __has_builtin
+#  define __has_builtin(x) 0 // Compatibility with non-clang compilers
+#endif
+
+
+
 namespace vecmathlib {
   
   template<typename T, int N> struct boolbuiltinvec;
@@ -35,7 +41,8 @@ namespace vecmathlib {
     
     static const int size = N;
     typedef bool scalar_t;
-    typedef int_t bvector_t __attribute__((__ext_vector_type__(N)));
+    // typedef int_t bvector_t __attribute__((__ext_vector_type__(N)));
+    typedef int_t bvector_t __attribute__((__vector_size__(N * sizeof(T))));
     static const int alignment = sizeof(bvector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(bvector_t),
@@ -130,8 +137,10 @@ namespace vecmathlib {
     
     static const int size = N;
     typedef int_t scalar_t;
-    typedef int_t ivector_t __attribute__((__ext_vector_type__(N)));
-    typedef uint_t uvector_t __attribute__((__ext_vector_type__(N)));
+    // typedef int_t ivector_t __attribute__((__ext_vector_type__(N)));
+    // typedef uint_t uvector_t __attribute__((__ext_vector_type__(N)));
+    typedef int_t ivector_t __attribute__((__vector_size__(N * sizeof(T))));
+    typedef uint_t uvector_t __attribute__((__vector_size__(N * sizeof(T))));
     static const int alignment = sizeof(ivector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(ivector_t),
@@ -252,7 +261,9 @@ namespace vecmathlib {
     {
       intvec_t res;
       for (int d=0; d<size; ++d) {
-        res.set_elt(d, builtin_clz(U((*this)[d])));
+        int_t val = (*this)[d];
+        int_t cnt = val == 0 ? CHAR_BIT * sizeof val : builtin_clz(U(val));
+        res.set_elt(d, cnt);
       }
       return res;
     }
@@ -316,7 +327,8 @@ namespace vecmathlib {
     
     static const int size = N;
     typedef real_t scalar_t;
-    typedef real_t vector_t __attribute__((__ext_vector_type__(N)));
+    // typedef real_t vector_t __attribute__((__ext_vector_type__(N)));
+    typedef real_t vector_t __attribute__((__vector_size__(N * sizeof(T))));
     static const int alignment = sizeof(vector_t);
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
@@ -333,8 +345,37 @@ namespace vecmathlib {
       }
       return name_.c_str();
     }
-    void barrier() { volatile vector_t x __attribute__((__unused__)) = v; }
 #endif
+    void barrier() {
+#if defined __GNUC__ && !defined __clang__ && !defined __ICC
+      // GCC crashes when +X is used as constraint
+#  if defined __SSE2__
+      for (int d=0; d<size; ++d) __asm__("": "+x"(v[d]));
+#  elif defined __PPC64__       // maybe also __PPC__
+      for (int d=0; d<size; ++d) __asm__("": "+f"(v[d]));
+#  elif defined __arm__
+      for (int d=0; d<size; ++d) __asm__("": "+w"(v[d]));
+#  else
+#    error "Floating point barrier undefined on this architecture"
+#  endif
+#elif defined __clang__
+      for (int d=0; d<size; ++d) {
+        real_t tmp = v[d];
+        __asm__("": "+X"(tmp));
+        v[d] = tmp;
+      }
+#elif defined __ICC
+      for (int d=0; d<size; ++d) {
+        real_t tmp = v[d];
+        __asm__("": "+X"(tmp));
+        v[d] = tmp;
+      }
+#elif defined __IBMCPP__
+      for (int d=0; d<size; ++d) __asm__("": "+f"(v[d]));
+#else
+#  error "Floating point barrier undefined on this architecture"
+#endif
+    }
     
     typedef boolbuiltinvec<real_t, size> boolvec_t;
     typedef intbuiltinvec<real_t, size> intvec_t;
@@ -426,7 +467,7 @@ namespace vecmathlib {
     static realvec_t loada(const real_t* p)
     {
       VML_ASSERT(intptr_t(p) % alignment == 0);
-#if __has_builtin(__builtin_assume_aligned)
+#if defined __gcc__ || __has_builtin(__builtin_assume_aligned)
       p = (const real_t*)__builtin_assume_aligned(p, sizeof(realvec_t));
 #endif
       return mkvec(*(const vector_t*)p);
