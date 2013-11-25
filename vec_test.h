@@ -722,6 +722,7 @@ namespace vecmathlib {
     realvec_t log10() const { return MF::vml_log10(*this); }
     realvec_t log1p() const { return MF::vml_log1p(*this); }
     realvec_t log2() const { return MF::vml_log2(*this); }
+    intvec_t lrint() const { return MF::vml_lrint(*this); }
     realvec_t mad(realvec_t y, realvec_t z) const
     {
       return MF::vml_mad(*this, y, z);
@@ -1325,6 +1326,12 @@ namespace vecmathlib {
   inline realtestvec<real_t, size> log2(realtestvec<real_t, size> x)
   {
     return x.log2();
+  }
+  
+  template<typename real_t, int size>
+  inline inttestvec<real_t, size> lrint(realtestvec<real_t, size> x)
+  {
+    return x.lrint();
   }
   
   template<typename real_t, int size>

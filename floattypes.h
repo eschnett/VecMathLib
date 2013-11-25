@@ -129,10 +129,12 @@ namespace vml_std {
   inline bool isnan(float x) { return libc_isnan(x); }
   inline bool isnormal(float x) { return libc_isnormal(x); }
   inline float ldexp(float x, int n) { return ::ldexpf(x, n); }
+  inline long long llrint(float x) { return ::llrintf(x); }
   inline float log(float x) { return ::logf(x); }
   inline float log10(float x) { return ::log10f(x); }
   inline float log1p(float x) { return ::log1pf(x); }
   inline float log2(float x) { return ::log2f(x); }
+  inline long lrint(float x) { return ::lrintf(x); }
   inline float nextafter(float x, float y) { return ::nextafterf(x, y); }
   inline float pow(float x, float y) { return ::powf(x, y); }
   inline float remainder(float x, float y) { return ::remainderf(x, y); }
@@ -176,10 +178,12 @@ namespace vml_std {
   inline bool isnan(double x) { return libc_isnan(x); }
   inline bool isnormal(double x) { return libc_isnormal(x); }
   inline double ldexp(double x, int n) { return ::ldexp(x, n); }
+  inline long long llrint(double x) { return ::llrint(x); }
   inline double log(double x) { return ::log(x); }
   inline double log10(double x) { return ::log10(x); }
   inline double log1p(double x) { return ::log1p(x); }
   inline double log2(double x) { return ::log2(x); }
+  inline long lrint(double x) { return ::lrint(x); }
   inline double nextafter(double x, double y) { return ::nextafter(x, y); }
   inline double pow(double x, double y) { return ::pow(x, y); }
   inline double remainder(double x, double y) { return ::remainder(x, y); }

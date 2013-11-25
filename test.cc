@@ -1391,6 +1391,11 @@ struct vecmathlib_test {
       check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2, accuracy());
       check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn1h, accuracy());
       check_real<RV>("floor", vml_std::floor, vecmathlib::floor, fn2h, accuracy());
+      // check_int<RV>("lrint", vml_std::lrint, vecmathlib::rint, x, accuracy());
+      // check_int<RV>("lrint", vml_std::lrint, vecmathlib::rint, fn1, accuracy());
+      // check_int<RV>("lrint", vml_std::lrint, vecmathlib::rint, fn2, accuracy());
+      // check_int<RV>("lrint", vml_std::lrint, vecmathlib::rint, fn1h, accuracy());
+      // check_int<RV>("lrint", vml_std::lrint, vecmathlib::rint, fn2h, accuracy());
       check_real<RV>("rint", vml_std::rint, vecmathlib::rint, x, accuracy());
       check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn1, accuracy());
       check_real<RV>("rint", vml_std::rint, vecmathlib::rint, fn2, accuracy());

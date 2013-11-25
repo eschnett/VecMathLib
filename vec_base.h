@@ -517,7 +517,13 @@ namespace vecmathlib {
   {
     return x.log2();
   }
-  
+    
+  template<typename real_t, int size>
+  inline intvec<real_t, size> lrint(realvec<real_t, size> x)
+  {
+    return x.lrint();
+  }
+
   template<typename real_t, int size>
   inline realvec<real_t, size> mad(realvec<real_t, size> x,
                                    realvec<real_t, size> y,

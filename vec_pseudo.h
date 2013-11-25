@@ -887,6 +887,18 @@ namespace vecmathlib {
     realvec_t log10() const { return map(vml_std::log10); }
     realvec_t log1p() const { return map(vml_std::log1p); }
     realvec_t log2() const { return map(vml_std::log2); }
+    intvec_t lrint() const
+    {
+      realvec_t res;
+      if (sizeof(int_t) <= sizeof(long)) {
+        for (int d=0; d<size; ++d) res.v[d] = vml_std::lrint(v[d]);
+      } else if (sizeof(int_t) <= sizeof(long long)) {
+        for (int d=0; d<size; ++d) res.v[d] = vml_std::llrint(v[d]);
+      } else {
+        __builtin_unreachable();
+      }
+      return res;
+    }
     realvec_t mad(realvec_t y, realvec_t z) const
     {
       return MF::vml_mad(*this, y, z);
@@ -1504,6 +1516,12 @@ namespace vecmathlib {
   inline realpseudovec<real_t, size> log2(realpseudovec<real_t, size> x)
   {
     return x.log2();
+  }
+  
+  template<typename real_t, int size>
+  inline intpseudovec<real_t, size> lrint(realpseudovec<real_t, size> x)
+  {
+    return x.lrint();
   }
   
   template<typename real_t, int size>
