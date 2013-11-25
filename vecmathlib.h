@@ -94,8 +94,10 @@ namespace std { class type_info; }
 // useful as fallback)
 #include "vec_pseudo.h"
 
+#ifdef __clang__
 // Use compiler-provided vector types
-#include "vec_builtin.h"
+#  include "vec_builtin.h"
+#endif
 
 // Scalarise all vector operations; don't use libm, use only
 // Vecmathlib's functions (mostly useful for testing Vecmathlib)
