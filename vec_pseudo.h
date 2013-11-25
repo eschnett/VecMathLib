@@ -366,18 +366,26 @@ namespace vecmathlib {
     {
       intvec_t res;
 #if defined __clang__ || defined __gcc__
-      if (sizeof(int_t) == sizeof(long long)) {
-        for (int d=0; d<size; ++d) res.v[d] = __builtin_clzll(v[d]);
-      } else if (sizeof(int_t) == sizeof(long)) {
-        for (int d=0; d<size; ++d) res.v[d] = __builtin_clzl(v[d]);
-      } else if (sizeof(int_t) == sizeof(int)) {
-        for (int d=0; d<size; ++d) res.v[d] = __builtin_clz(v[d]);
-      } else if (sizeof(int_t) <= sizeof(short)) {
-        for (int d=0; d<size; ++d)
-          res.v[d] =
-            CHAR_BIT * (sizeof(short) - sizeof(int_t)) + __builtin_clzs(v[d]);
-      } else {
-        __builtin_unreachable();
+      for (int d=0; d<size; ++d) {
+        if (v[d] == 0) {
+          res.v[d] = CHAR_BIT * sizeof v[d];
+        } else {
+          if (sizeof v[d] == sizeof(long long)) {
+            res.v[d] = __builtin_clzll(v[d]);
+          } else if (sizeof v[d] == sizeof(long)) {
+            res.v[d] = __builtin_clzl(v[d]);
+          } else if (sizeof v[d] == sizeof(int)) {
+            res.v[d] = __builtin_clz(v[d]);
+          } else if (sizeof v[d] == sizeof(short)) {
+            res.v[d] = __builtin_clzs(v[d]);
+          } else if (sizeof v[d] == sizeof(char)) {
+            res.v[d] =
+              __builtin_clzs((unsigned short)(unsigned char)v[d]) -
+              CHAR_BIT * (sizeof(short) - sizeof(char));
+          } else {
+            __builtin_unreachable();
+          }
+        }
       }
 #else
       res = MF::vml_clz(*this);
