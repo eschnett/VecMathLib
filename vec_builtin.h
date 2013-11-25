@@ -11,7 +11,9 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <sstream>
+#ifndef VML_NO_IOSTREAM
+#  include <sstream>
+#endif
 #include <string>
 
 
@@ -320,6 +322,7 @@ namespace vecmathlib {
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
                   "vector size is wrong");
     
+#ifndef VML_NO_IOSTREAM
     static const char* name()
     {
       static std::string name_;
@@ -331,6 +334,7 @@ namespace vecmathlib {
       return name_.c_str();
     }
     void barrier() { volatile vector_t x __attribute__((__unused__)) = v; }
+#endif
     
     typedef boolbuiltinvec<real_t, size> boolvec_t;
     typedef intbuiltinvec<real_t, size> intvec_t;

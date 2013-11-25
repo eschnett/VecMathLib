@@ -11,8 +11,10 @@
 #include <cmath>
 #include <climits>
 #include <cstdlib>
+#ifndef VML_NO_IOSTREAM
+#  include <sstream>
+#endif
 #include <string>
-#include <sstream>
 
 
 
@@ -483,6 +485,7 @@ namespace vecmathlib {
     typedef real_t vector_t[size];
     static int const alignment = sizeof(real_t);
     
+#ifndef VML_NO_IOSTREAM
     static char const* name()
     {
       static std::string name_;
@@ -493,6 +496,7 @@ namespace vecmathlib {
       }
       return name_.c_str();
     }
+#endif
     void barrier()
     {
 #if defined __GNUC__ && !defined __clang__ && !defined __ICC

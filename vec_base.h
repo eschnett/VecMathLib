@@ -3,7 +3,9 @@
 #ifndef VEC_BASE_H
 #define VEC_BASE_H
 
-#include <iostream>
+#ifndef VML_NO_IOSTREAM
+#  include <iostream>
+#endif
 
 #include "vec_mask.h"
 
@@ -621,6 +623,7 @@ namespace vecmathlib {
   
   
   
+#ifndef VML_NO_IOSTREAM
   template<typename real_t, int size>
   std::ostream& operator<<(std::ostream& os, boolvec<real_t, size> const& x)
   {
@@ -656,6 +659,7 @@ namespace vecmathlib {
     os << "]";
     return os;
   }
+#endif
   
 } // namespace vecmathlib
 
