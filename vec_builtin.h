@@ -1415,6 +1415,7 @@ namespace vecmathlib {
   
   
   
+#ifndef VML_NO_IOSTREAM
   template<typename real_t, int size>
   std::ostream& operator<<(std::ostream& os,
                            boolbuiltinvec<real_t, size> const& x)
@@ -1453,6 +1454,7 @@ namespace vecmathlib {
     os << "]";
     return os;
   }
+#endif
   
 } // namespace vecmathlib
 
