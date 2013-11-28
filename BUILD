@@ -43,11 +43,8 @@ cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict
 xlC -qarch=pwr7 -qaltivec -O3 -o test test.cc
 
 # Redshift (OS X):
-cmake -DCMAKE_CXX_COMPILER=g++-mp-4.7 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
-cmake -DCMAKE_CXX_COMPILER=g++-mp-4.8 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
-cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.2 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -O3' -G Ninja
-cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.3 -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -Ofast' -G Ninja
-cmake -DCMAKE_CXX_COMPILER=$HOME/llvm-trunk/bin/clang++ -DCMAKE_CXX_FLAGS='-Wall -g -Drestrict=__restrict__ -march=native -Ofast' -G Ninja
+cmake -DCMAKE_CXX_COMPILER=g++-mp-4.8 -DCMAKE_CXX_FLAGS='-Wall -g -march=native -Ofast' -G Ninja ../vecmathlib
+cmake -DCMAKE_CXX_COMPILER=clang++-mp-3.3 -DCMAKE_CXX_FLAGS='-Wall -g -march=native -Ofast' -G Ninja ../vecmathlib
 
 # Stampede:
 module swap intel gcc/4.7.1
