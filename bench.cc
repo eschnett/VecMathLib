@@ -257,7 +257,7 @@ DECLARE_FUNCTOR(trunc, -1.0, +1.0);
 template<typename realvec_t, template<typename> class func_t>
 double run_bench()
 {
-  const int numiters = 10000000;
+  const int numiters = 1000000;
   
   typedef typename realvec_t::real_t real_t;
   const real_t xmin = func_t<realvec_t>::get_xmin();
