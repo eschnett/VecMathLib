@@ -76,6 +76,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   typename realvec_t::intvec_t mathfuncs<realvec_t>::vml_ilogb(realvec_t x)
   {
+    // TODO: Check SLEEF 2.80 algorithm
     intvec_t e = lsr(as_int(x) & IV(FP::exponent_mask), FP::mantissa_bits);
     intvec_t r = e - IV(FP::exponent_offset);
     r = ifthen(convert_bool(e), r, IV(std::numeric_limits<int_t>::min()));
@@ -164,6 +165,7 @@ namespace vecmathlib {
   template<typename realvec_t>
   realvec_t mathfuncs<realvec_t>::vml_ldexp(realvec_t x, intvec_t n)
   {
+    // TODO: Check SLEEF 2.80 algorithm
     realvec_t r = as_float(as_int(x) + (n << I(FP::mantissa_bits)));
     r = ifthen((as_int(x) & IV(FP::exponent_mask)) == IV(I(0)), x, r);
     return r;
