@@ -199,7 +199,8 @@ namespace vecmathlib {
     static uint_t const signbit_mask = uint_t(1) << (bits-1);
     static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
                   "error in masks");
-    static_assert((mantissa_mask | exponent_mask | signbit_mask) == ~uint_t(0),
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) ==
+                  uint_t(~uint_t(0)),
                   "error in masks");
     
     // Re-interpret bit patterns
@@ -260,7 +261,8 @@ namespace vecmathlib {
     static uint_t const signbit_mask = uint_t(1) << (bits-1);
     static_assert((mantissa_mask & exponent_mask & signbit_mask) == uint_t(0),
                   "error in masks");
-    static_assert((mantissa_mask | exponent_mask | signbit_mask) == ~uint_t(0),
+    static_assert((mantissa_mask | exponent_mask | signbit_mask) ==
+                  uint_t(~uint_t(0)),
                   "error in masks");
     
     // Re-interpret bit patterns
