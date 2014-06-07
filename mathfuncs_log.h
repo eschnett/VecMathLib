@@ -6,7 +6,6 @@
 #include "mathfuncs_base.h"
 
 #include <cmath>
-#include <iostream>
 
 
 
@@ -20,9 +19,6 @@ namespace vecmathlib {
     // Rescale
     intvec_t ilogb_x = ilogb(x * RV(M_SQRT2));
     x = ldexp(x, -ilogb_x);
-    if (!(all(x >= RV(M_SQRT1_2) && x <= RV(M_SQRT2)))) {
-      std::cout << "x=" << x << "\n";
-    }
     VML_ASSERT(all(x >= RV(M_SQRT1_2) && x <= RV(M_SQRT2)));
     
     realvec_t y = (x - RV(1.0)) / (x + RV(1.0));
