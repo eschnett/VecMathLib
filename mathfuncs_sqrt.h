@@ -114,6 +114,7 @@ namespace vecmathlib {
     }
     
     return r;
+#endif
   }
   
   
