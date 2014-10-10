@@ -358,7 +358,7 @@ namespace vecmathlib {
     }
     
     intvec_t abs() const;
-    boolvec_t isignbit() const;
+    boolvec_t isignbit() const { return as_bool(); }
     intvec_t max(intvec_t x) const;
     intvec_t min(intvec_t x) const;
   };
@@ -733,11 +733,6 @@ namespace vecmathlib {
       r.set_elt(d, floatprops::convert_float((*this)[d]));
     }
     return r;
-  }
-  
-  inline boolvec<double,4> intvec<double,4>::isignbit() const
-  {
-    return MF::vml_isignbit(*this);
   }
   
   inline intvec<double,4> intvec<double,4>::max(intvec_t x) const
