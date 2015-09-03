@@ -173,13 +173,17 @@ namespace vecmathlib {
     boolvec_t convert_bool() const
     {
       // Result: convert_bool(0)=false, convert_bool(else)=true
-      // There is no intrinsic to compare with zero. Instead, we check
+#ifdef __AVX2__
+      return _mm256_castsi256_pd(_mm256_cmpeq_epi64(v, _mm256_setzero_si256()));
+#else
+      // There is no intrinsic to compare to zero. Instead, we check
       // whether x is positive and x-1 is negative.
       intvec_t x = *this;
       // We know that boolvec_t values depend only on the sign bit
       // return (~(x-1) | x).as_bool();
       // return x.as_bool() || !(x-1).as_bool();
       return x.as_bool() || (x + (FP::signbit_mask - 1)).as_bool();
+#endif
     }
     realvec_t as_float() const;      // defined after realvec
     realvec_t convert_float() const; // defined after realvec
@@ -193,6 +197,9 @@ namespace vecmathlib {
     
     intvec_t operator+(intvec_t x) const
     {
+#ifdef __AVX2__
+      return _mm256_add_epi64(v, x.v);
+#else
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       __m128i xvlo = _mm256_castsi256_si128(x.v);
@@ -200,9 +207,13 @@ namespace vecmathlib {
       vlo = _mm_add_epi64(vlo, xvlo);
       vhi = _mm_add_epi64(vhi, xvhi);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+#endif
     }
     intvec_t operator-(intvec_t x) const
     {
+#ifdef __AVX2__
+      return _mm256_sub_epi64(v, x.v);
+#else
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       __m128i xvlo = _mm256_castsi256_si128(x.v);
@@ -210,6 +221,7 @@ namespace vecmathlib {
       vlo = _mm_sub_epi64(vlo, xvlo);
       vhi = _mm_sub_epi64(vhi, xvhi);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+#endif
     }
     
     intvec_t& operator+=(intvec_t const& x) { return *this=*this+x; }
@@ -221,18 +233,30 @@ namespace vecmathlib {
     
     intvec_t operator&(intvec_t x) const
     {
+#ifdef __AVX2__
+      return _mm256_and_si256(v, x.v);
+#else
       return _mm256_castpd_si256(_mm256_and_pd(_mm256_castsi256_pd(v),
                                                _mm256_castsi256_pd(x.v)));
+#endif
     }
     intvec_t operator|(intvec_t x) const
     {
+#ifdef __AVX2__
+      return _mm256_or_si256(v, x.v);
+#else
       return _mm256_castpd_si256(_mm256_or_pd(_mm256_castsi256_pd(v),
                                               _mm256_castsi256_pd(x.v)));
+#endif
     }
     intvec_t operator^(intvec_t x) const
     {
+#ifdef __AVX2__
+      return _mm256_xor_si256(v, x.v);
+#else
       return _mm256_castpd_si256(_mm256_xor_pd(_mm256_castsi256_pd(v),
                                                _mm256_castsi256_pd(x.v)));
+#endif
     }
     
     intvec_t& operator&=(intvec_t const& x) { return *this=*this&x; }
@@ -245,15 +269,26 @@ namespace vecmathlib {
     
     intvec_t lsr(int_t n) const
     {
+#ifdef __AVX2__
+      return _mm256_srli_epi64(v, n);
+#else
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       vlo = _mm_srli_epi64(vlo, n);
       vhi = _mm_srli_epi64(vhi, n);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+#endif
     }
     intvec_t rotate(int_t n) const;
     intvec_t operator>>(int_t n) const
     {
+#ifdef __AVX2__
+      // There is no _mm256_srai_epi64. To emulate it, add 0x80000000
+      // before shifting, and subtract the shifted 0x80000000 after
+      // shifting
+      intvec_t offset = U(1) << (bits-1);
+      return (*this + offset).lsr(n) - offset.lsr(n);
+#else
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       // There is no _mm_srai_epi64. To emulate it, add 0x80000000
@@ -282,42 +317,61 @@ namespace vecmathlib {
       vhi = _mm_sub_epi64(vhi, _mm_set1_epi64x(U(1) << (bits-1-n)));
 #endif
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+#endif
     }
     intvec_t operator<<(int_t n) const
     {
+#ifdef __AVX2__
+      return _mm256_slli_epi64(v, n);
+#else
       __m128i vlo = _mm256_castsi256_si128(v);
       __m128i vhi = _mm256_extractf128_si256(v, 1);
       vlo = _mm_slli_epi64(vlo, n);
       vhi = _mm_slli_epi64(vhi, n);
       return _mm256_insertf128_si256(_mm256_castsi128_si256(vlo), vhi, 1);
+#endif
     }
     intvec_t& operator>>=(int_t n) { return *this=*this>>n; }
     intvec_t& operator<<=(int_t n) { return *this=*this<<n; }
     
     intvec_t lsr(intvec_t n) const
     {
+#ifdef __AVX2__
+      return _mm256_srlv_epi64(v, n.v);
+#else
       intvec_t r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, U((*this)[i]) >> U(n[i]));
       }
       return r;
+#endif
     }
     intvec_t rotate(intvec_t n) const;
     intvec_t operator>>(intvec_t n) const
     {
+#ifdef __AVX2__
+      // See operator>> above
+      intvec_t offset = U(1) << (bits-1);
+      return (*this + offset).lsr(n) - offset.lsr(n);
+#else
       intvec_t r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, (*this)[i] >> n[i]);
       }
       return r;
+#endif
     }
     intvec_t operator<<(intvec_t n) const
     {
+#ifdef __AVX2__
+      return _mm256_sllv_epi64(v, n.v);
+#else
       intvec_t r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, (*this)[i] << n[i]);
       }
       return r;
+#endif
     }
     intvec_t& operator>>=(intvec_t n) { return *this=*this>>n; }
     intvec_t& operator<<=(intvec_t n) { return *this=*this<<n; }
@@ -329,20 +383,32 @@ namespace vecmathlib {
     
     boolvec_t operator==(intvec_t const& x) const
     {
+#ifdef __AVX2__
+      return _mm256_castsi256_pd(_mm256_cmpeq_epi64(v, x.v));
+#else
       return ! (*this != x);
+#endif
     }
     boolvec_t operator!=(intvec_t const& x) const
     {
+#ifdef __AVX2__
+      return ! (*this == x);
+#else
       return (*this ^ x).convert_bool();
+#endif
     }
     boolvec_t operator<(intvec_t const& x) const
     {
+#ifdef __AVX2__
+      return _mm256_castsi256_pd(_mm256_cmpgt_epi64(x.v, v));
+#else
       // return (*this - x).as_bool();
       boolvec_t r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, (*this)[i] < x[i]);
       }
       return r;
+#endif
     }
     boolvec_t operator<=(intvec_t const& x) const
     {
@@ -373,7 +439,13 @@ namespace vecmathlib {
     typedef __m256d vector_t;
     static int const alignment = sizeof(vector_t);
     
-    static char const* name() { return "<AVX:4*double>"; }
+    static char const* name() {
+#ifdef __AVX2__
+      return "<AVX2:4*double>";
+#else
+      return "<AVX:4*double>";
+#endif
+    }
     void barrier() { __asm__("": "+x"(v)); }
     
     static_assert(size * sizeof(real_t) == sizeof(vector_t),
