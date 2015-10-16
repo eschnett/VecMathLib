@@ -40,7 +40,11 @@ namespace vml_std {
 #include <stdint.h>
 
 #ifndef static_assert
-#  define static_assert(cond, msg)
+#  define VML_CONCAT2(x, y) x##y
+#  define VML_CONCAT(x, y) VML_CONCAT2(x, y)
+#  define static_assert(cond, msg)                                      \
+  typedef int VML_CONCAT(vml_static_assert_, __LINE__)[(cond) ? 1 : -1] \
+    __attribute__((__unused__))
 #endif
 
 
