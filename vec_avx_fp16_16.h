@@ -347,27 +347,56 @@ namespace vecmathlib {
     
     intvec lsr(intvec n) const
     {
+#ifdef __AVX2__
+      // TODO: Use permute instead of shift/mask?
+      _mm256i mlo = _mm256_set1_epi32(U(0x0000ffff));
+      _mm256i vlo = _mm256_and_si256(mlo, v);
+      _mm256i vhi = v;
+      _mm256i clo = _mm256_and_si256(mlo, n);
+      _mm256i chi = _mm256_and_si256(mlo, _mm256_srli_epi32(n, 16));
+      _mm256i rlo = _mm256_srlv_epi32(vlo, clo);
+      _mm256i rhi = _mm256_andnot_si256(mlo, _mm256_srlv_epi32(vhi, chi));
+      return _mm256_or_si256(rhi, rlo);
+#else
       intvec r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, U((*this)[i]) >> U(n[i]));
       }
       return r;
+#endif
     }
     intvec operator>>(intvec n) const
     {
+#ifdef __AVX2__
+      intvec_t offset = U(1) << (bits-1);
+      return (*this + offset).lsr(n) - offset.lsr(n);
+#else
       intvec r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, (*this)[i] >> n[i]);
       }
       return r;
+#endif
     }
     intvec operator<<(intvec n) const
     {
+#ifdef __AVX2__
+      // TODO: Use permute instead of shift/mask?
+      _mm256i mlo = _mm256_set1_epi32(U(0x0000ffff));
+      _mm256i vlo = v;
+      _mm256i vhi = _mm256_andnot_si256(mlo, v;
+      _mm256i clo = _mm256_and_si256(mlo, n);
+      _mm256i chi = _mm256_and_si256(mlo, _mm256_srli_epi32(n, 16));
+      _mm256i rlo = _mm256_and_si256(mlo, _mm256_sllv_epi32(vlo, clo));
+      _mm256i rhi = _mm256_sllv_epi32(vhi, chi);
+      return _mm256_or_si256(rhi, rlo);
+#else
       intvec r;
       for (int i=0; i<size; ++i) {
         r.set_elt(i, (*this)[i] << n[i]);
       }
       return r;
+#endif
     }
     intvec& operator>>=(intvec n) { return *this=*this>>n; }
     intvec& operator<<=(intvec n) { return *this=*this<<n; }
