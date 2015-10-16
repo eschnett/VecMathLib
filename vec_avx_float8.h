@@ -183,7 +183,7 @@ namespace vecmathlib {
     {
       // Result: convert_bool(0)=false, convert_bool(else)=true
 #ifdef __AVX2__
-      return _mm256_castsi256_ps(_mm256_cmpeq_epi32(v, _mm256_setzero_si256()));
+      return *this != IV(I(0));
 #else
       // There is no intrinsic to compare to zero. Instead, we check
       // whether x is positive and x-1 is negative.
