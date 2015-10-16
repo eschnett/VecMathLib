@@ -110,12 +110,6 @@ const int vecsize = realV::size;
 
 
 
-#ifdef __clang__
-#  define __builtin_assume_aligned(exp, align) (exp)
-#endif
-
-
-
 // Simple, naive loop adding two arrays
 extern "C"
 void loop_add(real* a,
