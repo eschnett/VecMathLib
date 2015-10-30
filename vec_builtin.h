@@ -296,7 +296,10 @@ template <typename T, int N> struct realbuiltinvec : floatprops<T> {
     return name_.c_str();
   }
 #endif
-  void barrier() { volatile vector_t x __attribute__((__unused__)) = v; }
+  void barrier() {
+    volatile vector_t x = v;
+    v = x;
+  }
 
   typedef boolbuiltinvec<real_t, size> boolvec_t;
   typedef intbuiltinvec<real_t, size> intvec_t;

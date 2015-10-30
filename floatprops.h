@@ -283,6 +283,30 @@ V &set_elt(V &v, const int n, const E e) {
   return v;
 }
 
+template <typename real_t> real_t barrier(real_t x) {
+#if defined __GNUC__ && !defined __clang__ && !defined __ICC
+// GCC crashes when +X is used as constraint
+#if defined __SSE2__
+  __asm__("" : "+x"(x));
+#elif defined __PPC64__ // maybe also __PPC__
+  __asm__("" : "+f"(x));
+#elif defined __arm__
+  __asm__("" : "+w"(x));
+#else
+#error "Floating point barrier undefined on this architecture"
+#endif
+#elif defined __clang__
+  __asm__("" : "+x"(x));
+#elif defined __ICC
+  __asm__("" : "+x"(x));
+#elif defined __IBMCPP__
+  __asm__("" : "+f"(x));
+#else
+#error "Floating point barrier undefined on this architecture"
+#endif
+  return x;
+}
+
 } // namespace vecmathlib
 
 #endif // #ifndef FLOATPROPS_H
