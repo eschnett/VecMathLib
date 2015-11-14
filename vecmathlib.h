@@ -141,7 +141,12 @@ class type_info;
 #include "vec_avx_fp16_16.h"
 #include "vec_avx_float8.h"
 #include "vec_avx_double4.h"
-#define VML_CONFIG_AVX " AVX"
+#if defined __AVX2__
+#define VML_CONFIG_AVX2 " AVX2"
+#else
+#define VML_CONFIG_AVX2
+#endif
+#define VML_CONFIG_AVX " AVX" VML_CONFIG_AVX2
 #else
 #define VML_CONFIG_AVX
 #endif
