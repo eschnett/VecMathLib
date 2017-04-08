@@ -1,24 +1,25 @@
 # See file "BUILD" for instructions
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
+cmake_policy(SET CMP0048 NEW)
 
-project (vecmathlib)
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 
-add_executable (example example.cc)
-add_executable (example_float example_float.cc)
-add_executable (loop loop.cc)
-add_executable (interp interp.cc)
-add_executable (bench bench.cc)
+project(VecMathLib VERSION 0.1.0 LANGUAGES CXX)
 
-add_library (instantiations instantiations.cc)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/Modules")
 
-# Tests
+option(COVERALLS "Generate coveralls data" OFF)
 
-add_executable (selftest selftest.cc)
-enable_testing()
-add_test(NAME selftest COMMAND ./selftest)
+# External dependencies
 
-# Install
+if(COVERALLS)
+  include(Coveralls)
+  coveralls_turn_on_coverage()
+endif()
+
+# Main project
 
 set(HEADERS
   floatbuiltins.h
@@ -59,6 +60,33 @@ set(HEADERS
   vec_vsx_double2.h
   vecmathlib.h
   )
+
+add_executable (example example.cc)
+add_executable (example_float example_float.cc)
+add_executable (loop loop.cc)
+add_executable (interp interp.cc)
+add_executable (bench bench.cc)
+
+add_library (instantiations instantiations.cc)
+
+# Tests
+
+add_executable (selftest selftest.cc)
+enable_testing()
+add_test(NAME selftest COMMAND ./selftest)
+
+# Coverage
+
+if(COVERALLS)
+  # Create the coveralls target
+  set(COVERALLS_SRCS "")
+  foreach(src ${HEADERS})
+    list(APPEND COVERALLS_SRCS "${PROJECT_SOURCE_DIR}/${src}")
+  endforeach()
+  coveralls_setup("${COVERALLS_SRCS}" ON "${PROJECT_SOURCE_DIR}/cmake/Modules")
+endif()
+
+# Install
 
 install(FILES ${HEADERS} DESTINATION include/vecmathlib)
 
