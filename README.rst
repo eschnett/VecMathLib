@@ -1,6 +1,8 @@
 VecMathLib: SIMD vector operations and vectorizable math functions
 ==================================================================
 
+|Build Status| |codecov.io|
+
 Vecmathlib provides efficient, accurate, tunable, and most importantly
 vectorizable math functions such as sqrt, sin, or atan.
 
@@ -61,3 +63,8 @@ several areas where it can be improved:
    them element-wise via libc's scalar functions
 8. handle inf, nan, negative zero, rounding modes, and everything else
    required for IEEE compliance (if -ffast-math is not used)
+
+.. |Build Status| image:: https://travis-ci.org/eschnett/VecMathLib.svg?branch=master
+   :target: https://travis-ci.org/eschnett/VecMathLib
+.. |codecov.io| image:: https://codecov.io/gh/eschnett/VecMathLib/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/eschnett/VecMathLib
