@@ -1,4 +1,5 @@
-[From the wiki at <https://bitbucket.org/eschnett/vecmathlib/wiki/Home>:]
+VecMathLib: SIMD vector operations and vectorizable math functions
+==================================================================
 
 Vecmathlib provides efficient, accurate, tunable, and most importantly
 vectorizable math functions such as sqrt, sin, or atan.
@@ -12,6 +13,7 @@ vecmathlib's algorithms are efficient on standard CPUs.
 
 
 Implementation
+==============
 
 Vecmathlib consists of three parts:
 
@@ -42,6 +44,7 @@ architectures where they are otherwise not available.
 
 
 Things To Do
+============
 
 Vecmathlib is not finished. Contributions are welcome! There are
 several areas where it can be improved:

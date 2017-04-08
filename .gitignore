@@ -19,3 +19,5 @@ instantiations
 .ninja_deps
 interp
 example_float
+build
+vectorclass
