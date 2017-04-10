@@ -20,6 +20,20 @@
 
 namespace vml_std {
 using namespace std;
+
+// The types double and long double might be the same time, making it
+// impossible to select a function pointer. Defining these here
+// explicitly removes long double from the picture.
+inline bool isfinite(float x) { return std::isfinite(x); }
+inline bool isfinite(double x) { return std::isfinite(x); }
+inline bool isinf(float x) { return std::isinf(x); }
+inline bool isinf(double x) { return std::isinf(x); }
+inline bool isnan(float x) { return std::isnan(x); }
+inline bool isnan(double x) { return std::isnan(x); }
+inline bool isnormal(float x) { return std::isnormal(x); }
+inline bool isnormal(double x) { return std::isnormal(x); }
+inline bool signbit(float x) { return std::signbit(x); }
+inline bool signbit(double x) { return std::signbit(x); }
 }
 
 #else
